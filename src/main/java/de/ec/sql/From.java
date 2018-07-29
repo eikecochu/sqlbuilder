@@ -178,6 +178,11 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	public Where where() {
 		return new Where(join());
 	}
+	
+	@Override
+	public Where where(ValueHolder values) {
+		return where().values(values);
+	}
 
 	@Override
 	public GroupBy groupBy() {

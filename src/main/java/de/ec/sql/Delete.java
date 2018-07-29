@@ -31,6 +31,11 @@ public class Delete implements QueryBuilder, QueryPart, Whereable {
 	public Where where() {
 		return new Where(this);
 	}
+	
+	@Override
+	public Where where(ValueHolder values) {
+		return where().values(values);
+	}
 
 	@Override
 	public String string() {

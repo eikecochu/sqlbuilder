@@ -9,8 +9,15 @@ import lombok.Getter;
 public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	public static enum Operator implements QueryPart {
-		EQUALS("="), LIKE("LIKE"), IN("IN"), IS_NULL("IS NULL"), IS_NOT_NULL("IS NOT NULL"), GE(">="), GT(">"), LE(
-				"<="), LT("<=");
+		EQUALS("="),
+		LIKE("LIKE"),
+		IN("IN"),
+		IS_NULL("IS NULL"),
+		IS_NOT_NULL("IS NOT NULL"),
+		GE(">="),
+		GT(">"),
+		LE("<="),
+		LT("<=");
 
 		private String string;
 
@@ -120,11 +127,12 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 		return op(null, Operator.IS_NULL);
 	}
 
-	@SuppressWarnings("unchecked")
 	public T in(Object... values) {
-		this.values = values;
-		this.operator = Operator.IN;
-		return (T) conditionable;
+		return in().values(values);
+	}
+
+	public T in(Iterable<Object> values) {
+		return in().values(values);
 	}
 
 	@SuppressWarnings("unchecked")

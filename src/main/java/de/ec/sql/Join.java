@@ -163,6 +163,11 @@ public class Join extends Conditionable<Join>
 	public Where where() {
 		return new Where(this);
 	}
+	
+	@Override
+	public Where where(ValueHolder values) {
+		return where().values(values);
+	}
 
 	@Override
 	public GroupBy groupBy() {
@@ -214,7 +219,8 @@ public class Join extends Conditionable<Join>
 			}
 
 			strings.add(" ");
-			strings.add(name);
+			strings.add(QueryUtils.splitName(name)
+				.string(options));
 
 			String condition = super.string(options);
 

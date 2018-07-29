@@ -23,6 +23,8 @@ public class QueryOptions {
 	private boolean indent = true;
 	private int indentLevel = 0;
 	private boolean uppercase = true;
+	private boolean backticks = true;
+	private char backtickChar = '`';
 	private String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
 	@Getter(AccessLevel.PROTECTED)
@@ -54,6 +56,12 @@ public class QueryOptions {
 			return StringUtils.leftPad("", length) + cased(keyword);
 		}
 		return cased(keyword);
+	}
+
+	public String ticked(String string) {
+		if (string == null)
+			return null;
+		return backticks || Name.isKeyword(string) ? backtickChar + string + backtickChar : string;
 	}
 
 	public String cased(String string) {

@@ -2,6 +2,7 @@ package de.ec.sql;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,7 +11,8 @@ import lombok.Getter;
 public abstract class Conditionable<T extends Conditionable<T>> implements QueryPart {
 
 	public static enum Operator implements QueryPart {
-		AND("AND"), OR("OR");
+		AND("AND"),
+		OR("OR");
 
 		private final String string;
 
@@ -38,6 +40,14 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 
 	protected Conditionable(Conditionable<T> conditionable) {
 		this.conditionable = conditionable;
+	}
+
+	@SuppressWarnings("unchecked")
+	public T values(ValueHolder values) {
+		if(values != null)
+			for (Entry<String, Object> value : values.values())
+				col(value.getKey(), value.getValue());
+		return (T) this;
 	}
 
 	public ConditionPart<T> col(String name) {
@@ -74,10 +84,6 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 	}
 
 	public Conditionable<T> and() {
-		assert !parts.isEmpty() : "operator can not be the first part of a condition";
-		assert parts.size() % 2 == 1 : "condition malformed: parts of a condition must be separated by operators";
-		assert !(parts.get(parts.size() - 1) instanceof Operator) : "operator can not immediately follow an operator";
-
 		if (!parts.isEmpty() && parts.size() % 2 == 1)
 			parts.add(Operator.AND);
 		return this;
