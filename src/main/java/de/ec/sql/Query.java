@@ -11,7 +11,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 @Getter(AccessLevel.PROTECTED)
-public class Query implements QueryPart {
+public class Query implements QueryPart, QueryBuilder {
 
 	private static final Logger log = LoggerFactory.getLogger(Query.class);
 
@@ -72,6 +72,11 @@ public class Query implements QueryPart {
 	public String preparedString(QueryOptions options) {
 		options.prepare(true);
 		return string(options);
+	}
+
+	@Override
+	public Query query() {
+		return this;
 	}
 
 }
