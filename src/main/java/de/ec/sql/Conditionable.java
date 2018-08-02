@@ -113,10 +113,13 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 
 		StringJoiner strings = new StringJoiner();
 
-		for (QueryPart part : parts) {
+		for (int i = 0; i < parts.size(); i++) {
+			QueryPart part = parts.get(i);
 			String condition = part.string(options);
 			if (condition != null && !condition.isEmpty())
 				strings.add(condition);
+			else
+				i++; // this will skip the next operator as well
 		}
 
 		return strings.toString(" ");
