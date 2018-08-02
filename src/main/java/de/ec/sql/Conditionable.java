@@ -44,14 +44,15 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 
 	@SuppressWarnings("unchecked")
 	public T values(ValueHolder values) {
-		if(values != null)
+		if (values != null)
 			for (Entry<String, Object> value : values.values())
 				col(value.getKey(), value.getValue());
 		return (T) this;
 	}
 
 	public ConditionPart<T> col(String name) {
-		assert (parts.isEmpty() || parts.get(parts.size() - 1) instanceof Operator);
+		if (!parts.isEmpty() && !(parts.get(parts.size() - 1) instanceof Operator))
+			this.and();
 
 		ConditionPart<T> part = new ConditionPart<>(conditionable(), name);
 		parts.add(part);
@@ -77,7 +78,8 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 
 	@SuppressWarnings("unchecked")
 	public T group(Condition group) {
-		assert (parts.isEmpty() || parts.get(parts.size() - 1) instanceof Operator);
+		if (!parts.isEmpty() && !(parts.get(parts.size() - 1) instanceof Operator))
+			this.and();
 
 		parts.add(group);
 		return (T) conditionable;
