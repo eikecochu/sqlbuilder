@@ -55,15 +55,6 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 		return part;
 	}
 
-	public ConditionPart<T> col(String tableAlias, String name) {
-		return col(tableAlias + "." + name);
-	}
-
-	public T colPair(String name1, String name2) {
-		return col(name1).eq()
-			.col(name2);
-	}
-
 	public T col(String name, Object value) {
 		return col(name).eq(value);
 	}

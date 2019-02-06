@@ -16,9 +16,15 @@ public class Query implements QueryPart, QueryBuilder {
 	private static final Logger log = LoggerFactory.getLogger(Query.class);
 
 	private QueryPart builder;
+	private PostProcessor processor;
 
 	protected Query(QueryPart builder) {
 		this.builder = builder;
+	}
+
+	public Query postprocess(PostProcessor processor) {
+		this.processor = processor;
+		return this;
 	}
 
 	@Override
@@ -40,6 +46,9 @@ public class Query implements QueryPart, QueryBuilder {
 		QueryOptions options = new QueryOptions().prepare(true)
 			.pretty(false);
 		String sql = string(options);
+		
+		if(processor != null)
+			sql = processor.process(sql);
 
 		log.info("Query preparation\n  ┌ Query     : " + sql + "\n  └ Parameters: [" + options.preparedValuesString()
 				+ "]");
