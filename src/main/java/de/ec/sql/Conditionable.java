@@ -38,10 +38,6 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 		this.conditionable = this;
 	}
 
-	protected Conditionable(Conditionable<T> conditionable) {
-		this.conditionable = conditionable;
-	}
-
 	@SuppressWarnings("unchecked")
 	public T values(ValueHolder values) {
 		if (values != null)
