@@ -109,6 +109,7 @@ class Name implements QueryPart {
 
 	private String function;
 	private String schema;
+	private String table;
 	private String name;
 	private String alias;
 
@@ -119,15 +120,19 @@ class Name implements QueryPart {
 
 	@Override
 	public String string(QueryOptions options) {
+		if (!options.splitNames())
+			return name;
+
 		StringBuilder sb = new StringBuilder();
 
 		if (function != null)
-			sb.append(options.cased(function))
-				.append("(");
+			sb.append(options.cased(function)).append("(");
 
 		if (schema != null)
-			sb.append(options.ticked(options.cased(schema)))
-				.append(".");
+			sb.append(options.ticked(options.cased(schema))).append(".");
+
+		if (table != null)
+			sb.append(options.ticked(options.cased(table))).append(".");
 
 		if (name.equals("*"))
 			sb.append(name);
@@ -138,8 +143,7 @@ class Name implements QueryPart {
 			sb.append(")");
 
 		if (alias != null)
-			sb.append(" ")
-				.append(options.ticked(alias));
+			sb.append(" ").append(options.ticked(alias));
 
 		return sb.toString();
 	}

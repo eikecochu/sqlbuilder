@@ -219,7 +219,7 @@ public class Join extends Conditionable<Join>
 			}
 
 			strings.add(" ");
-			strings.add(QueryUtils.splitName(name)
+			strings.add(QueryUtils.splitName(options, name)
 				.string(options));
 
 			String condition = super.string(options);

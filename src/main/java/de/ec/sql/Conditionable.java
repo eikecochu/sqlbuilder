@@ -11,8 +11,7 @@ import lombok.Getter;
 public abstract class Conditionable<T extends Conditionable<T>> implements QueryPart {
 
 	public static enum Operator implements QueryPart {
-		AND("AND"),
-		OR("OR");
+		AND("AND"), OR("OR");
 
 		private final String string;
 
@@ -98,15 +97,32 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 		if (parts.isEmpty())
 			return null;
 
+		if (parts.size() % 2 != 1)
+			throw new RuntimeException("wrong part count");
+
 		StringJoiner strings = new StringJoiner();
 
-		for (int i = 0; i < parts.size(); i++) {
-			QueryPart part = parts.get(i);
-			String condition = part.string(options);
-			if (condition != null && !condition.isEmpty())
-				strings.add(condition);
-			else
-				i++; // this will skip the next operator as well
+		String first = parts.get(0).string(options);
+		boolean needsOp = false;
+
+		if (first != null && !first.isEmpty()) {
+			needsOp = true;
+			strings.add(first);
+		}
+
+		for (int i = 1; i < parts.size(); i += 2) {
+			String op = parts.get(i).string(options);
+			String val = parts.get(i + 1).string(options);
+
+			if (needsOp) {
+				if (op != null && !op.isEmpty() && val != null && !val.isEmpty())
+					strings.add(op).add(val);
+			} else {
+				if (val != null && !val.isEmpty()) {
+					needsOp = true;
+					strings.add(val);
+				}
+			}
 		}
 
 		return strings.toString(" ");

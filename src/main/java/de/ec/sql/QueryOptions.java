@@ -19,6 +19,7 @@ public class QueryOptions {
 
 	public static final QueryOptions DEFAULT_OPTIONS = new QueryOptions();
 
+	private boolean splitNames = true;
 	private boolean pretty = true;
 	private boolean indent = true;
 	private int indentLevel = 0;

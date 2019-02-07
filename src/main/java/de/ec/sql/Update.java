@@ -116,7 +116,7 @@ public class Update implements QueryBuilder, QueryPart, Whereable {
 
 		StringJoiner sets = new StringJoiner();
 		for (UpdateValue updateValue : updateValues) {
-			String column = QueryUtils.splitName(updateValue.getColumn())
+			String column = QueryUtils.splitName(options, updateValue.getColumn())
 				.string(options) + " = ";
 			if (updateValue.isExpression())
 				column += updateValue.getValue()

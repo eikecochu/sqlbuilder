@@ -69,7 +69,7 @@ public class GroupBy implements QueryBuilder, QueryPart, Orderable {
 
 			StringJoiner columnsStrings = new StringJoiner();
 			for (String column : columns)
-				columnsStrings.add(QueryUtils.splitName(column)
+				columnsStrings.add(QueryUtils.splitName(options, column)
 					.string(options));
 			strings.add(" ");
 			strings.add(columnsStrings.toString(", "));

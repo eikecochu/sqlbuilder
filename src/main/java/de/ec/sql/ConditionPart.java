@@ -162,7 +162,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 				strings.add(" ");
 			}
 
-			strings.add(QueryUtils.splitName(name)
+			strings.add(QueryUtils.splitName(options, name)
 				.string(options));
 			strings.add(" ");
 
@@ -173,7 +173,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 				if (expression)
 					strings.add(value.toString());
 				else if (column)
-					strings.add(QueryUtils.splitName(value.toString())
+					strings.add(QueryUtils.splitName(options, value.toString())
 						.string(options));
 				else if (value != null) {
 					if (options.prepare()) {

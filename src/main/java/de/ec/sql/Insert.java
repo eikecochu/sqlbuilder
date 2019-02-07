@@ -10,13 +10,9 @@ import lombok.Getter;
 public class Insert implements QueryBuilder, QueryPart {
 
 	private static enum InsertType implements QueryPart {
-		INSERT("INSERT INTO"),
-		REPLACE("REPLACE INTO"),
-		INSERT_OR_REPLACE("INSERT OR REPLACE INTO"),
-		INSERT_OR_ROLLBACK("INSERT OR ROLLBACK INTO"),
-		INSERT_OR_ABORT("INSERT OR ABORT INTO"),
-		INSERT_OR_FAIL("INSERT OR FAIL INTO"),
-		INSERT_OR_IGNORE("INSERT OR IGNORE INTO");
+		INSERT("INSERT INTO"), REPLACE("REPLACE INTO"), INSERT_OR_REPLACE("INSERT OR REPLACE INTO"),
+		INSERT_OR_ROLLBACK("INSERT OR ROLLBACK INTO"), INSERT_OR_ABORT("INSERT OR ABORT INTO"),
+		INSERT_OR_FAIL("INSERT OR FAIL INTO"), INSERT_OR_IGNORE("INSERT OR IGNORE INTO");
 
 		private String string;
 
@@ -90,7 +86,7 @@ public class Insert implements QueryBuilder, QueryPart {
 		return new Select(this);
 	}
 
-	public InsertValue column(String column) {
+	public InsertValue col(String column) {
 		defaultValues = false;
 		onlyValues = false;
 		InsertValue insertValue = new InsertValue(this, column);
@@ -98,13 +94,13 @@ public class Insert implements QueryBuilder, QueryPart {
 		return insertValue;
 	}
 
-	public Insert column(String column, Object value) {
-		return column(column).value(value);
+	public Insert col(String column, Object value) {
+		return col(column).value(value);
 	}
 
 	public Insert value(Object value) {
 		onlyValues = onlyValues && true;
-		return column(null).value(value);
+		return col(null).value(value);
 	}
 
 	public Insert defaults() {
@@ -145,8 +141,7 @@ public class Insert implements QueryBuilder, QueryPart {
 
 				StringJoiner columns = new StringJoiner();
 				for (InsertValue insertValue : insertValues)
-					columns.add(QueryUtils.splitName(insertValue.getColumn())
-						.string(options));
+					columns.add(QueryUtils.splitName(options, insertValue.getColumn()).string(options));
 				strings.add(columns.toString(", "));
 
 				strings.add(")");
@@ -157,23 +152,18 @@ public class Insert implements QueryBuilder, QueryPart {
 
 			assert (!insertValues.isEmpty());
 
-			int count = insertValues.get(0)
-				.getValues()
-				.size();
+			int count = insertValues.get(0).getValues().size();
 			for (int i = 0; i < count; i++) {
 				if (i > 0)
-					strings.add(options.newLine())
-						.add(options.pad(""));
+					strings.add(options.newLine()).add(options.pad(""));
 				strings.add(" (");
 				StringJoiner values = new StringJoiner();
 				for (InsertValue insertValue : insertValues) {
 					if (options.prepare()) {
 						values.add("?");
-						options.addPreparedValue(insertValue.getValues()
-							.get(i));
+						options.addPreparedValue(insertValue.getValues().get(i));
 					} else
-						values.add(QueryUtils.valueToString(options, insertValue.getValues()
-							.get(i)));
+						values.add(QueryUtils.valueToString(options, insertValue.getValues().get(i)));
 				}
 				strings.add(values.toString(", "));
 				strings.add(")");

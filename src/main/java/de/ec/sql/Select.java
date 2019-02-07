@@ -97,7 +97,7 @@ public class Select implements QueryPart, Fromable {
 		} else {
 			StringJoiner columnsStrings = new StringJoiner();
 			for (String column : columns)
-				columnsStrings.add(QueryUtils.splitName(column)
+				columnsStrings.add(QueryUtils.splitName(options, column)
 					.string(options));
 			strings.add(" ");
 			strings.add(columnsStrings.toString(", "));

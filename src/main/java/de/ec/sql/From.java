@@ -28,7 +28,7 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 		@Override
 		public String string(QueryOptions options) {
 			if (table != null)
-				return QueryUtils.splitName(table)
+				return QueryUtils.splitName(options, table)
 					.string(options) + (alias != null ? " " + alias : "");
 			return "(" + subquery.string(options) + ")" + (alias != null ? " " + alias : "");
 		}

@@ -11,16 +11,25 @@ import java.util.stream.Collectors;
 abstract class QueryUtils {
 
 	private static final Pattern namePattern = Pattern.compile(
-			"^\\s*((?<function>\\w+)\\()?((?<sd>`)?(?<schema>\\w+)(\\k<sd>)?\\.)?(?<nd>`)?(?<name>\\w+)(\\k<nd>)?\\)?((\\s+[Aa][Ss])?\\s*(?<ad>`)?(?<alias>\\w+)(\\k<ad>)?)?\\s*$");
+			"^\\s*((?<fn>\\w+)\\()?(`?(?<a1>\\w+)`?\\.)?(`?(?<a2>\\w+)`?\\.)?(`?(?<name>\\w+|\\*)`?)\\)?(\\s+[Aa][Ss])?(\\s+`?(?<alias>\\w+))?`?\\s*$");
 
-	public static Name splitName(String strName) {
+	public static Name splitName(QueryOptions options, String strName) {
+		if (!options.splitNames())
+			return new Name().name(strName);
+
 		Matcher m = namePattern.matcher(strName);
-		if (m.matches())
-			return new Name().function(m.group("function"))
-				.schema(m.group("schema"))
-				.name(m.group("name"))
-				.alias(m.group("alias"));
-		else
+		if (m.matches()) {
+			String schema = m.group("a1");
+			String table = m.group("a2");
+
+			if (table == null) {
+				table = schema;
+				schema = null;
+			}
+
+			return new Name().function(m.group("fn")).schema(schema).table(table).name(m.group("name"))
+					.alias(m.group("alias"));
+		} else
 			throw new RuntimeException("unrecognizable name: " + strName);
 	}
 
@@ -45,9 +54,7 @@ abstract class QueryUtils {
 	}
 
 	public static List<String> valuesToStrings(QueryOptions options, Object... values) {
-		return Arrays.stream(values)
-			.map(value -> valueToString(options, value))
-			.collect(Collectors.toList());
+		return Arrays.stream(values).map(value -> valueToString(options, value)).collect(Collectors.toList());
 	}
 
 	public static String sqlStringEscape(String string) {
