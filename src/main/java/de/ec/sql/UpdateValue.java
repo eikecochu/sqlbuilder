@@ -11,17 +11,17 @@ public class UpdateValue {
 	private Object value;
 	private boolean expression = false;
 
-	protected UpdateValue(Update update, String column) {
+	protected UpdateValue(final Update update, final String column) {
 		this.update = update;
 		this.column = column;
 	}
 
-	public Update value(Object value) {
+	public Update value(final Object value) {
 		this.value = value;
 		return update;
 	}
 
-	public Update expr(String expr) {
+	public Update expr(final String expr) {
 		value = expr;
 		expression = true;
 		return update;

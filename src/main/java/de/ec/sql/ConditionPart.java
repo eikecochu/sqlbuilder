@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter(AccessLevel.PROTECTED)
 public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
-	public static enum Operator implements QueryPart {
+	public enum Operator implements QueryPart {
 		EQUALS("="),
 		LIKE("LIKE"),
 		IN("IN"),
@@ -21,7 +21,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 		private String string;
 
-		private Operator(String string) {
+		private Operator(final String string) {
 			this.string = string;
 		}
 
@@ -31,7 +31,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 		}
 
 		@Override
-		public String string(QueryOptions options) {
+		public String string(final QueryOptions options) {
 			return options.cased(string);
 		}
 	}
@@ -45,7 +45,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	private boolean column;
 	private boolean expression;
 
-	protected ConditionPart(Conditionable<T> conditionable, String name) {
+	protected ConditionPart(final Conditionable<T> conditionable, final String name) {
 		this.conditionable = conditionable;
 		this.name = name;
 	}
@@ -84,7 +84,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected T condition(ConditionValue<T> conditionValue) {
+	protected T condition(final ConditionValue<T> conditionValue) {
 		this.operator = conditionValue.getOperator();
 		this.value = conditionValue.getValue();
 		this.column = conditionValue.isColumn();
@@ -93,33 +93,33 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected T condition(ConditionValues<T> conditionValues) {
+	protected T condition(final ConditionValues<T> conditionValues) {
 		this.values = conditionValues.getValues();
 		this.operator = Operator.IN;
 		return (T) conditionable;
 	}
 
-	public T eq(Object value) {
+	public T eq(final Object value) {
 		return op(value, Operator.EQUALS);
 	}
 
-	public T ge(Object value) {
+	public T ge(final Object value) {
 		return op(value, Operator.GE);
 	}
 
-	public T gt(Object value) {
+	public T gt(final Object value) {
 		return op(value, Operator.GT);
 	}
 
-	public T le(Object value) {
+	public T le(final Object value) {
 		return op(value, Operator.LE);
 	}
 
-	public T lt(Object value) {
+	public T lt(final Object value) {
 		return op(value, Operator.LT);
 	}
 
-	public T like(Object value) {
+	public T like(final Object value) {
 		return op(value, Operator.LIKE);
 	}
 
@@ -127,16 +127,16 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 		return op(null, Operator.IS_NULL);
 	}
 
-	public T in(Object... values) {
+	public T in(final Object... values) {
 		return in().values(values);
 	}
 
-	public T in(Iterable<Object> values) {
+	public T in(final Iterable<Object> values) {
 		return in().values(values);
 	}
 
 	@SuppressWarnings("unchecked")
-	protected T op(Object value, Operator operator) {
+	protected T op(final Object value, final Operator operator) {
 		this.value = value;
 		this.operator = operator;
 		return (T) conditionable;
@@ -148,10 +148,10 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	}
 
 	@Override
-	public String string(QueryOptions options) {
+	public String string(final QueryOptions options) {
 		if (value != null || (values != null && values.length > 0) || operator == Operator.IS_NULL
 				|| operator == Operator.IS_NOT_NULL) {
-			StringJoiner strings = new StringJoiner();
+			final StringJoiner strings = new StringJoiner();
 			if (not && operator == Operator.IS_NULL) {
 				not = false;
 				operator = Operator.IS_NOT_NULL;
@@ -163,7 +163,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 			}
 
 			strings.add(QueryUtils.splitName(options, name)
-				.string(options));
+					.string(options));
 			strings.add(" ");
 
 			strings.add(operator.string(options));
@@ -174,7 +174,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 					strings.add(value.toString());
 				else if (column)
 					strings.add(QueryUtils.splitName(options, value.toString())
-						.string(options));
+							.string(options));
 				else if (value != null) {
 					if (options.prepare()) {
 						strings.add("?");
@@ -185,7 +185,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 					strings.add("(");
 					if (options.prepare()) {
 						strings.add(QueryUtils.preparedInValues(values.length));
-						for (Object value : values)
+						for (final Object value : values)
 							options.addPreparedValue(value);
 					} else
 						strings.add(StringUtils.join(QueryUtils.valuesToStrings(options, values), ", "));

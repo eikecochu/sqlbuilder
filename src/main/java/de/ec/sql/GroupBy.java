@@ -3,38 +3,52 @@ package de.ec.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.ec.sql.before.BeforeHaving;
+import de.ec.sql.before.BeforeOrderBy;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
-public class GroupBy implements QueryBuilder, QueryPart, Orderable {
+public class GroupBy implements QueryBuilder, QueryPart, BeforeOrderBy, BeforeHaving {
 
-	private final Where where;
+	@Setter(AccessLevel.PACKAGE)
+	private Where where;
 	private final List<String> columns = new ArrayList<>();
 
-	protected GroupBy(Where where) {
+	public GroupBy() {
+	}
+
+	protected GroupBy(final Where where) {
 		this.where = where;
 	}
 
-	public GroupBy(Where where, String... columns) {
+	protected GroupBy(final Where where, final String... columns) {
 		this(where);
 		columns(columns);
 	}
 
-	public GroupBy column(String column) {
+	public GroupBy column(final String column) {
 		columns.add(column);
 		return this;
 	}
 
-	public GroupBy columns(String... columns) {
+	public GroupBy columns(final String... columns) {
 		if (columns != null)
-			for (String column : columns)
+			for (final String column : columns)
 				this.columns.add(column);
 		return this;
 	}
 
+	@Override
 	public Having having() {
 		return new Having(this);
+	}
+
+	@Override
+	public Having having(final Having having) {
+		having.setGroupBy(this);
+		return having;
 	}
 
 	@Override
@@ -43,8 +57,14 @@ public class GroupBy implements QueryBuilder, QueryPart, Orderable {
 	}
 
 	@Override
-	public OrderBy orderBy(String... columns) {
+	public OrderBy orderBy(final String... columns) {
 		return new OrderBy(this, columns);
+	}
+
+	@Override
+	public OrderBy orderBy(final OrderBy orderBy) {
+		orderBy.setHaving(new Having(this));
+		return orderBy;
 	}
 
 	@Override
@@ -58,19 +78,20 @@ public class GroupBy implements QueryBuilder, QueryPart, Orderable {
 	}
 
 	@Override
-	public String string(QueryOptions options) {
-		StringJoiner strings = new StringJoiner();
+	public String string(final QueryOptions options) {
+		final StringJoiner strings = new StringJoiner();
 
-		strings.add(where.string(options));
+		if (where != null)
+			strings.add(where.string(options));
 
 		if (!columns.isEmpty()) {
 			strings.add(options.newLine());
 			strings.add(options.pad("GROUP BY"));
 
-			StringJoiner columnsStrings = new StringJoiner();
-			for (String column : columns)
+			final StringJoiner columnsStrings = new StringJoiner();
+			for (final String column : columns)
 				columnsStrings.add(QueryUtils.splitName(options, column)
-					.string(options));
+						.string(options));
 			strings.add(" ");
 			strings.add(columnsStrings.toString(", "));
 		}

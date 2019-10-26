@@ -3,34 +3,37 @@ package de.ec.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.ec.sql.before.BeforeFrom;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
-public class Select implements QueryPart, Fromable {
+public class Select implements QueryPart, BeforeFrom {
 
 	private final List<String> columns = new ArrayList<>();
 	private boolean distinct = false;
 	private boolean all = false;
+	@Setter(AccessLevel.PACKAGE)
 	private QueryPart builder;
 
 	public Select() {
 	}
 
-	public Select(String... columns) {
+	public Select(final String... columns) {
 		columns(columns);
 	}
 
-	protected Select(With with) {
+	protected Select(final With with) {
 		builder = with;
 	}
 
-	protected Select(With with, String... columns) {
+	protected Select(final With with, final String... columns) {
 		builder = with;
 		columns(columns);
 	}
 
-	protected Select(Insert insert) {
+	protected Select(final Insert insert) {
 		builder = insert;
 	}
 
@@ -46,14 +49,14 @@ public class Select implements QueryPart, Fromable {
 		return this;
 	}
 
-	public Select column(String column) {
+	public Select column(final String column) {
 		columns.add(column);
 		return this;
 	}
 
-	public Select columns(String... columns) {
+	public Select columns(final String... columns) {
 		if (columns != null)
-			for (String column : columns)
+			for (final String column : columns)
 				this.columns.add(column);
 		return this;
 	}
@@ -64,8 +67,14 @@ public class Select implements QueryPart, Fromable {
 	}
 
 	@Override
-	public From from(String... tables) {
+	public From from(final String... tables) {
 		return new From(this, tables);
+	}
+
+	@Override
+	public From from(final From from) {
+		from.setSelect(this);
+		return from;
 	}
 
 	@Override
@@ -74,8 +83,8 @@ public class Select implements QueryPart, Fromable {
 	}
 
 	@Override
-	public String string(QueryOptions options) {
-		StringJoiner strings = new StringJoiner();
+	public String string(final QueryOptions options) {
+		final StringJoiner strings = new StringJoiner();
 
 		if (builder != null) {
 			strings.add(builder.string(options));
@@ -95,10 +104,10 @@ public class Select implements QueryPart, Fromable {
 		if (columns.isEmpty()) {
 			strings.add(" *");
 		} else {
-			StringJoiner columnsStrings = new StringJoiner();
-			for (String column : columns)
+			final StringJoiner columnsStrings = new StringJoiner();
+			for (final String column : columns)
 				columnsStrings.add(QueryUtils.splitName(options, column)
-					.string(options));
+						.string(options));
 			strings.add(" ");
 			strings.add(columnsStrings.toString(", "));
 		}

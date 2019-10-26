@@ -2,8 +2,8 @@ package de.ec.sql;
 
 interface QueryPart {
 
-	public String string();
+	String string();
 
-	public String string(QueryOptions options);
+	String string(QueryOptions options);
 
 }

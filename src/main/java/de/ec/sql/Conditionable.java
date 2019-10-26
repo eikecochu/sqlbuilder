@@ -10,12 +10,13 @@ import lombok.Getter;
 @Getter(AccessLevel.PROTECTED)
 public abstract class Conditionable<T extends Conditionable<T>> implements QueryPart {
 
-	public static enum Operator implements QueryPart {
-		AND("AND"), OR("OR");
+	public enum Operator implements QueryPart {
+		AND("AND"),
+		OR("OR");
 
 		private final String string;
 
-		private Operator(String string) {
+		private Operator(final String string) {
 			this.string = string;
 		}
 
@@ -25,7 +26,7 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 		}
 
 		@Override
-		public String string(QueryOptions options) {
+		public String string(final QueryOptions options) {
 			return options.cased(string);
 		}
 	}
@@ -38,32 +39,32 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 	}
 
 	@SuppressWarnings("unchecked")
-	public T values(ValueHolder values) {
+	public T values(final ValueHolder values) {
 		if (values != null)
-			for (Entry<String, Object> value : values.values())
+			for (final Entry<String, Object> value : values)
 				col(value.getKey(), value.getValue());
 		return (T) this;
 	}
 
-	public ConditionPart<T> col(String name) {
+	public ConditionPart<T> col(final String name) {
 		if (!parts.isEmpty() && !(parts.get(parts.size() - 1) instanceof Operator))
 			this.and();
 
-		ConditionPart<T> part = new ConditionPart<>(conditionable(), name);
+		final ConditionPart<T> part = new ConditionPart<>(conditionable(), name);
 		parts.add(part);
 		return part;
 	}
 
-	public T col(String name, Object value) {
+	public T col(final String name, final Object value) {
 		return col(name).eq(value);
 	}
 
-	public T col(String name, Object... values) {
+	public T col(final String name, final Object... values) {
 		return col(name).in(values);
 	}
 
 	@SuppressWarnings("unchecked")
-	public T group(Condition group) {
+	public T group(final Condition group) {
 		if (!parts.isEmpty() && !(parts.get(parts.size() - 1) instanceof Operator))
 			this.and();
 
@@ -93,16 +94,17 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 	}
 
 	@Override
-	public String string(QueryOptions options) {
+	public String string(final QueryOptions options) {
 		if (parts.isEmpty())
 			return null;
 
 		if (parts.size() % 2 != 1)
 			throw new RuntimeException("wrong part count");
 
-		StringJoiner strings = new StringJoiner();
+		final StringJoiner strings = new StringJoiner();
 
-		String first = parts.get(0).string(options);
+		final String first = parts.get(0)
+				.string(options);
 		boolean needsOp = false;
 
 		if (first != null && !first.isEmpty()) {
@@ -111,12 +113,15 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 		}
 
 		for (int i = 1; i < parts.size(); i += 2) {
-			String op = parts.get(i).string(options);
-			String val = parts.get(i + 1).string(options);
+			final String op = parts.get(i)
+					.string(options);
+			final String val = parts.get(i + 1)
+					.string(options);
 
 			if (needsOp) {
 				if (op != null && !op.isEmpty() && val != null && !val.isEmpty())
-					strings.add(op).add(val);
+					strings.add(op)
+							.add(val);
 			} else {
 				if (val != null && !val.isEmpty()) {
 					needsOp = true;

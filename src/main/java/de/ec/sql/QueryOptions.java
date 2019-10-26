@@ -34,9 +34,9 @@ public class QueryOptions {
 
 	@Getter(AccessLevel.PROTECTED)
 	@Setter(AccessLevel.NONE)
-	private List<Object> preparedValues = new ArrayList<>();
+	private final List<Object> preparedValues = new ArrayList<>();
 
-	protected void addPreparedValue(Object value) {
+	protected void addPreparedValue(final Object value) {
 		preparedValues.add(value);
 	}
 
@@ -51,21 +51,21 @@ public class QueryOptions {
 		return pretty ? "\n" + indentString() : " ";
 	}
 
-	public String pad(String keyword) {
+	public String pad(final String keyword) {
 		if (pretty && keyword != null) {
-			int length = Math.max(0, PAD_LENGTH - keyword.split("\\s+")[0].length());
+			final int length = Math.max(0, PAD_LENGTH - keyword.split("\\s+")[0].length());
 			return StringUtils.leftPad("", length) + cased(keyword);
 		}
 		return cased(keyword);
 	}
 
-	public String ticked(String string) {
+	public String ticked(final String string) {
 		if (string == null)
 			return null;
 		return backticks || Name.isKeyword(string) ? backtickChar + string + backtickChar : string;
 	}
 
-	public String cased(String string) {
+	public String cased(final String string) {
 		if (string == null)
 			return null;
 		return uppercase ? string.toUpperCase() : string.toLowerCase();
@@ -73,21 +73,21 @@ public class QueryOptions {
 
 	public QueryOptions copy() {
 		return new QueryOptions().pretty(pretty)
-			.indent(indent)
-			.indentLevel(indentLevel)
-			.uppercase(uppercase)
-			.dateFormat(dateFormat);
+				.indent(indent)
+				.indentLevel(indentLevel)
+				.uppercase(uppercase)
+				.dateFormat(dateFormat);
 	}
 
 	public String preparedValuesString() {
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		int index = 1;
 		String prefix = "";
-		for (Object value : preparedValues) {
+		for (final Object value : preparedValues) {
 			sb.append(prefix)
-				.append(index++)
-				.append(": ")
-				.append(value.toString());
+					.append(index++)
+					.append(": ")
+					.append(value.toString());
 			prefix = ", ";
 		}
 		return sb.toString();

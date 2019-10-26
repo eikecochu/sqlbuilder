@@ -8,7 +8,7 @@ public class Condition extends Conditionable<Condition> {
 	}
 
 	@Override
-	public String string(QueryOptions options) {
+	public String string(final QueryOptions options) {
 		return "(" + super.string(options) + ")";
 	}
 

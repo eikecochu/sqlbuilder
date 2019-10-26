@@ -5,23 +5,30 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import de.ec.sql.before.BeforeDelete;
+import de.ec.sql.before.BeforeInsert;
+import de.ec.sql.before.BeforeSelect;
+import de.ec.sql.before.BeforeUpdate;
+import de.ec.sql.before.BeforeWith;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
-public class With implements QueryPart {
+public class With implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, BeforeDelete, BeforeInsert {
 
+	@Setter(AccessLevel.PACKAGE)
 	private With with;
 	private final String name;
 	private final List<String> columns = new ArrayList<>();
 	private Query query;
 	private boolean recursive;
 
-	public With(String name) {
+	public With(final String name) {
 		this.name = name;
 	}
 
-	private With(With with, String name) {
+	private With(final With with, final String name) {
 		this.name = name;
 		this.with = with;
 	}
@@ -31,48 +38,95 @@ public class With implements QueryPart {
 		return this;
 	}
 
-	public With column(String column) {
+	public With column(final String column) {
 		columns.add(column);
 		return this;
 	}
 
-	public With columns(String... columns) {
-		for (String column : columns)
+	public With columns(final String... columns) {
+		for (final String column : columns)
 			this.columns.add(column);
 		return this;
 	}
 
-	public With as(Query query) {
+	public With as(final Query query) {
 		this.query = query;
 		return this;
 	}
 
+	@Override
 	public Select select() {
 		return new Select(this);
 	}
 
-	public Select select(String... columns) {
+	@Override
+	public Select select(final String... columns) {
 		return new Select(this, columns);
 	}
 
-	public Delete delete(String table) {
+	@Override
+	public Select select(final Select select) {
+		select.setBuilder(this);
+		return select;
+	}
+
+	@Override
+	public Delete delete(final String table) {
 		return new Delete(this, table);
 	}
 
-	public Delete delete(Table table) {
+	@Override
+	public Delete delete(final Table table) {
 		return delete(table.tableName());
 	}
 
-	public Update update(String table) {
+	@Override
+	public Delete delete(final Delete delete) {
+		delete.setWith(this);
+		return delete;
+	}
+
+	@Override
+	public Update update(final String table) {
 		return new Update(this, table);
 	}
 
-	public Update update(Table table) {
+	@Override
+	public Update update(final Table table) {
 		return update(table.tableName());
 	}
 
-	public With with(String name) {
+	@Override
+	public Update update(final Update update) {
+		update.setWith(this);
+		return update;
+	}
+
+	@Override
+	public Insert insert(final String table) {
+		return new Insert(this, table);
+	}
+
+	@Override
+	public Insert insert(final Table table) {
+		return insert(table.tableName());
+	}
+
+	@Override
+	public Insert insert(final Insert insert) {
+		insert.setWith(this);
+		return insert;
+	}
+
+	@Override
+	public With with(final String name) {
 		return new With(this, name);
+	}
+
+	@Override
+	public With with(final With with) {
+		with.setWith(this);
+		return with;
 	}
 
 	@Override
@@ -81,8 +135,8 @@ public class With implements QueryPart {
 	}
 
 	@Override
-	public String string(QueryOptions options) {
-		StringJoiner strings = new StringJoiner();
+	public String string(final QueryOptions options) {
+		final StringJoiner strings = new StringJoiner();
 
 		if (with == null) {
 			strings.add(options.pad("WITH"));
@@ -110,11 +164,11 @@ public class With implements QueryPart {
 		strings.add(options.cased("AS"));
 		strings.add(" (");
 
-		QueryOptions subOptions = options.copy()
-			.indentLevel(options.indentLevel() + 1);
+		final QueryOptions subOptions = options.copy()
+				.indentLevel(options.indentLevel() + 1);
 		strings.add(subOptions.newLine());
 		strings.add(query.string(subOptions)
-			.trim());
+				.trim());
 
 		strings.add(")");
 

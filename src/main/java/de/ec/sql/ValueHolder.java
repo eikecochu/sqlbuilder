@@ -1,10 +1,13 @@
 package de.ec.sql;
 
+import java.util.Iterator;
 import java.util.Map.Entry;
 
-@FunctionalInterface
-public interface ValueHolder {
+public interface ValueHolder extends Iterable<Entry<String, Object>>, Iterator<Entry<String, Object>> {
 
-	Iterable<Entry<String, Object>> values();
+	@Override
+	default Iterator<Entry<String, Object>> iterator() {
+		return iterator();
+	}
 
 }

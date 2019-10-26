@@ -11,28 +11,28 @@ public class InsertValue {
 
 	private final Insert insert;
 	private final String column;
-	private List<Object> values = new ArrayList<>();
+	private final List<Object> values = new ArrayList<>();
 	private Query query;
 
-	protected InsertValue(Insert insert, String column) {
+	protected InsertValue(final Insert insert, final String column) {
 		this.insert = insert;
 		this.column = column;
 	}
 
-	public Insert value(Object value) {
+	public Insert value(final Object value) {
 		values.add(value);
 		query = null;
 		return insert;
 	}
 
-	public Insert values(Object... values) {
+	public Insert values(final Object... values) {
 		if (values != null)
-			for (Object value : values)
+			for (final Object value : values)
 				this.values.add(value);
 		return insert;
 	}
 
-	public Insert query(Query query) {
+	public Insert query(final Query query) {
 		values.clear();
 		this.query = query;
 		return insert;

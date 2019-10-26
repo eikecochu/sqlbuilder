@@ -7,9 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 
 class StringJoiner {
 
-	private List<String> strings = new ArrayList<>();
+	private final List<String> strings = new ArrayList<>();
 
-	public StringJoiner add(String string) {
+	public StringJoiner add(final String string) {
 		strings.add(string);
 		return this;
 	}
@@ -19,7 +19,7 @@ class StringJoiner {
 		return toString(null);
 	}
 
-	public String toString(String delimiter) {
+	public String toString(final String delimiter) {
 		return StringUtils.join(strings, delimiter);
 	}
 

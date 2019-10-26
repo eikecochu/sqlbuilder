@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.ec.sql.Join.JoinMode;
+import de.ec.sql.before.BeforeGroupBy;
+import de.ec.sql.before.BeforeJoin;
+import de.ec.sql.before.BeforeOrderBy;
+import de.ec.sql.before.BeforeWhere;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter(AccessLevel.PROTECTED)
-public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Groupable, Orderable {
+public class From implements QueryBuilder, QueryPart, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy {
 
 	@Data
 	@Accessors(fluent = true)
@@ -26,23 +31,27 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 		}
 
 		@Override
-		public String string(QueryOptions options) {
+		public String string(final QueryOptions options) {
 			if (table != null)
 				return QueryUtils.splitName(options, table)
-					.string(options) + (alias != null ? " " + alias : "");
+						.string(options) + (alias != null ? " " + alias : "");
 			return "(" + subquery.string(options) + ")" + (alias != null ? " " + alias : "");
 		}
 
 	}
 
-	private final Select select;
-	private List<FromOrigin> origins = new ArrayList<>();
+	@Setter(AccessLevel.PACKAGE)
+	private Select select;
+	private final List<FromOrigin> origins = new ArrayList<>();
 
-	protected From(Select select) {
+	public From() {
+	}
+
+	protected From(final Select select) {
 		this.select = select;
 	}
 
-	protected From(Select select, String... tables) {
+	protected From(final Select select, final String... tables) {
 		this(select);
 		tables(tables);
 	}
@@ -50,37 +59,37 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	public From table(String table) {
 		String alias = null;
 		if (table.toUpperCase()
-			.contains(" AS "))
+				.contains(" AS "))
 			table = table.replaceAll("\\s+[Aa][Ss]\\s+", " ");
-		String[] parts = table.split("\\s+");
+		final String[] parts = table.split("\\s+");
 		if (parts.length > 1) {
 			table = parts[0];
 			alias = parts[1];
 		}
 		origins.add(new FromOrigin().table(table)
-			.alias(alias));
+				.alias(alias));
 		return this;
 	}
 
-	public From table(Table table) {
+	public From table(final Table table) {
 		return table(table.tableName());
 	}
 
-	public From tables(String... tables) {
-		for (String table : tables)
+	public From tables(final String... tables) {
+		for (final String table : tables)
 			table(table);
 		return this;
 	}
 
-	public From tables(Table...tables) {
-		for (Table table : tables)
+	public From tables(final Table... tables) {
+		for (final Table table : tables)
 			table(table);
 		return this;
 	}
 
-	public From subquery(Query query, String alias) {
+	public From subquery(final Query query, final String alias) {
 		origins.add(new FromOrigin().subquery(query)
-			.alias(alias));
+				.alias(alias));
 		return this;
 	}
 
@@ -90,8 +99,14 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	}
 
 	@Override
-	public Join join(String table) {
+	public Join join(final String table) {
 		return join().table(table);
+	}
+
+	@Override
+	public Join join(final Join join) {
+		join.setFrom(this);
+		return join;
 	}
 
 	@Override
@@ -100,7 +115,7 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	}
 
 	@Override
-	public Join innerJoin(String table) {
+	public Join innerJoin(final String table) {
 		return innerJoin().table(table);
 	}
 
@@ -110,7 +125,7 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	}
 
 	@Override
-	public Join crossJoin(String table) {
+	public Join crossJoin(final String table) {
 		return crossJoin().table(table);
 	}
 
@@ -120,7 +135,7 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	}
 
 	@Override
-	public Join outerJoin(String table) {
+	public Join outerJoin(final String table) {
 		return outerJoin().table(table);
 	}
 
@@ -130,7 +145,7 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	}
 
 	@Override
-	public Join fullOuterJoin(String table) {
+	public Join fullOuterJoin(final String table) {
 		return fullOuterJoin().table(table);
 	}
 
@@ -140,7 +155,7 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	}
 
 	@Override
-	public Join leftJoin(String table) {
+	public Join leftJoin(final String table) {
 		return leftJoin().table(table);
 	}
 
@@ -150,7 +165,7 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	}
 
 	@Override
-	public Join leftOuterJoin(String table) {
+	public Join leftOuterJoin(final String table) {
 		return leftOuterJoin().table(table);
 	}
 
@@ -160,7 +175,7 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	}
 
 	@Override
-	public Join rightJoin(String table) {
+	public Join rightJoin(final String table) {
 		return rightJoin().table(table);
 	}
 
@@ -170,7 +185,7 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	}
 
 	@Override
-	public Join rightOuterJoin(String table) {
+	public Join rightOuterJoin(final String table) {
 		return rightOuterJoin().table(table);
 	}
 
@@ -178,10 +193,16 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	public Where where() {
 		return new Where(join());
 	}
-	
+
 	@Override
-	public Where where(ValueHolder values) {
+	public Where where(final ValueHolder values) {
 		return where().values(values);
+	}
+
+	@Override
+	public Where where(final Where where) {
+		where.setBuilder(this);
+		return where;
 	}
 
 	@Override
@@ -190,8 +211,14 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	}
 
 	@Override
-	public GroupBy groupBy(String... columns) {
+	public GroupBy groupBy(final String... columns) {
 		return new GroupBy(where(), columns);
+	}
+
+	@Override
+	public GroupBy groupBy(final GroupBy groupBy) {
+		groupBy.setWhere(where());
+		return groupBy;
 	}
 
 	@Override
@@ -200,8 +227,14 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	}
 
 	@Override
-	public OrderBy orderBy(String... columns) {
+	public OrderBy orderBy(final String... columns) {
 		return new OrderBy(groupBy(), columns);
+	}
+
+	@Override
+	public OrderBy orderBy(final OrderBy orderBy) {
+		orderBy.setHaving(new Having(groupBy()));
+		return orderBy;
 	}
 
 	@Override
@@ -215,18 +248,19 @@ public class From implements QueryBuilder, QueryPart, Joinable, Whereable, Group
 	}
 
 	@Override
-	public String string(QueryOptions options) {
+	public String string(final QueryOptions options) {
 		assert !origins.isEmpty() : "from statement must have at least one target";
 
-		StringJoiner strings = new StringJoiner();
+		final StringJoiner strings = new StringJoiner();
 
-		strings.add(select.string(options));
+		if (select != null)
+			strings.add(select.string(options));
 		strings.add(options.newLine());
 		strings.add(options.pad("FROM"));
 		strings.add(" ");
 
-		StringJoiner fromStrings = new StringJoiner();
-		for (FromOrigin origin : origins)
+		final StringJoiner fromStrings = new StringJoiner();
+		for (final FromOrigin origin : origins)
 			fromStrings.add(origin.string(options));
 
 		strings.add(fromStrings.toString(", "));

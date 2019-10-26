@@ -1,23 +1,26 @@
 package de.ec.sql;
 
+import de.ec.sql.before.BeforeWhere;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
-public class Delete implements QueryBuilder, QueryPart, Whereable {
+public class Delete implements QueryBuilder, QueryPart, BeforeWhere {
 
+	@Setter(AccessLevel.PACKAGE)
 	private With with;
-	private String table;
+	private final String table;
 
-	public Delete(String table) {
+	public Delete(final String table) {
 		this.table = table;
 	}
 
-	public Delete(Table table) {
+	public Delete(final Table table) {
 		this(table.tableName());
 	}
 
-	protected Delete(With with, String table) {
+	protected Delete(final With with, final String table) {
 		this(table);
 		this.with = with;
 	}
@@ -31,10 +34,16 @@ public class Delete implements QueryBuilder, QueryPart, Whereable {
 	public Where where() {
 		return new Where(this);
 	}
-	
+
 	@Override
-	public Where where(ValueHolder values) {
+	public Where where(final ValueHolder values) {
 		return where().values(values);
+	}
+
+	@Override
+	public Where where(final Where where) {
+		where.setBuilder(this);
+		return where;
 	}
 
 	@Override
@@ -43,8 +52,8 @@ public class Delete implements QueryBuilder, QueryPart, Whereable {
 	}
 
 	@Override
-	public String string(QueryOptions options) {
-		StringJoiner strings = new StringJoiner();
+	public String string(final QueryOptions options) {
+		final StringJoiner strings = new StringJoiner();
 
 		if (with != null) {
 			strings.add(with.string(options));

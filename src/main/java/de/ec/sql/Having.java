@@ -1,20 +1,38 @@
 package de.ec.sql;
 
+import de.ec.sql.before.BeforeOrderBy;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
-public class Having extends Conditionable<Having> implements QueryBuilder, QueryPart {
+public class Having extends Conditionable<Having> implements QueryBuilder, QueryPart, BeforeOrderBy {
 
-	private final GroupBy groupBy;
+	@Setter(AccessLevel.PACKAGE)
+	private GroupBy groupBy;
 	private Conditionable<Having> condition;
 
-	protected Having(GroupBy groupBy) {
+	public Having() {
+	}
+
+	protected Having(final GroupBy groupBy) {
 		this.groupBy = groupBy;
 	}
 
+	@Override
 	public OrderBy orderBy() {
 		return new OrderBy(this);
+	}
+
+	@Override
+	public OrderBy orderBy(final String... columns) {
+		return new OrderBy(this).columns(columns);
+	}
+
+	@Override
+	public OrderBy orderBy(final OrderBy orderBy) {
+		orderBy.setHaving(this);
+		return orderBy;
 	}
 
 	@Override
@@ -28,10 +46,11 @@ public class Having extends Conditionable<Having> implements QueryBuilder, Query
 	}
 
 	@Override
-	public String string(QueryOptions options) {
-		StringJoiner strings = new StringJoiner();
+	public String string(final QueryOptions options) {
+		final StringJoiner strings = new StringJoiner();
 
-		strings.add(groupBy.string(options));
+		if (groupBy != null)
+			strings.add(groupBy.string(options));
 
 		if (condition != null) {
 			strings.add(options.newLine());

@@ -5,35 +5,40 @@ import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
 public class OrderBy implements QueryBuilder, QueryPart {
 
-	private final Having having;
+	@Setter(AccessLevel.PACKAGE)
+	private Having having;
 	private final List<OrderByTerm> orderByTerms = new ArrayList<>();
 
-	protected OrderBy(GroupBy groupBy) {
+	public OrderBy() {
+	}
+
+	protected OrderBy(final GroupBy groupBy) {
 		having = new Having(groupBy);
 	}
 
-	protected OrderBy(GroupBy groupBy, String... names) {
+	protected OrderBy(final GroupBy groupBy, final String... names) {
 		this(groupBy);
 		columns(names);
 	}
 
-	protected OrderBy(Having having) {
+	protected OrderBy(final Having having) {
 		this.having = having;
 	}
 
-	public OrderBy column(String name, boolean ascending) {
+	public OrderBy column(final String name, final boolean ascending) {
 		orderByTerms.add(new OrderByTerm(name, ascending));
 		return this;
 	}
 
 	public OrderBy column(String name) {
 		if (name != null) {
-			String nameUpper = name.toUpperCase()
-				.trim();
+			final String nameUpper = name.toUpperCase()
+					.trim();
 			boolean ascending = true;
 			if (nameUpper.endsWith(" DESC")) {
 				ascending = false;
@@ -43,7 +48,7 @@ public class OrderBy implements QueryBuilder, QueryPart {
 			}
 			String schema = null;
 			if (name.contains(".")) {
-				String[] parts = name.split("\\.");
+				final String[] parts = name.split("\\.");
 				schema = parts[0];
 				name = parts[1];
 			}
@@ -52,18 +57,18 @@ public class OrderBy implements QueryBuilder, QueryPart {
 		return this;
 	}
 
-	public OrderBy columns(String... names) {
+	public OrderBy columns(final String... names) {
 		if (names != null)
-			for (String name : names)
+			for (final String name : names)
 				column(name);
 		return this;
 	}
 
-	public OrderBy asc(String name) {
+	public OrderBy asc(final String name) {
 		return column(name, true);
 	}
 
-	public OrderBy desc(String name) {
+	public OrderBy desc(final String name) {
 		return column(name, false);
 	}
 
@@ -78,13 +83,14 @@ public class OrderBy implements QueryBuilder, QueryPart {
 	}
 
 	@Override
-	public String string(QueryOptions options) {
-		StringJoiner strings = new StringJoiner();
+	public String string(final QueryOptions options) {
+		final StringJoiner strings = new StringJoiner();
 
-		strings.add(having.string(options));
+		if (having != null)
+			strings.add(having.string(options));
 
-		StringJoiner orderStrings = new StringJoiner();
-		for (OrderByTerm orderByTerm : orderByTerms)
+		final StringJoiner orderStrings = new StringJoiner();
+		for (final OrderByTerm orderByTerm : orderByTerms)
 			orderStrings.add(orderByTerm.string(options));
 
 		if (!orderStrings.isEmpty()) {

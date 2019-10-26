@@ -8,30 +8,29 @@ import lombok.Getter;
 public class ConditionValue<T extends Conditionable<T>> {
 
 	private final ConditionPart<T> part;
-
 	private final Operator operator;
 	private Object value;
 	private boolean column = false;
 	private boolean expression = false;
 
-	protected ConditionValue(ConditionPart<T> part, Operator operator) {
+	protected ConditionValue(final ConditionPart<T> part, final Operator operator) {
 		this.part = part;
 		this.operator = operator;
 	}
 
-	public T value(Object value) {
+	public T value(final Object value) {
 		return op(value, false, false);
 	}
 
-	public T col(String column) {
+	public T col(final String column) {
 		return op(column, true, false);
 	}
 
-	public T expr(String expr) {
+	public T expr(final String expr) {
 		return op(expr, false, true);
 	}
 
-	private T op(Object value, boolean column, boolean expr) {
+	private T op(final Object value, final boolean column, final boolean expr) {
 		this.value = value;
 		this.column = column;
 		this.expression = expr;

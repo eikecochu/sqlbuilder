@@ -1,22 +1,29 @@
 package de.ec.sql;
 
+import de.ec.sql.before.BeforeGroupBy;
+import de.ec.sql.before.BeforeOrderBy;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
-public class Where extends Conditionable<Where> implements QueryBuilder, QueryPart, Groupable, Orderable {
+public class Where extends Conditionable<Where> implements QueryBuilder, QueryPart, BeforeGroupBy, BeforeOrderBy {
 
-	private final QueryPart builder;
+	@Setter(AccessLevel.PACKAGE)
+	private QueryPart builder;
 
-	protected Where(Join join) {
+	public Where() {
+	}
+
+	protected Where(final Join join) {
 		builder = join;
 	}
 
-	protected Where(Delete delete) {
+	protected Where(final Delete delete) {
 		builder = delete;
 	}
 
-	protected Where(Update update) {
+	protected Where(final Update update) {
 		builder = update;
 	}
 
@@ -26,8 +33,14 @@ public class Where extends Conditionable<Where> implements QueryBuilder, QueryPa
 	}
 
 	@Override
-	public GroupBy groupBy(String... columns) {
+	public GroupBy groupBy(final String... columns) {
 		return new GroupBy(this, columns);
+	}
+
+	@Override
+	public GroupBy groupBy(final GroupBy groupBy) {
+		groupBy.setWhere(this);
+		return groupBy;
 	}
 
 	@Override
@@ -36,8 +49,14 @@ public class Where extends Conditionable<Where> implements QueryBuilder, QueryPa
 	}
 
 	@Override
-	public OrderBy orderBy(String... columns) {
+	public OrderBy orderBy(final String... columns) {
 		return new OrderBy(groupBy(), columns);
+	}
+
+	@Override
+	public OrderBy orderBy(final OrderBy orderBy) {
+		orderBy.setHaving(new Having(groupBy()));
+		return orderBy;
 	}
 
 	@Override
@@ -51,12 +70,13 @@ public class Where extends Conditionable<Where> implements QueryBuilder, QueryPa
 	}
 
 	@Override
-	public String string(QueryOptions options) {
-		StringJoiner strings = new StringJoiner();
+	public String string(final QueryOptions options) {
+		final StringJoiner strings = new StringJoiner();
 
-		strings.add(builder.string(options));
+		if (builder != null)
+			strings.add(builder.string(options));
 
-		String condition = super.string(options);
+		final String condition = super.string(options);
 
 		if (condition != null && !condition.isEmpty()) {
 			strings.add(options.newLine());

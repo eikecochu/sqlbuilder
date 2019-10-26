@@ -3,16 +3,23 @@ package de.ec.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Update implements QueryBuilder, QueryPart, Whereable {
+import de.ec.sql.before.BeforeWhere;
+import lombok.AccessLevel;
+import lombok.Setter;
 
-	private static enum UpdateType implements QueryPart {
-		UPDATE("UPDATE"), UPDATE_OR_ROLLBACK("UPDATE OR ROLLBACK"), UPDATE_OR_ABORT(
-				"UPDATE OR ABORT"), UPDATE_OR_REPLACE(
-						"UPDATE OR REPLACE"), UPDATE_OR_FAIL("UPDATE OR FAIL"), UPDATE_OR_IGNORE("UPDATE OR IGNORE");
+public class Update implements QueryBuilder, QueryPart, BeforeWhere {
+
+	private enum UpdateType implements QueryPart {
+		UPDATE("UPDATE"),
+		UPDATE_OR_ROLLBACK("UPDATE OR ROLLBACK"),
+		UPDATE_OR_ABORT("UPDATE OR ABORT"),
+		UPDATE_OR_REPLACE("UPDATE OR REPLACE"),
+		UPDATE_OR_FAIL("UPDATE OR FAIL"),
+		UPDATE_OR_IGNORE("UPDATE OR IGNORE");
 
 		private String string;
 
-		private UpdateType(String string) {
+		private UpdateType(final String string) {
 			this.string = string;
 		}
 
@@ -22,30 +29,31 @@ public class Update implements QueryBuilder, QueryPart, Whereable {
 		}
 
 		@Override
-		public String string(QueryOptions options) {
+		public String string(final QueryOptions options) {
 			return options.cased(string);
 		}
 	}
 
 	private UpdateType updateType = UpdateType.UPDATE;
+	@Setter(AccessLevel.PACKAGE)
 	private With with;
 	private final String table;
 	private final List<UpdateValue> updateValues = new ArrayList<>();
 
-	public Update(String table) {
+	public Update(final String table) {
 		this.table = table;
 	}
-	
-	public Update(Table table) {
+
+	public Update(final Table table) {
 		this(table.tableName());
 	}
 
-	protected Update(With with, String table) {
+	protected Update(final With with, final String table) {
 		this(table);
 		this.with = with;
 	}
 
-	private Update setType(UpdateType updateType) {
+	private Update setType(final UpdateType updateType) {
 		this.updateType = updateType;
 		return this;
 	}
@@ -70,8 +78,8 @@ public class Update implements QueryBuilder, QueryPart, Whereable {
 		return setType(UpdateType.UPDATE_OR_IGNORE);
 	}
 
-	public UpdateValue set(String column) {
-		UpdateValue updateValue = new UpdateValue(this, column);
+	public UpdateValue set(final String column) {
+		final UpdateValue updateValue = new UpdateValue(this, column);
 		updateValues.add(updateValue);
 		return updateValue;
 	}
@@ -80,10 +88,16 @@ public class Update implements QueryBuilder, QueryPart, Whereable {
 	public Where where() {
 		return new Where(this);
 	}
-	
+
 	@Override
-	public Where where(ValueHolder values) {
+	public Where where(final ValueHolder values) {
 		return where().values(values);
+	}
+
+	@Override
+	public Where where(final Where where) {
+		where.setBuilder(this);
+		return where;
 	}
 
 	@Override
@@ -97,8 +111,8 @@ public class Update implements QueryBuilder, QueryPart, Whereable {
 	}
 
 	@Override
-	public String string(QueryOptions options) {
-		StringJoiner strings = new StringJoiner();
+	public String string(final QueryOptions options) {
+		final StringJoiner strings = new StringJoiner();
 
 		if (with != null) {
 			strings.add(with.string(options));
@@ -114,13 +128,13 @@ public class Update implements QueryBuilder, QueryPart, Whereable {
 		strings.add(options.pad("SET"));
 		strings.add(" ");
 
-		StringJoiner sets = new StringJoiner();
-		for (UpdateValue updateValue : updateValues) {
+		final StringJoiner sets = new StringJoiner();
+		for (final UpdateValue updateValue : updateValues) {
 			String column = QueryUtils.splitName(options, updateValue.getColumn())
-				.string(options) + " = ";
+					.string(options) + " = ";
 			if (updateValue.isExpression())
 				column += updateValue.getValue()
-					.toString();
+						.toString();
 			else if (options.prepare()) {
 				column += "?";
 				options.addPreparedValue(updateValue.getValue());

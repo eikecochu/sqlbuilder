@@ -1,13 +1,18 @@
 package de.ec.sql;
 
+import de.ec.sql.before.BeforeGroupBy;
+import de.ec.sql.before.BeforeJoin;
+import de.ec.sql.before.BeforeOrderBy;
+import de.ec.sql.before.BeforeWhere;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
 public class Join extends Conditionable<Join>
-		implements QueryBuilder, QueryPart, Joinable, Whereable, Groupable, Orderable {
+		implements QueryBuilder, QueryPart, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy {
 
-	public static enum JoinMode implements QueryPart {
+	public enum JoinMode implements QueryPart {
 		INNER_JOIN("INNER JOIN"),
 		OUTER_JOIN("OUTER JOIN"),
 		LEFT_JOIN("LEFT JOIN"),
@@ -16,7 +21,7 @@ public class Join extends Conditionable<Join>
 
 		private final String string;
 
-		private JoinMode(String string) {
+		private JoinMode(final String string) {
 			this.string = string;
 		}
 
@@ -26,40 +31,42 @@ public class Join extends Conditionable<Join>
 		}
 
 		@Override
-		public String string(QueryOptions options) {
+		public String string(final QueryOptions options) {
 			return options.cased(string);
 		}
 	}
 
-	private final From from;
-	private final Join join;
+	@Setter(AccessLevel.PACKAGE)
+	private From from;
+	@Setter(AccessLevel.PACKAGE)
+	private Join join;
 	private final JoinMode joinMode;
 	private Query query;
 	private String name;
 
-	protected Join(From from) {
+	protected Join(final From from) {
 		this(from, JoinMode.INNER_JOIN);
 	}
 
-	protected Join(From from, JoinMode joinMode) {
+	protected Join(final From from, final JoinMode joinMode) {
 		this.from = from;
 		join = null;
 		this.joinMode = joinMode;
 	}
 
-	private Join(Join join, JoinMode joinMode) {
+	private Join(final Join join, final JoinMode joinMode) {
 		from = null;
 		this.join = join;
 		this.joinMode = joinMode;
 	}
 
-	public Join subquery(Query query, String name) {
+	public Join subquery(final Query query, final String name) {
 		this.query = query;
 		this.name = name;
 		return this;
 	}
 
-	public Join table(String name) {
+	public Join table(final String name) {
 		query = null;
 		this.name = name;
 		return this;
@@ -75,8 +82,14 @@ public class Join extends Conditionable<Join>
 	}
 
 	@Override
-	public Join join(String table) {
+	public Join join(final String table) {
 		return join().table(table);
+	}
+
+	@Override
+	public Join join(final Join join) {
+		join.setJoin(this);
+		return join;
 	}
 
 	@Override
@@ -85,7 +98,7 @@ public class Join extends Conditionable<Join>
 	}
 
 	@Override
-	public Join innerJoin(String table) {
+	public Join innerJoin(final String table) {
 		return innerJoin().table(table);
 	}
 
@@ -95,7 +108,7 @@ public class Join extends Conditionable<Join>
 	}
 
 	@Override
-	public Join crossJoin(String table) {
+	public Join crossJoin(final String table) {
 		return crossJoin().table(table);
 	}
 
@@ -105,7 +118,7 @@ public class Join extends Conditionable<Join>
 	}
 
 	@Override
-	public Join outerJoin(String table) {
+	public Join outerJoin(final String table) {
 		return outerJoin().table(table);
 	}
 
@@ -115,7 +128,7 @@ public class Join extends Conditionable<Join>
 	}
 
 	@Override
-	public Join fullOuterJoin(String table) {
+	public Join fullOuterJoin(final String table) {
 		return fullOuterJoin().table(table);
 	}
 
@@ -125,7 +138,7 @@ public class Join extends Conditionable<Join>
 	}
 
 	@Override
-	public Join leftJoin(String table) {
+	public Join leftJoin(final String table) {
 		return leftJoin().table(table);
 	}
 
@@ -135,7 +148,7 @@ public class Join extends Conditionable<Join>
 	}
 
 	@Override
-	public Join leftOuterJoin(String table) {
+	public Join leftOuterJoin(final String table) {
 		return leftOuterJoin().table(table);
 	}
 
@@ -145,7 +158,7 @@ public class Join extends Conditionable<Join>
 	}
 
 	@Override
-	public Join rightJoin(String table) {
+	public Join rightJoin(final String table) {
 		return rightJoin().table(table);
 	}
 
@@ -155,7 +168,7 @@ public class Join extends Conditionable<Join>
 	}
 
 	@Override
-	public Join rightOuterJoin(String table) {
+	public Join rightOuterJoin(final String table) {
 		return rightOuterJoin().table(table);
 	}
 
@@ -163,10 +176,16 @@ public class Join extends Conditionable<Join>
 	public Where where() {
 		return new Where(this);
 	}
-	
+
 	@Override
-	public Where where(ValueHolder values) {
+	public Where where(final ValueHolder values) {
 		return where().values(values);
+	}
+
+	@Override
+	public Where where(final Where where) {
+		where.setBuilder(this);
+		return where;
 	}
 
 	@Override
@@ -175,8 +194,14 @@ public class Join extends Conditionable<Join>
 	}
 
 	@Override
-	public GroupBy groupBy(String... columns) {
+	public GroupBy groupBy(final String... columns) {
 		return new GroupBy(where(), columns);
+	}
+
+	@Override
+	public GroupBy groupBy(final GroupBy groupBy) {
+		groupBy.setWhere(where());
+		return groupBy;
 	}
 
 	@Override
@@ -185,8 +210,14 @@ public class Join extends Conditionable<Join>
 	}
 
 	@Override
-	public OrderBy orderBy(String... columns) {
+	public OrderBy orderBy(final String... columns) {
 		return new OrderBy(groupBy(), columns);
+	}
+
+	@Override
+	public OrderBy orderBy(final OrderBy orderBy) {
+		orderBy.setHaving(new Having(groupBy()));
+		return orderBy;
 	}
 
 	@Override
@@ -200,8 +231,8 @@ public class Join extends Conditionable<Join>
 	}
 
 	@Override
-	public String string(QueryOptions options) {
-		StringJoiner strings = new StringJoiner();
+	public String string(final QueryOptions options) {
+		final StringJoiner strings = new StringJoiner();
 
 		if (join != null)
 			strings.add(join.string(options));
@@ -220,9 +251,9 @@ public class Join extends Conditionable<Join>
 
 			strings.add(" ");
 			strings.add(QueryUtils.splitName(options, name)
-				.string(options));
+					.string(options));
 
-			String condition = super.string(options);
+			final String condition = super.string(options);
 
 			if (condition != null) {
 				strings.add(" ");

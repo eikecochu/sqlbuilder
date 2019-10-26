@@ -9,13 +9,13 @@ class OrderByTerm implements QueryPart {
 	private final Name name;
 	private final boolean ascending;
 
-	protected OrderByTerm(String name, boolean ascending) {
+	protected OrderByTerm(final String name, final boolean ascending) {
 		this(null, name, ascending);
 	}
 
-	protected OrderByTerm(String schema, String name, boolean ascending) {
+	protected OrderByTerm(final String schema, final String name, final boolean ascending) {
 		this.name = new Name().schema(schema)
-			.name(name);
+				.name(name);
 		this.ascending = ascending;
 	}
 
@@ -25,7 +25,7 @@ class OrderByTerm implements QueryPart {
 	}
 
 	@Override
-	public String string(QueryOptions options) {
+	public String string(final QueryOptions options) {
 		return name.string(options) + " " + options.cased(ascending ? "ASC" : "DESC");
 	}
 
