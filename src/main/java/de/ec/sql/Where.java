@@ -1,19 +1,18 @@
 package de.ec.sql;
 
-import de.ec.sql.before.BeforeGroupBy;
-import de.ec.sql.before.BeforeOrderBy;
+import de.ec.sql.Keyword.SecondaryKeyword;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Getter(AccessLevel.PROTECTED)
-public class Where extends Conditionable<Where> implements QueryBuilder, QueryPart, BeforeGroupBy, BeforeOrderBy {
+public class Where extends Conditionable<Where>
+		implements QueryBuilder, BeforeGroupBy, BeforeOrderBy, SecondaryKeyword {
 
 	@Setter(AccessLevel.PACKAGE)
 	private QueryPart builder;
-
-	public Where() {
-	}
 
 	protected Where(final Join join) {
 		builder = join;

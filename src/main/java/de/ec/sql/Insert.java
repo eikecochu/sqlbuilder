@@ -3,13 +3,13 @@ package de.ec.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.ec.sql.before.BeforeSelect;
+import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
-public class Insert implements QueryBuilder, QueryPart, BeforeSelect {
+public class Insert implements QueryBuilder, BeforeSelect, PrimaryKeyword {
 
 	private enum InsertType implements QueryPart {
 		INSERT("INSERT INTO"),

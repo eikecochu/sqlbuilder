@@ -3,21 +3,19 @@ package de.ec.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.ec.sql.before.BeforeHaving;
-import de.ec.sql.before.BeforeOrderBy;
+import de.ec.sql.Keyword.SecondaryKeyword;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Getter(AccessLevel.PROTECTED)
-public class GroupBy implements QueryBuilder, QueryPart, BeforeOrderBy, BeforeHaving {
+public class GroupBy implements QueryBuilder, BeforeOrderBy, BeforeHaving, SecondaryKeyword {
 
 	@Setter(AccessLevel.PACKAGE)
 	private Where where;
 	private final List<String> columns = new ArrayList<>();
-
-	public GroupBy() {
-	}
 
 	protected GroupBy(final Where where) {
 		this.where = where;

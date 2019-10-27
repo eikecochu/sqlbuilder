@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(fluent = true)
-class Name implements QueryPart {
+public class Name implements QueryPart {
 
 	public static final Set<String> KEYWORDS = new HashSet<>(Arrays.asList("A", "ABORT", "ABS", "ABSOLUTE", "ACCESS",
 			"ACTION", "ADA", "ADD", "ADMIN", "AFTER", "AGGREGATE", "ALIAS", "ALL", "ALLOCATE", "ALSO", "ALTER",

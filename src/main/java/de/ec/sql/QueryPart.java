@@ -1,6 +1,6 @@
 package de.ec.sql;
 
-interface QueryPart {
+public interface QueryPart {
 
 	String string();
 

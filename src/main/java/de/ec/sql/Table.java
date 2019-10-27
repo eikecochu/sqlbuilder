@@ -1,7 +1,12 @@
 package de.ec.sql;
 
-public interface Table {
+import java.util.function.Supplier;
 
-	String tableName();
+@FunctionalInterface
+public interface Table extends Supplier<String> {
+
+	default String tableName() {
+		return get();
+	}
 
 }

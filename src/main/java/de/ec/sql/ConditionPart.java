@@ -171,9 +171,9 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 			if (operator != Operator.IS_NULL && operator != Operator.IS_NOT_NULL) {
 				strings.add(" ");
 				if (expression)
-					strings.add(value.toString());
+					strings.add(QueryUtils.valueToString(options, value));
 				else if (column)
-					strings.add(QueryUtils.splitName(options, value.toString())
+					strings.add(QueryUtils.splitName(options, QueryUtils.valueToString(options, value))
 							.string(options));
 				else if (value != null) {
 					if (options.prepare()) {

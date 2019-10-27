@@ -1,19 +1,18 @@
 package de.ec.sql;
 
-import de.ec.sql.before.BeforeOrderBy;
+import de.ec.sql.Keyword.SecondaryKeyword;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Getter(AccessLevel.PROTECTED)
-public class Having extends Conditionable<Having> implements QueryBuilder, QueryPart, BeforeOrderBy {
+public class Having extends Conditionable<Having> implements QueryBuilder, BeforeOrderBy, SecondaryKeyword {
 
 	@Setter(AccessLevel.PACKAGE)
 	private GroupBy groupBy;
 	private Conditionable<Having> condition;
-
-	public Having() {
-	}
 
 	protected Having(final GroupBy groupBy) {
 		this.groupBy = groupBy;

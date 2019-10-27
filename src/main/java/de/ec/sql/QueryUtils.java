@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-abstract class QueryUtils {
+public abstract class QueryUtils {
 
 	private static final Pattern namePattern = Pattern.compile(
 			"^\\s*((?<fn>\\w+)\\()?(`?(?<a1>\\w+)`?\\.)?(`?(?<a2>\\w+)`?\\.)?(`?(?<name>\\w+|\\*)`?)\\)?(\\s+[Aa][Ss])?(\\s+`?(?<alias>\\w+))?`?\\s*$");
@@ -36,7 +36,10 @@ abstract class QueryUtils {
 			throw new RuntimeException("unrecognizable name: " + strName);
 	}
 
-	public static String valueToString(final QueryOptions options, final Object value) {
+	public static String valueToString(final QueryOptions options, Object value) {
+		if (options.valueConverter() != null)
+			value = options.valueConverter()
+					.apply(value);
 		if (value == null)
 			return "";
 		if (value instanceof String)

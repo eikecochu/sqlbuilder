@@ -1,16 +1,13 @@
 package de.ec.sql;
 
-import de.ec.sql.before.BeforeGroupBy;
-import de.ec.sql.before.BeforeJoin;
-import de.ec.sql.before.BeforeOrderBy;
-import de.ec.sql.before.BeforeWhere;
+import de.ec.sql.Keyword.SecondaryKeyword;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
 public class Join extends Conditionable<Join>
-		implements QueryBuilder, QueryPart, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy {
+		implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, SecondaryKeyword {
 
 	public enum JoinMode implements QueryPart {
 		INNER_JOIN("INNER JOIN"),

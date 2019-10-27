@@ -1,12 +1,12 @@
 package de.ec.sql;
 
-import de.ec.sql.before.BeforeWhere;
+import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
-public class Delete implements QueryBuilder, QueryPart, BeforeWhere {
+public class Delete implements QueryBuilder, BeforeWhere, PrimaryKeyword {
 
 	@Setter(AccessLevel.PACKAGE)
 	private With with;

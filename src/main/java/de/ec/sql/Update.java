@@ -3,11 +3,11 @@ package de.ec.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.ec.sql.before.BeforeWhere;
+import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
 import lombok.Setter;
 
-public class Update implements QueryBuilder, QueryPart, BeforeWhere {
+public class Update implements QueryBuilder, BeforeWhere, PrimaryKeyword {
 
 	private enum UpdateType implements QueryPart {
 		UPDATE("UPDATE"),
@@ -82,6 +82,10 @@ public class Update implements QueryBuilder, QueryPart, BeforeWhere {
 		final UpdateValue updateValue = new UpdateValue(this, column);
 		updateValues.add(updateValue);
 		return updateValue;
+	}
+
+	public Update set(final String column, final Object value) {
+		return set(column).value(value);
 	}
 
 	@Override

@@ -4,18 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.ec.sql.Join.JoinMode;
-import de.ec.sql.before.BeforeGroupBy;
-import de.ec.sql.before.BeforeJoin;
-import de.ec.sql.before.BeforeOrderBy;
-import de.ec.sql.before.BeforeWhere;
+import de.ec.sql.Keyword.SecondaryKeyword;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+@NoArgsConstructor
 @Getter(AccessLevel.PROTECTED)
-public class From implements QueryBuilder, QueryPart, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy {
+public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, SecondaryKeyword {
 
 	@Data
 	@Accessors(fluent = true)
@@ -43,9 +42,6 @@ public class From implements QueryBuilder, QueryPart, BeforeJoin, BeforeWhere, B
 	@Setter(AccessLevel.PACKAGE)
 	private Select select;
 	private final List<FromOrigin> origins = new ArrayList<>();
-
-	public From() {
-	}
 
 	protected From(final Select select) {
 		this.select = select;

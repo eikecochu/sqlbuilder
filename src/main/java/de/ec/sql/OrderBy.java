@@ -3,19 +3,19 @@ package de.ec.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.ec.sql.Keyword.SecondaryKeyword;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Getter(AccessLevel.PROTECTED)
-public class OrderBy implements QueryBuilder, QueryPart {
+public class OrderBy implements QueryBuilder, SecondaryKeyword {
 
 	@Setter(AccessLevel.PACKAGE)
 	private Having having;
 	private final List<OrderByTerm> orderByTerms = new ArrayList<>();
-
-	public OrderBy() {
-	}
 
 	protected OrderBy(final GroupBy groupBy) {
 		having = new Having(groupBy);

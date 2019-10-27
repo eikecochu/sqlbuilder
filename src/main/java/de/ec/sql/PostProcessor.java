@@ -1,7 +1,7 @@
 package de.ec.sql;
 
-public interface PostProcessor {
+public interface PostProcessor<T> {
 
-	String process(String sql);
+	T process(T sql);
 
 }

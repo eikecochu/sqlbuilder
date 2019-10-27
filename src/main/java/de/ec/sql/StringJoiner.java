@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-class StringJoiner {
+public class StringJoiner {
 
 	private final List<String> strings = new ArrayList<>();
 

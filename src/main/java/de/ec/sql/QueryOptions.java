@@ -1,7 +1,9 @@
 package de.ec.sql;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,71 +17,83 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class QueryOptions {
 
-	private static final int PAD_LENGTH = "SELECT".length();
+	static QueryOptions DEFAULT_OPTIONS = new QueryOptions();
 
-	public static final QueryOptions DEFAULT_OPTIONS = new QueryOptions();
-
+	private int padLength = "SELECT".length();
 	private boolean splitNames = true;
 	private boolean pretty = true;
 	private boolean indent = true;
-	private int indentLevel = 0;
 	private boolean uppercase = true;
 	private boolean backticks = true;
 	private char backtickChar = '`';
 	private String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+	private PostProcessor<String> sqlPostprocessor = null;
+	private PostProcessor<PreparedStatement> stmtPostprocessor = null;
+	private Function<Object, Object> valueConverter = null;
 
-	@Getter(AccessLevel.PROTECTED)
-	@Setter(AccessLevel.PROTECTED)
+	@Getter(AccessLevel.PACKAGE)
+	@Setter(AccessLevel.PACKAGE)
+	private int indentLevel = 0;
+
+	@Getter(AccessLevel.PACKAGE)
+	@Setter(AccessLevel.PACKAGE)
 	private boolean prepare;
 
-	@Getter(AccessLevel.PROTECTED)
+	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.NONE)
 	private final List<Object> preparedValues = new ArrayList<>();
 
-	protected void addPreparedValue(final Object value) {
+	private Query query;
+
+	void addPreparedValue(final Object value) {
 		preparedValues.add(value);
 	}
 
-	public String indentString() {
+	String indentString() {
 		if (pretty && indent) {
-			return StringUtils.repeat(' ', indentLevel * PAD_LENGTH + (indentLevel == 0 ? 0 : 1));
+			return StringUtils.repeat(' ', indentLevel * padLength + (indentLevel == 0 ? 0 : 1));
 		} else
 			return "";
 	}
 
-	public String newLine() {
+	String newLine() {
 		return pretty ? "\n" + indentString() : " ";
 	}
 
-	public String pad(final String keyword) {
+	String pad(final String keyword) {
 		if (pretty && keyword != null) {
-			final int length = Math.max(0, PAD_LENGTH - keyword.split("\\s+")[0].length());
+			final int length = Math.max(0, padLength - keyword.split("\\s+")[0].length());
 			return StringUtils.leftPad("", length) + cased(keyword);
 		}
 		return cased(keyword);
 	}
 
-	public String ticked(final String string) {
+	String ticked(final String string) {
 		if (string == null)
 			return null;
 		return backticks || Name.isKeyword(string) ? backtickChar + string + backtickChar : string;
 	}
 
-	public String cased(final String string) {
+	String cased(final String string) {
 		if (string == null)
 			return null;
 		return uppercase ? string.toUpperCase() : string.toLowerCase();
 	}
 
-	public QueryOptions copy() {
-		return new QueryOptions().pretty(pretty)
+	QueryOptions copy() {
+		return new QueryOptions().padLength(padLength)
+				.splitNames(splitNames)
+				.pretty(pretty)
 				.indent(indent)
-				.indentLevel(indentLevel)
 				.uppercase(uppercase)
-				.dateFormat(dateFormat);
+				.backticks(backticks)
+				.backtickChar(backtickChar)
+				.dateFormat(dateFormat)
+				.sqlPostprocessor(sqlPostprocessor)
+				.stmtPostprocessor(stmtPostprocessor);
 	}
 
-	public String preparedValuesString() {
+	String preparedValuesString() {
 		final StringBuilder sb = new StringBuilder();
 		int index = 1;
 		String prefix = "";
@@ -91,6 +105,10 @@ public class QueryOptions {
 			prefix = ", ";
 		}
 		return sb.toString();
+	}
+
+	public static <T extends QueryOptions> void setDefaultOptions(final T options) {
+		DEFAULT_OPTIONS = options.copy();
 	}
 
 }

@@ -3,13 +3,13 @@ package de.ec.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.ec.sql.before.BeforeFrom;
+import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
-public class Select implements QueryPart, BeforeFrom {
+public class Select implements QueryPart, BeforeFrom, PrimaryKeyword {
 
 	private final List<String> columns = new ArrayList<>();
 	private boolean distinct = false;

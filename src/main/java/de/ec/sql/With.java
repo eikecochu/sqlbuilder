@@ -5,17 +5,14 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.ec.sql.before.BeforeDelete;
-import de.ec.sql.before.BeforeInsert;
-import de.ec.sql.before.BeforeSelect;
-import de.ec.sql.before.BeforeUpdate;
-import de.ec.sql.before.BeforeWith;
+import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter(AccessLevel.PROTECTED)
-public class With implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, BeforeDelete, BeforeInsert {
+public class With
+		implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, BeforeDelete, BeforeInsert, PrimaryKeyword {
 
 	@Setter(AccessLevel.PACKAGE)
 	private With with;

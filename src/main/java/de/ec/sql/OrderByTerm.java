@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 
 @Getter(AccessLevel.PROTECTED)
-class OrderByTerm implements QueryPart {
+public class OrderByTerm implements QueryPart {
 
 	private final Name name;
 	private final boolean ascending;
