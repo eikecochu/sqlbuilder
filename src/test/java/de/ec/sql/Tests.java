@@ -62,4 +62,34 @@ public class Tests {
 		Assertions.assertEquals("DELETE FROM TEST WHERE COL1 = 1 AND NOT COL2 = true", string);
 	}
 
+	@Test
+	public void testNull() {
+		final String string = new Select("COL1").from("TEST")
+				.where()
+				.col("COL1")
+				.eq(null)
+				.and()
+				.col("COL2", 1)
+				.query()
+				.string(testOptions());
+
+		Assertions.assertEquals("SELECT COL1 FROM TEST WHERE COL2 = 1", string);
+	}
+
+	@Test
+	public void testMiddleNull() {
+		final String string = new Select("COL1").from("TEST")
+				.where()
+				.col("COL1", 1)
+				.and()
+				.col("COL2")
+				.eq(null)
+				.or()
+				.col("COL3", 2)
+				.query()
+				.string(testOptions());
+
+		Assertions.assertEquals("SELECT COL1 FROM TEST WHERE COL1 = 1 OR COL3 = 2", string);
+	}
+
 }

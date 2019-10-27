@@ -2,6 +2,7 @@ package de.ec.sql;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
@@ -86,6 +87,12 @@ public class Update implements QueryBuilder, BeforeWhere, PrimaryKeyword {
 
 	public Update set(final String column, final Object value) {
 		return set(column).value(value);
+	}
+
+	public Update set(final ValueHolder values) {
+		for (final Entry<String, Object> entry : values)
+			set(entry.getKey(), entry.getValue());
+		return this;
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package de.ec.sql;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
@@ -117,9 +118,21 @@ public class Insert implements QueryBuilder, BeforeSelect, PrimaryKeyword {
 		return column(column).value(value);
 	}
 
+	public Insert columns(final ValueHolder values) {
+		for (final Entry<String, Object> entry : values)
+			column(entry.getKey(), entry.getValue());
+		return this;
+	}
+
 	public Insert value(final Object value) {
 		onlyValues = onlyValues && true;
 		return column(null).value(value);
+	}
+
+	public Insert values(final ValueHolder values) {
+		for (final Entry<String, Object> entry : values)
+			value(entry.getValue());
+		return this;
 	}
 
 	public Insert defaults() {

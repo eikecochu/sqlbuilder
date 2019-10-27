@@ -30,6 +30,7 @@ public class QueryOptions {
 	private PostProcessor<String> sqlPostprocessor = null;
 	private PostProcessor<PreparedStatement> stmtPostprocessor = null;
 	private Function<Object, Object> valueConverter = null;
+	private boolean returnGeneratedKeys = false;
 
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
