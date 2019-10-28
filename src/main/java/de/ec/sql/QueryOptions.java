@@ -17,6 +17,8 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class QueryOptions {
 
+	public static int FETCH_ALL = 0;
+
 	static QueryOptions DEFAULT_OPTIONS = new QueryOptions();
 
 	private int padLength = "SELECT".length();
@@ -24,13 +26,16 @@ public class QueryOptions {
 	private boolean pretty = true;
 	private boolean indent = true;
 	private boolean uppercase = true;
-	private boolean backticks = true;
-	private char backtickChar = '`';
+	private boolean backticks = false;
+	private char quoteStartChar = '"';
+	private char quoteEndChar = '"';
 	private String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	private PostProcessor<String> sqlPostprocessor = null;
 	private PostProcessor<PreparedStatement> stmtPostprocessor = null;
 	private Function<Object, Object> valueConverter = null;
 	private boolean returnGeneratedKeys = false;
+	private int fetchSize = FETCH_ALL;
+	private boolean escapeKeywords = false;
 
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
@@ -61,7 +66,7 @@ public class QueryOptions {
 		return pretty ? "\n" + indentString() : " ";
 	}
 
-	String pad(final String keyword) {
+	String padCased(final String keyword) {
 		if (pretty && keyword != null) {
 			final int length = Math.max(0, padLength - keyword.split("\\s+")[0].length());
 			return StringUtils.leftPad("", length) + cased(keyword);
@@ -72,7 +77,8 @@ public class QueryOptions {
 	String ticked(final String string) {
 		if (string == null)
 			return null;
-		return backticks || Name.isKeyword(string) ? backtickChar + string + backtickChar : string;
+		return backticks || (escapeKeywords && Name.isKeyword(string)) ? quoteStartChar + string + quoteEndChar
+				: string;
 	}
 
 	String cased(final String string) {
@@ -88,10 +94,16 @@ public class QueryOptions {
 				.indent(indent)
 				.uppercase(uppercase)
 				.backticks(backticks)
-				.backtickChar(backtickChar)
+				.quoteStartChar(quoteStartChar)
+				.quoteEndChar(quoteEndChar)
 				.dateFormat(dateFormat)
 				.sqlPostprocessor(sqlPostprocessor)
-				.stmtPostprocessor(stmtPostprocessor);
+				.stmtPostprocessor(stmtPostprocessor)
+				.valueConverter(valueConverter)
+				.returnGeneratedKeys(returnGeneratedKeys)
+				.fetchSize(fetchSize)
+				.escapeKeywords(escapeKeywords)
+				.indentLevel(indentLevel);
 	}
 
 	String preparedValuesString() {
@@ -108,7 +120,19 @@ public class QueryOptions {
 		return sb.toString();
 	}
 
-	public static <T extends QueryOptions> void setDefaultOptions(final T options) {
+	public QueryOptions fetchAll() {
+		return fetchSize(FETCH_ALL);
+	}
+
+	public QueryOptions fetchFirst() {
+		return fetchSize(1);
+	}
+
+	public static QueryOptions getDefaultOptions() {
+		return DEFAULT_OPTIONS.copy();
+	}
+
+	public static void setDefaultOptions(final QueryOptions options) {
 		DEFAULT_OPTIONS = options.copy();
 	}
 

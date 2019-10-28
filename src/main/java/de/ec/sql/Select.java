@@ -5,36 +5,26 @@ import java.util.List;
 
 import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@Getter(AccessLevel.PROTECTED)
+@NoArgsConstructor
+@Setter(AccessLevel.PROTECTED)
+@Accessors(fluent = true)
 public class Select implements QueryPart, BeforeFrom, PrimaryKeyword {
 
 	private final List<String> columns = new ArrayList<>();
 	private boolean distinct = false;
 	private boolean all = false;
-	@Setter(AccessLevel.PACKAGE)
-	private QueryPart builder;
-
-	public Select() {
-	}
+	private BeforeSelect builder;
 
 	public Select(final String... columns) {
 		columns(columns);
 	}
 
-	protected Select(final With with) {
-		builder = with;
-	}
-
-	protected Select(final With with, final String... columns) {
-		builder = with;
-		columns(columns);
-	}
-
-	protected Select(final Insert insert) {
-		builder = insert;
+	protected Select(final BeforeSelect builder) {
+		this.builder = builder;
 	}
 
 	public Select distinct() {
@@ -62,27 +52,6 @@ public class Select implements QueryPart, BeforeFrom, PrimaryKeyword {
 	}
 
 	@Override
-	public From from() {
-		return new From(this);
-	}
-
-	@Override
-	public From from(final String... tables) {
-		return new From(this, tables);
-	}
-
-	@Override
-	public From from(final From from) {
-		from.setSelect(this);
-		return from;
-	}
-
-	@Override
-	public String string() {
-		return string(QueryOptions.DEFAULT_OPTIONS);
-	}
-
-	@Override
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
@@ -91,7 +60,7 @@ public class Select implements QueryPart, BeforeFrom, PrimaryKeyword {
 			strings.add(options.newLine());
 		}
 
-		strings.add(options.pad("SELECT"));
+		strings.add(options.padCased("SELECT"));
 
 		if (distinct) {
 			strings.add(" ");

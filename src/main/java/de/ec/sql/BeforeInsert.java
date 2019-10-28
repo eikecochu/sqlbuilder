@@ -1,11 +1,17 @@
 package de.ec.sql;
 
-public interface BeforeInsert {
+public interface BeforeInsert extends QueryPart {
 
-	Insert insert(String table);
+	default Insert insert(String table) {
+		return new Insert(this, table);
+	}
 
-	Insert insert(Table table);
+	default Insert insert(Table table) {
+		return insert(table.tableName());
+	}
 
-	Insert insert(Insert insert);
+	default Insert insert(Insert insert) {
+		return insert.builder(this);
+	}
 
 }

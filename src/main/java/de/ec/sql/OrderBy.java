@@ -5,29 +5,20 @@ import java.util.List;
 
 import de.ec.sql.Keyword.SecondaryKeyword;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @NoArgsConstructor
-@Getter(AccessLevel.PROTECTED)
+@Setter(AccessLevel.PROTECTED)
+@Accessors(fluent = true)
 public class OrderBy implements QueryBuilder, SecondaryKeyword {
 
-	@Setter(AccessLevel.PACKAGE)
-	private Having having;
+	private BeforeOrderBy builder;
 	private final List<OrderByTerm> orderByTerms = new ArrayList<>();
 
-	protected OrderBy(final GroupBy groupBy) {
-		having = new Having(groupBy);
-	}
-
-	protected OrderBy(final GroupBy groupBy, final String... names) {
-		this(groupBy);
-		columns(names);
-	}
-
-	protected OrderBy(final Having having) {
-		this.having = having;
+	protected OrderBy(final BeforeOrderBy builder) {
+		this.builder = builder;
 	}
 
 	public OrderBy column(final String name, final boolean ascending) {
@@ -73,11 +64,6 @@ public class OrderBy implements QueryBuilder, SecondaryKeyword {
 	}
 
 	@Override
-	public Query query() {
-		return new Query(this);
-	}
-
-	@Override
 	public String string() {
 		return string(QueryOptions.DEFAULT_OPTIONS);
 	}
@@ -86,8 +72,8 @@ public class OrderBy implements QueryBuilder, SecondaryKeyword {
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (having != null)
-			strings.add(having.string(options));
+		if (builder != null)
+			strings.add(builder.string(options));
 
 		final StringJoiner orderStrings = new StringJoiner();
 		for (final OrderByTerm orderByTerm : orderByTerms)
@@ -95,7 +81,7 @@ public class OrderBy implements QueryBuilder, SecondaryKeyword {
 
 		if (!orderStrings.isEmpty()) {
 			strings.add(options.newLine());
-			strings.add(options.pad("ORDER BY"));
+			strings.add(options.padCased("ORDER BY"));
 			strings.add(" ");
 			strings.add(orderStrings.toString(", "));
 		}

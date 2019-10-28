@@ -1,9 +1,13 @@
 package de.ec.sql;
 
-public interface BeforeHaving {
+public interface BeforeHaving extends QueryPart {
 
-	Having having();
+	default Having having() {
+		return new Having(this);
+	}
 
-	Having having(Having having);
+	default Having having(Having having) {
+		return having.builder(this);
+	}
 
 }

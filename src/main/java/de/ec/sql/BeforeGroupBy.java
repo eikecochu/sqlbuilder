@@ -1,11 +1,17 @@
 package de.ec.sql;
 
-public interface BeforeGroupBy {
+public interface BeforeGroupBy extends QueryPart {
 
-	GroupBy groupBy();
+	default GroupBy groupBy() {
+		return new GroupBy(this);
+	}
 
-	GroupBy groupBy(String... columns);
+	default GroupBy groupBy(String... columns) {
+		return groupBy().columns(columns);
+	}
 
-	GroupBy groupBy(GroupBy groupBy);
+	default GroupBy groupBy(GroupBy groupBy) {
+		return groupBy.builder(this);
+	}
 
 }

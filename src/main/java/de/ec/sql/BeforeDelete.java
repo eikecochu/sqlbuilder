@@ -1,11 +1,17 @@
 package de.ec.sql;
 
-public interface BeforeDelete {
+public interface BeforeDelete extends QueryPart {
 
-	Delete delete(String table);
+	default Delete delete(String table) {
+		return new Delete(this, table);
+	}
 
-	Delete delete(Table table);
+	default Delete delete(Table table) {
+		return delete(table.tableName());
+	}
 
-	Delete delete(Delete delete);
+	default Delete delete(Delete delete) {
+		return delete.builder(this);
+	}
 
 }

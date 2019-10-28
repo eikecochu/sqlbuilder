@@ -2,14 +2,14 @@ package de.ec.sql;
 
 import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@Getter(AccessLevel.PROTECTED)
+@Setter(AccessLevel.PROTECTED)
+@Accessors(fluent = true)
 public class Delete implements QueryBuilder, BeforeWhere, PrimaryKeyword {
 
-	@Setter(AccessLevel.PACKAGE)
-	private With with;
+	private BeforeDelete builder;
 	private final String table;
 
 	public Delete(final String table) {
@@ -20,47 +20,21 @@ public class Delete implements QueryBuilder, BeforeWhere, PrimaryKeyword {
 		this(table.tableName());
 	}
 
-	protected Delete(final With with, final String table) {
+	protected Delete(final BeforeDelete builder, final String table) {
 		this(table);
-		this.with = with;
-	}
-
-	@Override
-	public Query query() {
-		return new Query(this);
-	}
-
-	@Override
-	public Where where() {
-		return new Where(this);
-	}
-
-	@Override
-	public Where where(final ValueHolder values) {
-		return where().values(values);
-	}
-
-	@Override
-	public Where where(final Where where) {
-		where.setBuilder(this);
-		return where;
-	}
-
-	@Override
-	public String string() {
-		return string(QueryOptions.DEFAULT_OPTIONS);
+		this.builder = builder;
 	}
 
 	@Override
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (with != null) {
-			strings.add(with.string(options));
+		if (builder != null) {
+			strings.add(builder.string(options));
 			strings.add(options.newLine());
 		}
 
-		strings.add(options.pad("DELETE FROM"));
+		strings.add(options.padCased("DELETE FROM"));
 
 		strings.add(" ");
 		strings.add(table);

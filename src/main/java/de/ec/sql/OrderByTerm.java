@@ -20,11 +20,6 @@ public class OrderByTerm implements QueryPart {
 	}
 
 	@Override
-	public String string() {
-		return string(QueryOptions.DEFAULT_OPTIONS);
-	}
-
-	@Override
 	public String string(final QueryOptions options) {
 		return name.string(options) + " " + options.cased(ascending ? "ASC" : "DESC");
 	}

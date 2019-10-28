@@ -114,11 +114,6 @@ public class Name implements QueryPart {
 	private String alias;
 
 	@Override
-	public String string() {
-		return string(QueryOptions.DEFAULT_OPTIONS);
-	}
-
-	@Override
 	public String string(final QueryOptions options) {
 		if (!options.splitNames())
 			return name;

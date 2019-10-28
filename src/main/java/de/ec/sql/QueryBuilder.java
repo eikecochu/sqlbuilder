@@ -2,6 +2,8 @@ package de.ec.sql;
 
 public interface QueryBuilder extends QueryPart {
 
-	Query query();
+	default Query query() {
+		return new Query(this);
+	}
 
 }

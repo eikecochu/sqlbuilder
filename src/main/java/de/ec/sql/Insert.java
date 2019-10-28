@@ -6,20 +6,17 @@ import java.util.Map.Entry;
 
 import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@Getter(AccessLevel.PROTECTED)
+@Setter(AccessLevel.PROTECTED)
+@Accessors(fluent = true)
 public class Insert implements QueryBuilder, BeforeSelect, PrimaryKeyword {
 
 	private enum InsertType implements QueryPart {
-		INSERT("INSERT INTO"),
-		REPLACE("REPLACE INTO"),
-		INSERT_OR_REPLACE("INSERT OR REPLACE INTO"),
-		INSERT_OR_ROLLBACK("INSERT OR ROLLBACK INTO"),
-		INSERT_OR_ABORT("INSERT OR ABORT INTO"),
-		INSERT_OR_FAIL("INSERT OR FAIL INTO"),
-		INSERT_OR_IGNORE("INSERT OR IGNORE INTO");
+		INSERT("INSERT INTO"), REPLACE("REPLACE INTO"), INSERT_OR_REPLACE("INSERT OR REPLACE INTO"),
+		INSERT_OR_ROLLBACK("INSERT OR ROLLBACK INTO"), INSERT_OR_ABORT("INSERT OR ABORT INTO"),
+		INSERT_OR_FAIL("INSERT OR FAIL INTO"), INSERT_OR_IGNORE("INSERT OR IGNORE INTO");
 
 		private String string;
 
@@ -28,18 +25,12 @@ public class Insert implements QueryBuilder, BeforeSelect, PrimaryKeyword {
 		}
 
 		@Override
-		public String string() {
-			return string(QueryOptions.DEFAULT_OPTIONS);
-		}
-
-		@Override
 		public String string(final QueryOptions options) {
 			return options.cased(string);
 		}
 	}
 
-	@Setter(AccessLevel.PACKAGE)
-	private With with;
+	private BeforeInsert builder;
 	private final String table;
 	private InsertType insertType = InsertType.INSERT;
 	private final List<InsertValue> insertValues = new ArrayList<>();
@@ -54,56 +45,40 @@ public class Insert implements QueryBuilder, BeforeSelect, PrimaryKeyword {
 		this(table.tableName());
 	}
 
-	protected Insert(final With with, final String table) {
+	protected Insert(final BeforeInsert builder, final String table) {
 		this(table);
-		this.with = with;
-	}
-
-	protected Insert setType(final InsertType type) {
-		insertType = type;
-		return this;
+		this.builder = builder;
 	}
 
 	public Insert replace() {
-		return setType(InsertType.REPLACE);
+		return insertType(InsertType.REPLACE);
 	}
 
 	public Insert orReplace() {
-		return setType(InsertType.INSERT_OR_REPLACE);
+		return insertType(InsertType.INSERT_OR_REPLACE);
 	}
 
 	public Insert orRollback() {
-		return setType(InsertType.INSERT_OR_ROLLBACK);
+		return insertType(InsertType.INSERT_OR_ROLLBACK);
 	}
 
 	public Insert orAbort() {
-		return setType(InsertType.INSERT_OR_ABORT);
+		return insertType(InsertType.INSERT_OR_ABORT);
 	}
 
 	public Insert orFail() {
-		return setType(InsertType.INSERT_OR_FAIL);
+		return insertType(InsertType.INSERT_OR_FAIL);
 	}
 
 	public Insert orIgnore() {
-		return setType(InsertType.INSERT_OR_IGNORE);
+		return insertType(InsertType.INSERT_OR_IGNORE);
 	}
 
 	@Override
 	public Select select() {
 		insertValues.clear();
 		defaultValues = false;
-		return new Select(this);
-	}
-
-	@Override
-	public Select select(final String... columns) {
-		return select().columns(columns);
-	}
-
-	@Override
-	public Select select(final Select select) {
-		select.setBuilder(this);
-		return select;
+		return BeforeSelect.super.select();
 	}
 
 	public InsertValue column(final String column) {
@@ -142,25 +117,15 @@ public class Insert implements QueryBuilder, BeforeSelect, PrimaryKeyword {
 	}
 
 	@Override
-	public Query query() {
-		return new Query(this);
-	}
-
-	@Override
-	public String string() {
-		return string(QueryOptions.DEFAULT_OPTIONS);
-	}
-
-	@Override
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (with != null) {
-			strings.add(with.string(options));
+		if (builder != null) {
+			strings.add(builder.string(options));
 			strings.add(options.newLine());
 		}
 
-		strings.add(options.pad(insertType.string(options)));
+		strings.add(options.padCased(insertType.string(options)));
 
 		strings.add(" ");
 		strings.add(table);
@@ -181,7 +146,7 @@ public class Insert implements QueryBuilder, BeforeSelect, PrimaryKeyword {
 			}
 
 			strings.add(options.newLine());
-			strings.add(options.pad("VALUES"));
+			strings.add(options.padCased("VALUES"));
 
 			assert (!insertValues.isEmpty());
 
@@ -191,7 +156,7 @@ public class Insert implements QueryBuilder, BeforeSelect, PrimaryKeyword {
 			for (int i = 0; i < count; i++) {
 				if (i > 0)
 					strings.add(options.newLine())
-							.add(options.pad(""));
+							.add(options.padCased(""));
 				strings.add(" (");
 				final StringJoiner values = new StringJoiner();
 				for (final InsertValue insertValue : insertValues) {

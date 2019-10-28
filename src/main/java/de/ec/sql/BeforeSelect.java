@@ -1,11 +1,17 @@
 package de.ec.sql;
 
-public interface BeforeSelect {
+public interface BeforeSelect extends QueryPart {
 
-	Select select();
+	default Select select() {
+		return new Select(this);
+	}
 
-	Select select(String... columns);
+	default Select select(String... columns) {
+		return select().columns(columns);
+	}
 
-	Select select(Select select);
+	default Select select(Select select) {
+		return select.builder(this);
+	}
 
 }

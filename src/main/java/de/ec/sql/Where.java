@@ -2,65 +2,20 @@ package de.ec.sql;
 
 import de.ec.sql.Keyword.SecondaryKeyword;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @NoArgsConstructor
-@Getter(AccessLevel.PROTECTED)
+@Setter(AccessLevel.PROTECTED)
+@Accessors(fluent = true)
 public class Where extends Conditionable<Where>
 		implements QueryBuilder, BeforeGroupBy, BeforeOrderBy, SecondaryKeyword {
 
-	@Setter(AccessLevel.PACKAGE)
-	private QueryPart builder;
+	private BeforeWhere builder;
 
-	protected Where(final Join join) {
-		builder = join;
-	}
-
-	protected Where(final Delete delete) {
-		builder = delete;
-	}
-
-	protected Where(final Update update) {
-		builder = update;
-	}
-
-	@Override
-	public GroupBy groupBy() {
-		return new GroupBy(this);
-	}
-
-	@Override
-	public GroupBy groupBy(final String... columns) {
-		return new GroupBy(this, columns);
-	}
-
-	@Override
-	public GroupBy groupBy(final GroupBy groupBy) {
-		groupBy.setWhere(this);
-		return groupBy;
-	}
-
-	@Override
-	public OrderBy orderBy() {
-		return new OrderBy(groupBy());
-	}
-
-	@Override
-	public OrderBy orderBy(final String... columns) {
-		return new OrderBy(groupBy(), columns);
-	}
-
-	@Override
-	public OrderBy orderBy(final OrderBy orderBy) {
-		orderBy.setHaving(new Having(groupBy()));
-		return orderBy;
-	}
-
-	@Override
-	public Query query() {
-		return new Query(this);
+	protected Where(final BeforeWhere builder) {
+		this.builder = builder;
 	}
 
 	@Override
@@ -79,7 +34,7 @@ public class Where extends Conditionable<Where>
 
 		if (condition != null && !condition.isEmpty()) {
 			strings.add(options.newLine());
-			strings.add(options.pad("WHERE"));
+			strings.add(options.padCased("WHERE"));
 			strings.add(" ");
 			strings.add(condition);
 		}

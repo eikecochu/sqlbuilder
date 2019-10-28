@@ -1,76 +1,120 @@
 package de.ec.sql;
 
-public interface BeforeJoin extends BeforeWhere {
+import de.ec.sql.Join.JoinMode;
 
-	Join join();
+public interface BeforeJoin extends QueryPart {
 
-	Join join(String table);
+	default Join join(JoinMode mode) {
+		return new Join(this, mode);
+	}
 
-	Join join(Join join);
+	default Join join() {
+		return join(JoinMode.INNER_JOIN);
+	}
+
+	default Join join(String table) {
+		return join().table(table);
+	}
+
+	default Join join(Join join) {
+		return join.builder(this);
+	}
 
 	default Join join(final Table table) {
 		return join(table.tableName());
 	}
 
-	Join innerJoin();
+	default Join innerJoin() {
+		return join();
+	}
 
-	Join innerJoin(String table);
+	default Join innerJoin(String table) {
+		return join().table(table);
+	}
 
 	default Join innerJoin(final Table table) {
 		return innerJoin(table.tableName());
 	}
 
-	Join crossJoin();
+	default Join crossJoin() {
+		return join(JoinMode.CROSS_JOIN);
+	}
 
-	Join crossJoin(String table);
+	default Join crossJoin(String table) {
+		return crossJoin().table(table);
+	}
 
 	default Join crossJoin(final Table table) {
 		return crossJoin(table.tableName());
 	}
 
-	Join outerJoin();
+	default Join outerJoin() {
+		return join(JoinMode.OUTER_JOIN);
+	}
 
-	Join outerJoin(String table);
+	default Join outerJoin(String table) {
+		return outerJoin().table(table);
+	}
 
 	default Join outerJoin(final Table table) {
 		return outerJoin(table.tableName());
 	}
 
-	Join fullOuterJoin();
+	default Join fullOuterJoin() {
+		return outerJoin();
+	}
 
-	Join fullOuterJoin(String table);
+	default Join fullOuterJoin(String table) {
+		return outerJoin(table);
+	}
 
 	default Join fullOuterJoin(final Table table) {
 		return fullOuterJoin(table.tableName());
 	}
 
-	Join leftJoin();
+	default Join leftJoin() {
+		return join(JoinMode.LEFT_JOIN);
+	}
 
-	Join leftJoin(String table);
+	default Join leftJoin(String table) {
+		return leftJoin().table(table);
+	}
 
 	default Join leftJoin(final Table table) {
 		return leftJoin(table.tableName());
 	}
 
-	Join leftOuterJoin();
+	default Join leftOuterJoin() {
+		return leftJoin();
+	}
 
-	Join leftOuterJoin(String table);
+	default Join leftOuterJoin(String table) {
+		return leftJoin(table);
+	}
 
 	default Join leftOuterJoin(final Table table) {
 		return leftOuterJoin(table.tableName());
 	}
 
-	Join rightJoin();
+	default Join rightJoin() {
+		return join(JoinMode.RIGHT_JOIN);
+	}
 
-	Join rightJoin(String table);
+	default Join rightJoin(String table) {
+		return rightJoin().table(table);
+	}
 
 	default Join rightJoin(final Table table) {
 		return rightJoin(table.tableName());
 	}
 
-	Join rightOuterJoin();
+	default Join rightOuterJoin() {
+		return rightJoin();
+	}
 
-	Join rightOuterJoin(String table);
+	default Join rightOuterJoin(String table) {
+		return rightJoin(table);
+	}
 
 	default Join rightOuterJoin(final Table table) {
 		return rightOuterJoin(table.tableName());

@@ -1,11 +1,17 @@
 package de.ec.sql;
 
-public interface BeforeOrderBy {
+public interface BeforeOrderBy extends QueryPart {
 
-	OrderBy orderBy();
+	default OrderBy orderBy() {
+		return new OrderBy(this);
+	}
 
-	OrderBy orderBy(String... columns);
+	default OrderBy orderBy(String... columns) {
+		return orderBy().columns(columns);
+	}
 
-	OrderBy orderBy(OrderBy orderBy);
+	default OrderBy orderBy(OrderBy orderBy) {
+		return orderBy.builder(this);
+	}
 
 }

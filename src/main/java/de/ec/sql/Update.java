@@ -7,26 +7,20 @@ import java.util.Map.Entry;
 import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
+@Setter(AccessLevel.PROTECTED)
+@Accessors(fluent = true)
 public class Update implements QueryBuilder, BeforeWhere, PrimaryKeyword {
 
-	private enum UpdateType implements QueryPart {
-		UPDATE("UPDATE"),
-		UPDATE_OR_ROLLBACK("UPDATE OR ROLLBACK"),
-		UPDATE_OR_ABORT("UPDATE OR ABORT"),
-		UPDATE_OR_REPLACE("UPDATE OR REPLACE"),
-		UPDATE_OR_FAIL("UPDATE OR FAIL"),
-		UPDATE_OR_IGNORE("UPDATE OR IGNORE");
+	protected static enum UpdateType implements QueryPart {
+		UPDATE("UPDATE"), UPDATE_OR_ROLLBACK("UPDATE OR ROLLBACK"), UPDATE_OR_ABORT("UPDATE OR ABORT"),
+		UPDATE_OR_REPLACE("UPDATE OR REPLACE"), UPDATE_OR_FAIL("UPDATE OR FAIL"), UPDATE_OR_IGNORE("UPDATE OR IGNORE");
 
 		private String string;
 
 		private UpdateType(final String string) {
 			this.string = string;
-		}
-
-		@Override
-		public String string() {
-			return string(QueryOptions.DEFAULT_OPTIONS);
 		}
 
 		@Override
@@ -36,8 +30,7 @@ public class Update implements QueryBuilder, BeforeWhere, PrimaryKeyword {
 	}
 
 	private UpdateType updateType = UpdateType.UPDATE;
-	@Setter(AccessLevel.PACKAGE)
-	private With with;
+	private BeforeUpdate builder;
 	private final String table;
 	private final List<UpdateValue> updateValues = new ArrayList<>();
 
@@ -49,9 +42,9 @@ public class Update implements QueryBuilder, BeforeWhere, PrimaryKeyword {
 		this(table.tableName());
 	}
 
-	protected Update(final With with, final String table) {
+	protected Update(final BeforeUpdate builder, final String table) {
 		this(table);
-		this.with = with;
+		this.builder = builder;
 	}
 
 	private Update setType(final UpdateType updateType) {
@@ -96,47 +89,21 @@ public class Update implements QueryBuilder, BeforeWhere, PrimaryKeyword {
 	}
 
 	@Override
-	public Where where() {
-		return new Where(this);
-	}
-
-	@Override
-	public Where where(final ValueHolder values) {
-		return where().values(values);
-	}
-
-	@Override
-	public Where where(final Where where) {
-		where.setBuilder(this);
-		return where;
-	}
-
-	@Override
-	public Query query() {
-		return new Query(this);
-	}
-
-	@Override
-	public String string() {
-		return string(QueryOptions.DEFAULT_OPTIONS);
-	}
-
-	@Override
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (with != null) {
-			strings.add(with.string(options));
+		if (builder != null) {
+			strings.add(builder.string(options));
 			strings.add(options.newLine());
 		}
 
-		strings.add(options.pad(updateType.string(options)));
+		strings.add(options.padCased(updateType.string(options)));
 
 		strings.add(" ");
 		strings.add(table);
 
 		strings.add(options.newLine());
-		strings.add(options.pad("SET"));
+		strings.add(options.padCased("SET"));
 		strings.add(" ");
 
 		final StringJoiner sets = new StringJoiner();

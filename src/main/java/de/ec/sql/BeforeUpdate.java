@@ -1,11 +1,17 @@
 package de.ec.sql;
 
-public interface BeforeUpdate {
+public interface BeforeUpdate extends QueryPart {
 
-	Update update(String table);
+	default Update update(String table) {
+		return new Update(this, table);
+	}
 
-	Update update(Table table);
+	default Update update(Table table) {
+		return update(table.tableName());
+	}
 
-	Update update(Update update);
+	default Update update(Update update) {
+		return update.builder(this);
+	}
 
 }

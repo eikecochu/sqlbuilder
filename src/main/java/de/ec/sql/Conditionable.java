@@ -11,18 +11,12 @@ import lombok.Getter;
 public abstract class Conditionable<T extends Conditionable<T>> implements QueryPart {
 
 	public enum Operator implements QueryPart {
-		AND("AND"),
-		OR("OR");
+		AND("AND"), OR("OR");
 
 		private final String string;
 
 		private Operator(final String string) {
 			this.string = string;
-		}
-
-		@Override
-		public String string() {
-			return string(QueryOptions.DEFAULT_OPTIONS);
 		}
 
 		@Override
@@ -86,11 +80,6 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 
 	private Conditionable<T> conditionable() {
 		return conditionable == null ? (Conditionable<T>) this : conditionable;
-	}
-
-	@Override
-	public String string() {
-		return string(QueryOptions.DEFAULT_OPTIONS);
 	}
 
 	@Override

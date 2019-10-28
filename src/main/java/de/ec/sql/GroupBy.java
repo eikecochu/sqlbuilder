@@ -5,25 +5,20 @@ import java.util.List;
 
 import de.ec.sql.Keyword.SecondaryKeyword;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @NoArgsConstructor
-@Getter(AccessLevel.PROTECTED)
+@Setter(AccessLevel.PROTECTED)
+@Accessors(fluent = true)
 public class GroupBy implements QueryBuilder, BeforeOrderBy, BeforeHaving, SecondaryKeyword {
 
-	@Setter(AccessLevel.PACKAGE)
-	private Where where;
+	private BeforeGroupBy builder;
 	private final List<String> columns = new ArrayList<>();
 
-	protected GroupBy(final Where where) {
-		this.where = where;
-	}
-
-	protected GroupBy(final Where where, final String... columns) {
-		this(where);
-		columns(columns);
+	protected GroupBy(final BeforeGroupBy builder) {
+		this.builder = builder;
 	}
 
 	public GroupBy column(final String column) {
@@ -39,38 +34,6 @@ public class GroupBy implements QueryBuilder, BeforeOrderBy, BeforeHaving, Secon
 	}
 
 	@Override
-	public Having having() {
-		return new Having(this);
-	}
-
-	@Override
-	public Having having(final Having having) {
-		having.setGroupBy(this);
-		return having;
-	}
-
-	@Override
-	public OrderBy orderBy() {
-		return new OrderBy(this);
-	}
-
-	@Override
-	public OrderBy orderBy(final String... columns) {
-		return new OrderBy(this, columns);
-	}
-
-	@Override
-	public OrderBy orderBy(final OrderBy orderBy) {
-		orderBy.setHaving(new Having(this));
-		return orderBy;
-	}
-
-	@Override
-	public Query query() {
-		return new Query(this);
-	}
-
-	@Override
 	public String string() {
 		return string(QueryOptions.DEFAULT_OPTIONS);
 	}
@@ -79,12 +42,12 @@ public class GroupBy implements QueryBuilder, BeforeOrderBy, BeforeHaving, Secon
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (where != null)
-			strings.add(where.string(options));
+		if (builder != null)
+			strings.add(builder.string(options));
 
 		if (!columns.isEmpty()) {
 			strings.add(options.newLine());
-			strings.add(options.pad("GROUP BY"));
+			strings.add(options.padCased("GROUP BY"));
 
 			final StringJoiner columnsStrings = new StringJoiner();
 			for (final String column : columns)

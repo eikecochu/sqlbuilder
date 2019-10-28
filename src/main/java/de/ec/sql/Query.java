@@ -19,22 +19,16 @@ public class Query implements QueryBuilder {
 
 	@Getter(AccessLevel.PUBLIC)
 	@Accessors(fluent = true)
-	private QueryOptions options = QueryOptions.DEFAULT_OPTIONS.copy()
-			.query(this);
+	private QueryOptions options;
 	private final QueryPart builder;
 
-	protected Query(final QueryPart builder) {
+	Query(final QueryPart builder) {
 		this.builder = builder;
 	}
 
 	@Override
 	public String toString() {
 		return string();
-	}
-
-	@Override
-	public String string() {
-		return string(safeOptions(options));
 	}
 
 	@Override
@@ -50,7 +44,7 @@ public class Query implements QueryBuilder {
 	}
 
 	public PreparedStatement prepare(final Connection connection) throws SQLException {
-		return prepare(connection, options);
+		return prepare(connection, safeOptions(options));
 	}
 
 	public PreparedStatement prepare(final Connection connection, QueryOptions options) throws SQLException {
@@ -70,6 +64,8 @@ public class Query implements QueryBuilder {
 			stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		else
 			stmt = connection.prepareStatement(sql);
+
+		stmt.setFetchSize(options.fetchSize());
 
 		if (options.stmtPostprocessor() != null)
 			stmt = options.stmtPostprocessor()

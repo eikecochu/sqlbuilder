@@ -1,11 +1,17 @@
 package de.ec.sql;
 
-public interface BeforeWhere {
+public interface BeforeWhere extends QueryPart {
 
-	Where where();
+	default Where where() {
+		return new Where(this);
+	}
 
-	Where where(ValueHolder values);
+	default Where where(ValueHolder values) {
+		return where().values(values);
+	}
 
-	Where where(Where where);
+	default Where where(Where where) {
+		return where.builder(this);
+	}
 
 }

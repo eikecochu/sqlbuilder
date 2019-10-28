@@ -1,9 +1,13 @@
 package de.ec.sql;
 
-public interface BeforeWith {
+public interface BeforeWith extends QueryPart {
 
-	With with(String name);
+	default With with(String name) {
+		return new With(this, name);
+	}
 
-	With with(With with);
+	default With with(With with) {
+		return with.builder(this);
+	}
 
 }

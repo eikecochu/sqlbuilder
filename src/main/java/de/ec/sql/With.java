@@ -7,15 +7,15 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
-@Getter(AccessLevel.PROTECTED)
+@Setter(AccessLevel.PROTECTED)
+@Accessors(fluent = true)
 public class With
 		implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, BeforeDelete, BeforeInsert, PrimaryKeyword {
 
-	@Setter(AccessLevel.PACKAGE)
-	private With with;
+	private BeforeWith builder;
 	private final String name;
 	private final List<String> columns = new ArrayList<>();
 	private Query query;
@@ -25,9 +25,9 @@ public class With
 		this.name = name;
 	}
 
-	private With(final With with, final String name) {
+	protected With(final BeforeWith builder, final String name) {
 		this.name = name;
-		this.with = with;
+		this.builder = builder;
 	}
 
 	public With recursive() {
@@ -51,92 +51,16 @@ public class With
 		return this;
 	}
 
-	@Override
-	public Select select() {
-		return new Select(this);
-	}
-
-	@Override
-	public Select select(final String... columns) {
-		return new Select(this, columns);
-	}
-
-	@Override
-	public Select select(final Select select) {
-		select.setBuilder(this);
-		return select;
-	}
-
-	@Override
-	public Delete delete(final String table) {
-		return new Delete(this, table);
-	}
-
-	@Override
-	public Delete delete(final Table table) {
-		return delete(table.tableName());
-	}
-
-	@Override
-	public Delete delete(final Delete delete) {
-		delete.setWith(this);
-		return delete;
-	}
-
-	@Override
-	public Update update(final String table) {
-		return new Update(this, table);
-	}
-
-	@Override
-	public Update update(final Table table) {
-		return update(table.tableName());
-	}
-
-	@Override
-	public Update update(final Update update) {
-		update.setWith(this);
-		return update;
-	}
-
-	@Override
-	public Insert insert(final String table) {
-		return new Insert(this, table);
-	}
-
-	@Override
-	public Insert insert(final Table table) {
-		return insert(table.tableName());
-	}
-
-	@Override
-	public Insert insert(final Insert insert) {
-		insert.setWith(this);
-		return insert;
-	}
-
-	@Override
-	public With with(final String name) {
-		return new With(this, name);
-	}
-
-	@Override
-	public With with(final With with) {
-		with.setWith(this);
-		return with;
-	}
-
-	@Override
-	public String string() {
-		return string(QueryOptions.DEFAULT_OPTIONS);
+	public With as(final QueryBuilder builder) {
+		return as(builder.query());
 	}
 
 	@Override
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (with == null) {
-			strings.add(options.pad("WITH"));
+		if (builder == null) {
+			strings.add(options.padCased("WITH"));
 
 			if (recursive) {
 				strings.add(" ");
@@ -144,7 +68,7 @@ public class With
 			}
 		} else {
 			strings.add(options.newLine());
-			strings.add(with.string(options));
+			strings.add(builder.string(options));
 			strings.add(",");
 		}
 
