@@ -4,18 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Update implements QueryBuilder, BeforeWhere, PrimaryKeyword {
+public class Update implements QueryBuilder, BeforeWhere {
 
-	protected static enum UpdateType implements QueryPart {
-		UPDATE("UPDATE"), UPDATE_OR_ROLLBACK("UPDATE OR ROLLBACK"), UPDATE_OR_ABORT("UPDATE OR ABORT"),
-		UPDATE_OR_REPLACE("UPDATE OR REPLACE"), UPDATE_OR_FAIL("UPDATE OR FAIL"), UPDATE_OR_IGNORE("UPDATE OR IGNORE");
+	protected enum UpdateType implements QueryPart {
+		UPDATE("UPDATE"),
+		UPDATE_OR_ROLLBACK("UPDATE OR ROLLBACK"),
+		UPDATE_OR_ABORT("UPDATE OR ABORT"),
+		UPDATE_OR_REPLACE("UPDATE OR REPLACE"),
+		UPDATE_OR_FAIL("UPDATE OR FAIL"),
+		UPDATE_OR_IGNORE("UPDATE OR IGNORE");
 
 		private String string;
 
@@ -33,6 +36,7 @@ public class Update implements QueryBuilder, BeforeWhere, PrimaryKeyword {
 	private BeforeUpdate builder;
 	private final String table;
 	private final List<UpdateValue> updateValues = new ArrayList<>();
+	private String sql;
 
 	public Update(final String table) {
 		this.table = table;
@@ -97,30 +101,34 @@ public class Update implements QueryBuilder, BeforeWhere, PrimaryKeyword {
 			strings.add(options.newLine());
 		}
 
-		strings.add(options.padCased(updateType.string(options)));
+		if (sql != null) {
+			strings.add(sql);
+		} else {
+			strings.add(options.padCased(updateType.string(options)));
 
-		strings.add(" ");
-		strings.add(table);
+			strings.add(" ");
+			strings.add(table);
 
-		strings.add(options.newLine());
-		strings.add(options.padCased("SET"));
-		strings.add(" ");
+			strings.add(options.newLine());
+			strings.add(options.padCased("SET"));
+			strings.add(" ");
 
-		final StringJoiner sets = new StringJoiner();
-		for (final UpdateValue updateValue : updateValues) {
-			String column = QueryUtils.splitName(options, updateValue.getColumn())
-					.string(options) + " = ";
-			if (updateValue.isExpression())
-				column += updateValue.getValue()
-						.toString();
-			else if (options.prepare()) {
-				column += "?";
-				options.addPreparedValue(updateValue.getValue());
-			} else
-				column += QueryUtils.valueToString(options, updateValue.getValue());
-			sets.add(column);
+			final StringJoiner sets = new StringJoiner();
+			for (final UpdateValue updateValue : updateValues) {
+				String column = QueryUtils.splitName(options, updateValue.getColumn())
+						.string(options) + " = ";
+				if (updateValue.isExpression())
+					column += updateValue.getValue()
+							.toString();
+				else if (options.prepare()) {
+					column += "?";
+					options.addPreparedValue(updateValue.getValue());
+				} else
+					column += QueryUtils.valueToString(options, updateValue.getValue());
+				sets.add(column);
+			}
+			strings.add(sets.toString(", "));
 		}
-		strings.add(sets.toString(", "));
 
 		return strings.toString();
 	}

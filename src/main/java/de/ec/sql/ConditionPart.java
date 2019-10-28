@@ -9,8 +9,15 @@ import lombok.Getter;
 public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	public enum Operator implements QueryPart {
-		EQUALS("="), LIKE("LIKE"), IN("IN"), IS_NULL("IS NULL"), IS_NOT_NULL("IS NOT NULL"), GE(">="), GT(">"),
-		LE("<="), LT("<=");
+		EQUALS("="),
+		LIKE("LIKE"),
+		IN("IN"),
+		IS_NULL("IS NULL"),
+		IS_NOT_NULL("IS NOT NULL"),
+		GE(">="),
+		GT(">"),
+		LE("<="),
+		LT("<=");
 
 		private String string;
 

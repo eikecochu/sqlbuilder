@@ -6,12 +6,16 @@ public interface BeforeSelect extends QueryPart {
 		return new Select(this);
 	}
 
-	default Select select(String... columns) {
+	default Select select(final String... columns) {
 		return select().columns(columns);
 	}
 
-	default Select select(Select select) {
+	default Select select(final Select select) {
 		return select.builder(this);
+	}
+
+	default Select selectSQL(final String sql) {
+		return select().sql(sql);
 	}
 
 }

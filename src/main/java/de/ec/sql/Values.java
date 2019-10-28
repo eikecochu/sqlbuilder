@@ -7,7 +7,7 @@ public class Values extends HashMap<String, Object> implements ValueHolder {
 
 	private static final long serialVersionUID = 1L;
 
-	public Values add(String key, Object value) {
+	public Values add(final String key, final Object value) {
 		put(key, value);
 		return this;
 	}

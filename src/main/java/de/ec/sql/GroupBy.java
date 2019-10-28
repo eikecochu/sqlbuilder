@@ -3,7 +3,6 @@ package de.ec.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.ec.sql.Keyword.SecondaryKeyword;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,10 +11,11 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class GroupBy implements QueryBuilder, BeforeOrderBy, BeforeHaving, SecondaryKeyword {
+public class GroupBy implements QueryBuilder, BeforeOrderBy, BeforeHaving {
 
 	private BeforeGroupBy builder;
 	private final List<String> columns = new ArrayList<>();
+	private String sql;
 
 	protected GroupBy(final BeforeGroupBy builder) {
 		this.builder = builder;
@@ -45,16 +45,20 @@ public class GroupBy implements QueryBuilder, BeforeOrderBy, BeforeHaving, Secon
 		if (builder != null)
 			strings.add(builder.string(options));
 
-		if (!columns.isEmpty()) {
-			strings.add(options.newLine());
-			strings.add(options.padCased("GROUP BY"));
+		if (sql != null) {
+			strings.add(sql);
+		} else {
+			if (!columns.isEmpty()) {
+				strings.add(options.newLine());
+				strings.add(options.padCased("GROUP BY"));
 
-			final StringJoiner columnsStrings = new StringJoiner();
-			for (final String column : columns)
-				columnsStrings.add(QueryUtils.splitName(options, column)
-						.string(options));
-			strings.add(" ");
-			strings.add(columnsStrings.toString(", "));
+				final StringJoiner columnsStrings = new StringJoiner();
+				for (final String column : columns)
+					columnsStrings.add(QueryUtils.splitName(options, column)
+							.string(options));
+				strings.add(" ");
+				strings.add(columnsStrings.toString(", "));
+			}
 		}
 
 		return strings.toString();

@@ -9,7 +9,7 @@ public interface BeforeFrom extends QueryPart {
 		return new From(this);
 	}
 
-	default From from(String... tables) {
+	default From from(final String... tables) {
 		return new From(this).tables(tables);
 	}
 
@@ -20,8 +20,12 @@ public interface BeforeFrom extends QueryPart {
 		return from(names.toArray(new String[tables.length]));
 	}
 
-	default From from(From from) {
+	default From from(final From from) {
 		return from.builder(this);
+	}
+
+	default From fromSQL(final String sql) {
+		return from().sql(sql);
 	}
 
 }

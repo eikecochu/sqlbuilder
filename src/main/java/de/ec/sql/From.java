@@ -3,7 +3,6 @@ package de.ec.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.ec.sql.Keyword.SecondaryKeyword;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, SecondaryKeyword {
+public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy {
 
 	@Data
 	@Accessors(fluent = true)
@@ -35,6 +34,7 @@ public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupB
 
 	private BeforeFrom builder;
 	private final List<FromOrigin> origins = new ArrayList<>();
+	private String sql;
 
 	protected From(final BeforeFrom builder) {
 		this.builder = builder;
@@ -79,7 +79,7 @@ public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupB
 
 	@Override
 	public String string(final QueryOptions options) {
-		assert !origins.isEmpty() : "from statement must have at least one target";
+		assert sql == null && !origins.isEmpty() : "from statement must have at least one target";
 
 		final StringJoiner strings = new StringJoiner();
 
@@ -88,14 +88,18 @@ public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupB
 			strings.add(options.newLine());
 		}
 
-		strings.add(options.padCased("FROM"));
-		strings.add(" ");
+		if (sql != null) {
+			strings.add(sql);
+		} else {
+			strings.add(options.padCased("FROM"));
+			strings.add(" ");
 
-		final StringJoiner fromStrings = new StringJoiner();
-		for (final FromOrigin origin : origins)
-			fromStrings.add(origin.string(options));
+			final StringJoiner fromStrings = new StringJoiner();
+			for (final FromOrigin origin : origins)
+				fromStrings.add(origin.string(options));
 
-		strings.add(fromStrings.toString(", "));
+			strings.add(fromStrings.toString(", "));
+		}
 
 		return strings.toString();
 	}

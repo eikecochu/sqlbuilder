@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -13,13 +12,14 @@ import lombok.experimental.Accessors;
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
 public class With
-		implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, BeforeDelete, BeforeInsert, PrimaryKeyword {
+		implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, BeforeDelete, BeforeInsert {
 
 	private BeforeWith builder;
 	private final String name;
 	private final List<String> columns = new ArrayList<>();
 	private Query query;
 	private boolean recursive;
+	private String sql;
 
 	public With(final String name) {
 		this.name = name;
@@ -60,11 +60,13 @@ public class With
 		final StringJoiner strings = new StringJoiner();
 
 		if (builder == null) {
-			strings.add(options.padCased("WITH"));
+			if (sql == null) {
+				strings.add(options.padCased("WITH"));
 
-			if (recursive) {
-				strings.add(" ");
-				strings.add(options.cased("RECURSIVE"));
+				if (recursive) {
+					strings.add(" ");
+					strings.add(options.cased("RECURSIVE"));
+				}
 			}
 		} else {
 			strings.add(options.newLine());
@@ -72,26 +74,30 @@ public class With
 			strings.add(",");
 		}
 
-		strings.add(" ");
-		strings.add(name);
+		if (sql != null) {
+			strings.add(sql);
+		} else {
+			strings.add(" ");
+			strings.add(name);
 
-		if (!columns.isEmpty()) {
+			if (!columns.isEmpty()) {
+				strings.add(" (");
+				strings.add(StringUtils.join(columns, ", "));
+				strings.add(")");
+			}
+
+			strings.add(" ");
+			strings.add(options.cased("AS"));
 			strings.add(" (");
-			strings.add(StringUtils.join(columns, ", "));
+
+			final QueryOptions subOptions = options.copy()
+					.indentLevel(options.indentLevel() + 1);
+			strings.add(subOptions.newLine());
+			strings.add(query.string(subOptions)
+					.trim());
+
 			strings.add(")");
 		}
-
-		strings.add(" ");
-		strings.add(options.cased("AS"));
-		strings.add(" (");
-
-		final QueryOptions subOptions = options.copy()
-				.indentLevel(options.indentLevel() + 1);
-		strings.add(subOptions.newLine());
-		strings.add(query.string(subOptions)
-				.trim());
-
-		strings.add(")");
 
 		return strings.toString();
 	}

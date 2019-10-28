@@ -3,7 +3,6 @@ package de.ec.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.ec.sql.Keyword.SecondaryKeyword;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,10 +11,11 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class OrderBy implements QueryBuilder, SecondaryKeyword {
+public class OrderBy implements QueryBuilder {
 
 	private BeforeOrderBy builder;
 	private final List<OrderByTerm> orderByTerms = new ArrayList<>();
+	private String sql;
 
 	protected OrderBy(final BeforeOrderBy builder) {
 		this.builder = builder;
@@ -75,15 +75,19 @@ public class OrderBy implements QueryBuilder, SecondaryKeyword {
 		if (builder != null)
 			strings.add(builder.string(options));
 
-		final StringJoiner orderStrings = new StringJoiner();
-		for (final OrderByTerm orderByTerm : orderByTerms)
-			orderStrings.add(orderByTerm.string(options));
+		if (sql != null) {
+			strings.add(sql);
+		} else {
+			final StringJoiner orderStrings = new StringJoiner();
+			for (final OrderByTerm orderByTerm : orderByTerms)
+				orderStrings.add(orderByTerm.string(options));
 
-		if (!orderStrings.isEmpty()) {
-			strings.add(options.newLine());
-			strings.add(options.padCased("ORDER BY"));
-			strings.add(" ");
-			strings.add(orderStrings.toString(", "));
+			if (!orderStrings.isEmpty()) {
+				strings.add(options.newLine());
+				strings.add(options.padCased("ORDER BY"));
+				strings.add(" ");
+				strings.add(orderStrings.toString(", "));
+			}
 		}
 
 		return strings.toString();

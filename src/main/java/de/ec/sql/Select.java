@@ -3,7 +3,6 @@ package de.ec.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,12 +11,13 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Select implements QueryPart, BeforeFrom, PrimaryKeyword {
+public class Select implements QueryPart, BeforeFrom {
 
 	private final List<String> columns = new ArrayList<>();
 	private boolean distinct = false;
 	private boolean all = false;
 	private BeforeSelect builder;
+	private String sql;
 
 	public Select(final String... columns) {
 		columns(columns);
@@ -60,25 +60,29 @@ public class Select implements QueryPart, BeforeFrom, PrimaryKeyword {
 			strings.add(options.newLine());
 		}
 
-		strings.add(options.padCased("SELECT"));
-
-		if (distinct) {
-			strings.add(" ");
-			strings.add(options.cased("DISTINCT"));
-		} else if (all) {
-			strings.add(" ");
-			strings.add(options.cased("ALL"));
-		}
-
-		if (columns.isEmpty()) {
-			strings.add(" *");
+		if (sql != null) {
+			strings.add(sql);
 		} else {
-			final StringJoiner columnsStrings = new StringJoiner();
-			for (final String column : columns)
-				columnsStrings.add(QueryUtils.splitName(options, column)
-						.string(options));
-			strings.add(" ");
-			strings.add(columnsStrings.toString(", "));
+			strings.add(options.padCased("SELECT"));
+
+			if (distinct) {
+				strings.add(" ");
+				strings.add(options.cased("DISTINCT"));
+			} else if (all) {
+				strings.add(" ");
+				strings.add(options.cased("ALL"));
+			}
+
+			if (columns.isEmpty()) {
+				strings.add(" *");
+			} else {
+				final StringJoiner columnsStrings = new StringJoiner();
+				for (final String column : columns)
+					columnsStrings.add(QueryUtils.splitName(options, column)
+							.string(options));
+				strings.add(" ");
+				strings.add(columnsStrings.toString(", "));
+			}
 		}
 
 		return strings.toString();

@@ -6,12 +6,16 @@ public interface BeforeGroupBy extends QueryPart {
 		return new GroupBy(this);
 	}
 
-	default GroupBy groupBy(String... columns) {
+	default GroupBy groupBy(final String... columns) {
 		return groupBy().columns(columns);
 	}
 
-	default GroupBy groupBy(GroupBy groupBy) {
+	default GroupBy groupBy(final GroupBy groupBy) {
 		return groupBy.builder(this);
+	}
+
+	default GroupBy groupBySQL(final String sql) {
+		return groupBy().sql(sql);
 	}
 
 }

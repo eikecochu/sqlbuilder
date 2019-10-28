@@ -4,7 +4,7 @@ import de.ec.sql.Join.JoinMode;
 
 public interface BeforeJoin extends QueryPart {
 
-	default Join join(JoinMode mode) {
+	default Join join(final JoinMode mode) {
 		return new Join(this, mode);
 	}
 
@@ -12,11 +12,11 @@ public interface BeforeJoin extends QueryPart {
 		return join(JoinMode.INNER_JOIN);
 	}
 
-	default Join join(String table) {
+	default Join join(final String table) {
 		return join().table(table);
 	}
 
-	default Join join(Join join) {
+	default Join join(final Join join) {
 		return join.builder(this);
 	}
 
@@ -24,11 +24,15 @@ public interface BeforeJoin extends QueryPart {
 		return join(table.tableName());
 	}
 
+	default Join joinSQL(final String sql) {
+		return new Join(this, null).sql(sql);
+	}
+
 	default Join innerJoin() {
 		return join();
 	}
 
-	default Join innerJoin(String table) {
+	default Join innerJoin(final String table) {
 		return join().table(table);
 	}
 
@@ -40,7 +44,7 @@ public interface BeforeJoin extends QueryPart {
 		return join(JoinMode.CROSS_JOIN);
 	}
 
-	default Join crossJoin(String table) {
+	default Join crossJoin(final String table) {
 		return crossJoin().table(table);
 	}
 
@@ -52,7 +56,7 @@ public interface BeforeJoin extends QueryPart {
 		return join(JoinMode.OUTER_JOIN);
 	}
 
-	default Join outerJoin(String table) {
+	default Join outerJoin(final String table) {
 		return outerJoin().table(table);
 	}
 
@@ -64,7 +68,7 @@ public interface BeforeJoin extends QueryPart {
 		return outerJoin();
 	}
 
-	default Join fullOuterJoin(String table) {
+	default Join fullOuterJoin(final String table) {
 		return outerJoin(table);
 	}
 
@@ -76,7 +80,7 @@ public interface BeforeJoin extends QueryPart {
 		return join(JoinMode.LEFT_JOIN);
 	}
 
-	default Join leftJoin(String table) {
+	default Join leftJoin(final String table) {
 		return leftJoin().table(table);
 	}
 
@@ -88,7 +92,7 @@ public interface BeforeJoin extends QueryPart {
 		return leftJoin();
 	}
 
-	default Join leftOuterJoin(String table) {
+	default Join leftOuterJoin(final String table) {
 		return leftJoin(table);
 	}
 
@@ -100,7 +104,7 @@ public interface BeforeJoin extends QueryPart {
 		return join(JoinMode.RIGHT_JOIN);
 	}
 
-	default Join rightJoin(String table) {
+	default Join rightJoin(final String table) {
 		return rightJoin().table(table);
 	}
 
@@ -112,7 +116,7 @@ public interface BeforeJoin extends QueryPart {
 		return rightJoin();
 	}
 
-	default Join rightOuterJoin(String table) {
+	default Join rightOuterJoin(final String table) {
 		return rightJoin(table);
 	}
 

@@ -1,16 +1,16 @@
 package de.ec.sql;
 
-import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Delete implements QueryBuilder, BeforeWhere, PrimaryKeyword {
+public class Delete implements QueryBuilder, BeforeWhere {
 
 	private BeforeDelete builder;
 	private final String table;
+	private String sql;
 
 	public Delete(final String table) {
 		this.table = table;
@@ -34,10 +34,14 @@ public class Delete implements QueryBuilder, BeforeWhere, PrimaryKeyword {
 			strings.add(options.newLine());
 		}
 
-		strings.add(options.padCased("DELETE FROM"));
+		if (sql != null) {
+			strings.add(sql);
+		} else {
+			strings.add(options.padCased("DELETE FROM"));
 
-		strings.add(" ");
-		strings.add(table);
+			strings.add(" ");
+			strings.add(table);
+		}
 
 		return strings.toString();
 	}

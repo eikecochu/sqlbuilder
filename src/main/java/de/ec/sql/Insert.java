@@ -4,19 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import de.ec.sql.Keyword.PrimaryKeyword;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Insert implements QueryBuilder, BeforeSelect, PrimaryKeyword {
+public class Insert implements QueryBuilder, BeforeSelect {
 
 	private enum InsertType implements QueryPart {
-		INSERT("INSERT INTO"), REPLACE("REPLACE INTO"), INSERT_OR_REPLACE("INSERT OR REPLACE INTO"),
-		INSERT_OR_ROLLBACK("INSERT OR ROLLBACK INTO"), INSERT_OR_ABORT("INSERT OR ABORT INTO"),
-		INSERT_OR_FAIL("INSERT OR FAIL INTO"), INSERT_OR_IGNORE("INSERT OR IGNORE INTO");
+		INSERT("INSERT INTO"),
+		REPLACE("REPLACE INTO"),
+		INSERT_OR_REPLACE("INSERT OR REPLACE INTO"),
+		INSERT_OR_ROLLBACK("INSERT OR ROLLBACK INTO"),
+		INSERT_OR_ABORT("INSERT OR ABORT INTO"),
+		INSERT_OR_FAIL("INSERT OR FAIL INTO"),
+		INSERT_OR_IGNORE("INSERT OR IGNORE INTO");
 
 		private String string;
 
@@ -36,6 +39,7 @@ public class Insert implements QueryBuilder, BeforeSelect, PrimaryKeyword {
 	private final List<InsertValue> insertValues = new ArrayList<>();
 	private boolean defaultValues = false;
 	private boolean onlyValues = true;
+	private String sql;
 
 	public Insert(final String table) {
 		this.table = table;
@@ -125,51 +129,55 @@ public class Insert implements QueryBuilder, BeforeSelect, PrimaryKeyword {
 			strings.add(options.newLine());
 		}
 
-		strings.add(options.padCased(insertType.string(options)));
-
-		strings.add(" ");
-		strings.add(table);
-
-		if (defaultValues) {
-			strings.add("DEFAULT VALUES");
+		if (sql != null) {
+			strings.add(sql);
 		} else {
-			if (!onlyValues) {
-				strings.add(" (");
+			strings.add(options.padCased(insertType.string(options)));
 
-				final StringJoiner columns = new StringJoiner();
-				for (final InsertValue insertValue : insertValues)
-					columns.add(QueryUtils.splitName(options, insertValue.getColumn())
-							.string(options));
-				strings.add(columns.toString(", "));
+			strings.add(" ");
+			strings.add(table);
 
-				strings.add(")");
-			}
+			if (defaultValues) {
+				strings.add("DEFAULT VALUES");
+			} else {
+				if (!onlyValues) {
+					strings.add(" (");
 
-			strings.add(options.newLine());
-			strings.add(options.padCased("VALUES"));
+					final StringJoiner columns = new StringJoiner();
+					for (final InsertValue insertValue : insertValues)
+						columns.add(QueryUtils.splitName(options, insertValue.getColumn())
+								.string(options));
+					strings.add(columns.toString(", "));
 
-			assert (!insertValues.isEmpty());
-
-			final int count = insertValues.get(0)
-					.getValues()
-					.size();
-			for (int i = 0; i < count; i++) {
-				if (i > 0)
-					strings.add(options.newLine())
-							.add(options.padCased(""));
-				strings.add(" (");
-				final StringJoiner values = new StringJoiner();
-				for (final InsertValue insertValue : insertValues) {
-					if (options.prepare()) {
-						values.add("?");
-						options.addPreparedValue(insertValue.getValues()
-								.get(i));
-					} else
-						values.add(QueryUtils.valueToString(options, insertValue.getValues()
-								.get(i)));
+					strings.add(")");
 				}
-				strings.add(values.toString(", "));
-				strings.add(")");
+
+				strings.add(options.newLine());
+				strings.add(options.padCased("VALUES"));
+
+				assert (!insertValues.isEmpty());
+
+				final int count = insertValues.get(0)
+						.getValues()
+						.size();
+				for (int i = 0; i < count; i++) {
+					if (i > 0)
+						strings.add(options.newLine())
+								.add(options.padCased(""));
+					strings.add(" (");
+					final StringJoiner values = new StringJoiner();
+					for (final InsertValue insertValue : insertValues) {
+						if (options.prepare()) {
+							values.add("?");
+							options.addPreparedValue(insertValue.getValues()
+									.get(i));
+						} else
+							values.add(QueryUtils.valueToString(options, insertValue.getValues()
+									.get(i)));
+					}
+					strings.add(values.toString(", "));
+					strings.add(")");
+				}
 			}
 		}
 

@@ -6,8 +6,12 @@ public interface BeforeHaving extends QueryPart {
 		return new Having(this);
 	}
 
-	default Having having(Having having) {
+	default Having having(final Having having) {
 		return having.builder(this);
+	}
+
+	default Having havingSQL(final String sql) {
+		return having().sql(sql);
 	}
 
 }

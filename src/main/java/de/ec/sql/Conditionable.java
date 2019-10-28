@@ -11,7 +11,8 @@ import lombok.Getter;
 public abstract class Conditionable<T extends Conditionable<T>> implements QueryPart {
 
 	public enum Operator implements QueryPart {
-		AND("AND"), OR("OR");
+		AND("AND"),
+		OR("OR");
 
 		private final String string;
 
