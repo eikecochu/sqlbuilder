@@ -16,8 +16,7 @@ String sql = new Select("*")
 		.or()
 		.col("USER_NAME").like("%test%")
 	.orderBy("USER_NAME")
-	.query()
-	.preparedString();
+	.string();
 ```
 will result in:
 ```SQL
@@ -33,8 +32,7 @@ SELECT *
 String sql = new Insert("USERS")
 	.column("USER_ID", 1)
 	.column("USER_NAME").value("Administrator")
-	.query()
-	.preparedString();
+	.string();
 ```
 will result in:
 ```SQL
@@ -49,8 +47,7 @@ String sql = new Update("USERS")
 	.set("USER_NAME", "UpdatedAdmin")
 	.where()
 	.col("USER_ID", 1)
-	.query()
-	.preparedString();
+	.string();
 ```
 will result in
 ```SQL
@@ -67,8 +64,7 @@ String sql = new Delete("USERS")
 		.col("USER_ID").eq(1)
 		.or()
 		.col("USER_NAME").not().eq("Administrator")
-	.query()
-	.preparedString();
+	.string();
 ```
 will result in
 ```SQL
