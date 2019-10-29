@@ -2,6 +2,8 @@ package com.github.eikecochu.sqlbuilder;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.eikecochu.sqlbuilder.ConditionValue.ConditionValueType;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -10,6 +12,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	public enum Operator implements QueryPart {
 		EQUALS("="),
+		NOT_EQUALS("<>"),
 		LIKE("LIKE"),
 		IN("IN"),
 		IS_NULL("IS NULL"),
@@ -17,7 +20,8 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 		GE(">="),
 		GT(">"),
 		LE("<="),
-		LT("<=");
+		LT("<="),
+		BETWEEN("BETWEEN");
 
 		private String string;
 
@@ -37,8 +41,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	private Object[] values;
 	private Operator operator;
 	private boolean not;
-	private boolean column;
-	private boolean expression;
+	private ConditionValueType type;
 
 	protected ConditionPart(final Conditionable<T> conditionable, final String name) {
 		this.conditionable = conditionable;
@@ -47,6 +50,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The NOT operator
+	 *
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionPart<T> not() {
@@ -56,6 +60,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The EQUALS operator
+	 *
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionValue<T> eq() {
@@ -63,7 +68,17 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	}
 
 	/**
+	 * The NOT EQUALS operator
+	 *
+	 * @return The value instance to set the compare value
+	 */
+	public ConditionValue<T> notEq() {
+		return new ConditionValue<>(this, Operator.NOT_EQUALS);
+	}
+
+	/**
 	 * The GREATER EQUALS operator
+	 *
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionValue<T> ge() {
@@ -72,6 +87,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The GREATER THAN operator
+	 *
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionValue<T> gt() {
@@ -80,6 +96,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The LESSER EQUALS operator
+	 *
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionValue<T> le() {
@@ -88,6 +105,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The LESSER THAN operator
+	 *
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionValue<T> lt() {
@@ -96,6 +114,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The LIKE operator
+	 *
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionValue<T> like() {
@@ -104,30 +123,47 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The IN operator
+	 *
 	 * @return The value instance to set the compare values
 	 */
 	public ConditionValues<T> in() {
-		return new ConditionValues<>(this);
+		return new ConditionValues<>(this, Operator.IN);
+	}
+
+	/**
+	 * The BETWEEN operator
+	 *
+	 * @return The value instance to set the compare values
+	 */
+	public ConditionBiValue<T> between() {
+		return new ConditionBiValue<>(this, Operator.BETWEEN);
 	}
 
 	@SuppressWarnings("unchecked")
 	protected T condition(final ConditionValue<T> conditionValue) {
 		this.operator = conditionValue.getOperator();
 		this.value = conditionValue.getValue();
-		this.column = conditionValue.isColumn();
-		this.expression = conditionValue.isExpression();
+		this.type = conditionValue.getType();
 		return (T) conditionable;
 	}
 
 	@SuppressWarnings("unchecked")
 	protected T condition(final ConditionValues<T> conditionValues) {
 		this.values = conditionValues.getValues();
-		this.operator = Operator.IN;
+		this.operator = conditionValues.getOperator();
+		return (T) conditionable;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected T condition(final ConditionBiValue<T> conditionValues) {
+		this.values = conditionValues.getValues();
+		this.operator = conditionValues.getOperator();
 		return (T) conditionable;
 	}
 
 	/**
 	 * The EQUALS operator
+	 *
 	 * @param value The value to compare to
 	 * @return The previous instance
 	 */
@@ -137,6 +173,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The GREATER EQUALS operator
+	 *
 	 * @param value The value to compare to
 	 * @return The previous instance
 	 */
@@ -146,6 +183,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The GREATER THAN operator
+	 *
 	 * @param value The value to compare to
 	 * @return The previous instance
 	 */
@@ -155,6 +193,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The LESSER EQUALS operator
+	 *
 	 * @param value The value to compare to
 	 * @return The previous instance
 	 */
@@ -164,6 +203,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The LESSER THAN operator
+	 *
 	 * @param value The value to compare to
 	 * @return The previous instance
 	 */
@@ -173,6 +213,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The LIKE operator
+	 *
 	 * @param value The value to compare to
 	 * @return The previous instance
 	 */
@@ -182,6 +223,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The IS NULL operator
+	 *
 	 * @param value The value to compare to
 	 * @return The previous instance
 	 */
@@ -191,6 +233,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The IN operator
+	 *
 	 * @param values The values to compare to
 	 * @return The previous instance
 	 */
@@ -200,6 +243,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	/**
 	 * The IN operator
+	 *
 	 * @param values The values to compare to
 	 * @return The previous instance
 	 */
@@ -211,6 +255,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	protected T op(final Object value, final Operator operator) {
 		this.value = value;
 		this.operator = operator;
+		this.type = ConditionValueType.VALUE;
 		return (T) conditionable;
 	}
 
@@ -237,18 +282,41 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 			if (operator != Operator.IS_NULL && operator != Operator.IS_NOT_NULL) {
 				strings.add(" ");
-				if (expression)
-					strings.add(QueryUtils.valueToString(options, value));
-				else if (column)
-					strings.add(QueryUtils.splitName(options, value.toString())
-							.string(options));
-				else if (value != null) {
-					if (options.prepare()) {
-						strings.add("?");
-						options.addPreparedValue(value);
-					} else
+				if (type != null) {
+					if (type == ConditionValueType.EXPRESSION)
 						strings.add(QueryUtils.valueToString(options, value));
-				} else {
+					else if (type == ConditionValueType.COLUMN)
+						strings.add(QueryUtils.splitName(options, value.toString())
+								.string(options));
+					else if (type == ConditionValueType.VALUE) {
+						if (options.prepare()) {
+							strings.add("?");
+							options.addPreparedValue(value);
+						} else
+							strings.add(QueryUtils.valueToString(options, value));
+					} else if (type == ConditionValueType.ALL || type == ConditionValueType.ANY) {
+						strings.add(type.toString());
+						strings.add(" (");
+
+						final QueryOptions subOptions = options.copy()
+								.indentLevel(options.indentLevel() + 1);
+						strings.add(subOptions.newLine(true));
+						strings.add(((QueryBuilder) value).string(subOptions)
+								.trim());
+
+						strings.add(")");
+					}
+				} else if (operator == Operator.BETWEEN) {
+					if (options.prepare()) {
+						strings.add("? AND ?");
+						options.addPreparedValue(values[0]);
+						options.addPreparedValue(values[1]);
+					} else {
+						strings.add(QueryUtils.valueToString(options, values[0]));
+						strings.add(" AND ");
+						strings.add(QueryUtils.valueToString(options, values[1]));
+					}
+				} else if (operator == Operator.IN) {
 					strings.add("(");
 					if (options.prepare()) {
 						strings.add(QueryUtils.preparedInValues(values.length));

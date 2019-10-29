@@ -16,12 +16,13 @@ public class With implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, 
 	private BeforeWith builder;
 	private final String name;
 	private final List<String> columns = new ArrayList<>();
-	private Query query;
+	private QueryBuilder query;
 	private boolean recursive;
 	private String sql;
 
 	/**
 	 * Create a new WITH statement
+	 *
 	 * @param name The name of the with-block
 	 */
 	public With(final String name) {
@@ -35,6 +36,7 @@ public class With implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, 
 
 	/**
 	 * Flag WITH statement as RECURSIVE
+	 *
 	 * @return This WITH statement
 	 */
 	public With recursive() {
@@ -44,6 +46,7 @@ public class With implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, 
 
 	/**
 	 * Add a column to this WITH statement
+	 *
 	 * @param column The column name to add
 	 * @return This WITH statement
 	 */
@@ -54,6 +57,7 @@ public class With implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, 
 
 	/**
 	 * Add multiple columns to this WITH statement
+	 *
 	 * @param columns The column names to add
 	 * @return This WITH statement
 	 */
@@ -65,21 +69,13 @@ public class With implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, 
 
 	/**
 	 * Use a subquery as the body of this WITH statement
-	 * @param query The subquery to use as body
-	 * @return This WITH statement
-	 */
-	public With as(final Query query) {
-		this.query = query;
-		return this;
-	}
-
-	/**
-	 * Use a subquery as the body of this WITH statement
+	 *
 	 * @param builder The subquery builder to use as body
 	 * @return This WITH statement
 	 */
 	public With as(final QueryBuilder builder) {
-		return as(builder.query());
+		query = builder;
+		return this;
 	}
 
 	@Override
@@ -101,9 +97,9 @@ public class With implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, 
 			strings.add(",");
 		}
 
-		if (sql != null) {
+		if (sql != null)
 			strings.add(sql);
-		} else {
+		else {
 			strings.add(" ");
 			strings.add(name);
 
@@ -119,7 +115,7 @@ public class With implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, 
 
 			final QueryOptions subOptions = options.copy()
 					.indentLevel(options.indentLevel() + 1);
-			strings.add(subOptions.newLine());
+			strings.add(subOptions.newLine(true));
 			strings.add(query.string(subOptions)
 					.trim());
 

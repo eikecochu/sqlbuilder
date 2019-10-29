@@ -33,7 +33,8 @@ public class Query implements QueryBuilder {
 
 	/**
 	 * Transforms this statement into an SQL string
-	 * @param options The QueryOptions to apply for transformation
+	 *
+	 * @param options    The QueryOptions to apply for transformation
 	 * @param connection Optional database connection
 	 * @return The created SQL string
 	 */
@@ -49,6 +50,7 @@ public class Query implements QueryBuilder {
 
 	/**
 	 * Sets the QueryOptions of this Query instance
+	 *
 	 * @param options The QueryOptions
 	 * @return This Query instance
 	 */
@@ -61,6 +63,7 @@ public class Query implements QueryBuilder {
 
 	/**
 	 * Prepares the statement using the passed database connection
+	 *
 	 * @param connection The database connection
 	 * @return The PreparedStatement
 	 * @throws SQLException
@@ -71,8 +74,9 @@ public class Query implements QueryBuilder {
 
 	/**
 	 * Prepares the statement using the passed database connection
+	 *
 	 * @param connection The database connection
-	 * @param options The QueryOptions to use
+	 * @param options    The QueryOptions to use
 	 * @return The PreparedStatement
 	 * @throws SQLException
 	 */

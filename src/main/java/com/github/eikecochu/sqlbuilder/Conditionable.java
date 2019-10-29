@@ -7,6 +7,12 @@ import java.util.Map.Entry;
 import lombok.AccessLevel;
 import lombok.Getter;
 
+/**
+ * Abstract base class for condition like statements, generic to allow multiple
+ * origins, for example from WHERE, JOIN etc.
+ *
+ * @param <T> The type which allows setting conditions
+ */
 @Getter(AccessLevel.PROTECTED)
 public abstract class Conditionable<T extends Conditionable<T>> implements QueryPart {
 
@@ -35,6 +41,7 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 
 	/**
 	 * Set the comparing values
+	 *
 	 * @param values The comparing values
 	 * @return This instance
 	 */
@@ -48,21 +55,29 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 
 	/**
 	 * Use a column as constraint
+	 *
 	 * @param name The column name
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionPart<T> col(final String name) {
+		final ConditionPart<T> part = new ConditionPart<>(conditionable(), name);
+		addPart(part);
+		return part;
+	}
+
+	@SuppressWarnings("unchecked")
+	T addPart(final QueryPart part) {
 		if (!parts.isEmpty() && !(parts.get(parts.size() - 1) instanceof Operator))
 			this.and();
 
-		final ConditionPart<T> part = new ConditionPart<>(conditionable(), name);
 		parts.add(part);
-		return part;
+		return (T) conditionable;
 	}
 
 	/**
 	 * Compare a column to a value
-	 * @param name The column name
+	 *
+	 * @param name  The column name
 	 * @param value The comparing value
 	 * @return This instance
 	 */
@@ -72,7 +87,8 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 
 	/**
 	 * Compare a column to multiple values
-	 * @param name The column name
+	 *
+	 * @param name   The column name
 	 * @param values The comparing values
 	 * @return This instance
 	 */
@@ -82,6 +98,7 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 
 	/**
 	 * Include a subgroup in the condition
+	 *
 	 * @param group The subgroup
 	 * @return This instance
 	 */
@@ -96,22 +113,26 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 
 	/**
 	 * Connect the previous and next condition with the AND operator
+	 *
 	 * @return This instance
 	 */
-	public Conditionable<T> and() {
+	@SuppressWarnings("unchecked")
+	public T and() {
 		if (!parts.isEmpty() && parts.size() % 2 == 1)
 			parts.add(Operator.AND);
-		return this;
+		return (T) this;
 	}
 
 	/**
 	 * Connect the previous and next condition with the OR operator
+	 *
 	 * @return This instance
 	 */
-	public Conditionable<T> or() {
+	@SuppressWarnings("unchecked")
+	public T or() {
 		if (!parts.isEmpty() && parts.size() % 2 == 1)
 			parts.add(Operator.OR);
-		return this;
+		return (T) this;
 	}
 
 	private Conditionable<T> conditionable() {
@@ -147,11 +168,9 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 				if (op != null && !op.isEmpty() && val != null && !val.isEmpty())
 					strings.add(op)
 							.add(val);
-			} else {
-				if (val != null && !val.isEmpty()) {
-					needsOp = true;
-					strings.add(val);
-				}
+			} else if (val != null && !val.isEmpty()) {
+				needsOp = true;
+				strings.add(val);
 			}
 		}
 

@@ -14,6 +14,7 @@ public class Delete implements QueryBuilder, BeforeWhere {
 
 	/**
 	 * Create a new DELETE statement
+	 *
 	 * @param table The name of the table to delete from
 	 */
 	public Delete(final String table) {
@@ -22,6 +23,7 @@ public class Delete implements QueryBuilder, BeforeWhere {
 
 	/**
 	 * Create a new DELETE statement
+	 *
 	 * @param table The Table representation of the table to delete from
 	 */
 	public Delete(final Table table) {
@@ -42,9 +44,9 @@ public class Delete implements QueryBuilder, BeforeWhere {
 			strings.add(options.newLine());
 		}
 
-		if (sql != null) {
+		if (sql != null)
 			strings.add(sql);
-		} else {
+		else {
 			strings.add(options.padCased("DELETE FROM"));
 
 			strings.add(" ");

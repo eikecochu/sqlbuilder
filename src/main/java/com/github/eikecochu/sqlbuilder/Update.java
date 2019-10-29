@@ -40,6 +40,7 @@ public class Update implements QueryBuilder, BeforeWhere {
 
 	/**
 	 * Create a new UPDATE statement
+	 *
 	 * @param table The name of the table to update
 	 */
 	public Update(final String table) {
@@ -48,6 +49,7 @@ public class Update implements QueryBuilder, BeforeWhere {
 
 	/**
 	 * Create a new UPDATE statement
+	 *
 	 * @param table The Table representation of the table to update
 	 */
 	public Update(final Table table) {
@@ -66,6 +68,7 @@ public class Update implements QueryBuilder, BeforeWhere {
 
 	/**
 	 * Set this UPDATE statement to be UPDATE OR ROLLBACK
+	 *
 	 * @return This UPDATE statement
 	 */
 	public Update orRollback() {
@@ -74,6 +77,7 @@ public class Update implements QueryBuilder, BeforeWhere {
 
 	/**
 	 * Set this UPDATE statement to be UPDATE OR ABORT
+	 *
 	 * @return This UPDATE statement
 	 */
 	public Update orAbort() {
@@ -82,6 +86,7 @@ public class Update implements QueryBuilder, BeforeWhere {
 
 	/**
 	 * Set this UPDATE statement to be UPDATE OR FAIL
+	 *
 	 * @return This UPDATE statement
 	 */
 	public Update orFail() {
@@ -90,6 +95,7 @@ public class Update implements QueryBuilder, BeforeWhere {
 
 	/**
 	 * Set this UPDATE statement to be UPDATE OR REPLACE
+	 *
 	 * @return This UPDATE statement
 	 */
 	public Update orReplace() {
@@ -98,6 +104,7 @@ public class Update implements QueryBuilder, BeforeWhere {
 
 	/**
 	 * Set this UPDATE statement to be UPDATE OR IGNORE
+	 *
 	 * @return This UPDATE statement
 	 */
 	public Update orIgnore() {
@@ -106,6 +113,7 @@ public class Update implements QueryBuilder, BeforeWhere {
 
 	/**
 	 * Set a value to be updated
+	 *
 	 * @param column The column name to use for updating the value
 	 * @return The UpdateValue instance to set the value for updating
 	 */
@@ -117,8 +125,9 @@ public class Update implements QueryBuilder, BeforeWhere {
 
 	/**
 	 * Set a value to be updated
+	 *
 	 * @param column The column name to use for updating the value
-	 * @param value The value to be updated
+	 * @param value  The value to be updated
 	 * @return This UPDATE statement
 	 */
 	public Update set(final String column, final Object value) {
@@ -127,6 +136,7 @@ public class Update implements QueryBuilder, BeforeWhere {
 
 	/**
 	 * Set multiple values to be updated
+	 *
 	 * @param values The ValueHolder instance that holds the update values
 	 * @return This UPDATE statement
 	 */
@@ -145,9 +155,9 @@ public class Update implements QueryBuilder, BeforeWhere {
 			strings.add(options.newLine());
 		}
 
-		if (sql != null) {
+		if (sql != null)
 			strings.add(sql);
-		} else {
+		else {
 			strings.add(options.padCased(updateType.string(options)));
 
 			strings.add(" ");

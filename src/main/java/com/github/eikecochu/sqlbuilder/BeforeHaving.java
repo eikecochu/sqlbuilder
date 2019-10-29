@@ -7,6 +7,7 @@ public interface BeforeHaving extends QueryPart {
 
 	/**
 	 * Continue query with HAVING
+	 *
 	 * @return The new HAVING statement
 	 */
 	default Having having() {
@@ -15,6 +16,7 @@ public interface BeforeHaving extends QueryPart {
 
 	/**
 	 * Accept an existing HAVING statement as predecessor
+	 *
 	 * @param having The existing HAVING statement
 	 * @return Returns the passed HAVING statement
 	 */
@@ -24,6 +26,7 @@ public interface BeforeHaving extends QueryPart {
 
 	/**
 	 * Use plain SQL to form this HAVING statement
+	 *
 	 * @param sql The sql string
 	 * @return The new HAVING statement
 	 */

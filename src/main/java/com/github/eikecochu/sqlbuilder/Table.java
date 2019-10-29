@@ -7,6 +7,7 @@ public interface Table extends Supplier<String> {
 
 	/**
 	 * The table name
+	 *
 	 * @return The table name
 	 */
 	default String tableName() {

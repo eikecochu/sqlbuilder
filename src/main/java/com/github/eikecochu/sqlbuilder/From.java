@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy {
+public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
 
 	@Data
 	@Accessors(fluent = true)
@@ -42,6 +42,7 @@ public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupB
 
 	/**
 	 * Specify the target table by name
+	 *
 	 * @param table The table name to select from
 	 * @return This FROM statement
 	 */
@@ -62,6 +63,7 @@ public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupB
 
 	/**
 	 * Specify the target table by Table representation
+	 *
 	 * @param table The Table representation to select from
 	 * @return This FROM statement
 	 */
@@ -71,6 +73,7 @@ public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupB
 
 	/**
 	 * Specify the target tables by name
+	 *
 	 * @param table The table names to select from
 	 * @return This FROM statement
 	 */
@@ -82,6 +85,7 @@ public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupB
 
 	/**
 	 * Specify the target table by Table representations
+	 *
 	 * @param table The Table representations to select from
 	 * @return This FROM statement
 	 */
@@ -93,6 +97,7 @@ public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupB
 
 	/**
 	 * Specify a subquery to select from
+	 *
 	 * @param query The subquery to select from
 	 * @param alias The subquery alias
 	 * @return This FROM statement
@@ -114,9 +119,9 @@ public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupB
 			strings.add(options.newLine());
 		}
 
-		if (sql != null) {
+		if (sql != null)
 			strings.add(sql);
-		} else {
+		else {
 			strings.add(options.padCased("FROM"));
 			strings.add(" ");
 

@@ -7,6 +7,7 @@ public interface BeforeDelete extends QueryPart {
 
 	/**
 	 * Continue query with DELETE
+	 *
 	 * @param table The name of the table to delete from
 	 * @return The new DELETE statement
 	 */
@@ -16,6 +17,7 @@ public interface BeforeDelete extends QueryPart {
 
 	/**
 	 * Continue query with DELETE
+	 *
 	 * @param table The Table representation of the table to delete from
 	 * @return The new DELETE statement
 	 */
@@ -25,6 +27,7 @@ public interface BeforeDelete extends QueryPart {
 
 	/**
 	 * Accept an existing DELETE statement as predecessor
+	 *
 	 * @param delete The existing DELETE statement
 	 * @return Returns the passed DELETE statement
 	 */
@@ -34,6 +37,7 @@ public interface BeforeDelete extends QueryPart {
 
 	/**
 	 * Use plain SQL to form this DELETE statement
+	 *
 	 * @param sql The sql string
 	 * @return The new DELETE statement
 	 */

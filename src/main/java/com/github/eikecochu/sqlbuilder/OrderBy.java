@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class OrderBy implements QueryBuilder {
+public class OrderBy implements QueryBuilder, BeforeUnion {
 
 	private BeforeOrderBy builder;
 	private final List<OrderByTerm> orderByTerms = new ArrayList<>();
@@ -23,7 +23,8 @@ public class OrderBy implements QueryBuilder {
 
 	/**
 	 * Order by a column name and ascending or descending
-	 * @param name The column name to order by
+	 *
+	 * @param name      The column name to order by
 	 * @param ascending true for ascending order, false for descending order
 	 * @return This ORDER BY statement
 	 */
@@ -33,7 +34,9 @@ public class OrderBy implements QueryBuilder {
 	}
 
 	/**
-	 * Add a column to order by. Column name can also contain order direction, e.g. "COL DESC"
+	 * Add a column to order by. Column name can also contain order direction, e.g.
+	 * "COL DESC"
+	 *
 	 * @param name The column name to order by, including optional order direction
 	 * @return This ORDER BY statement
 	 */
@@ -45,9 +48,8 @@ public class OrderBy implements QueryBuilder {
 			if (nameUpper.endsWith(" DESC")) {
 				ascending = false;
 				name = name.replaceAll("\\s+[Dd][Ee][Ss][Cc]\\s*$", "");
-			} else {
+			} else
 				name = name.replaceAll("\\s+[Aa][Ss][Cc]\\s*$", "");
-			}
 			String schema = null;
 			if (name.contains(".")) {
 				final String[] parts = name.split("\\.");
@@ -61,6 +63,7 @@ public class OrderBy implements QueryBuilder {
 
 	/**
 	 * Order by multiple columns
+	 *
 	 * @param names The column names to order by
 	 * @return This ORDER BY statement
 	 */
@@ -73,6 +76,7 @@ public class OrderBy implements QueryBuilder {
 
 	/**
 	 * Order ascending by a column
+	 *
 	 * @param name The column name to order by in ascending order
 	 * @return This ORDER BY statement
 	 */
@@ -82,6 +86,7 @@ public class OrderBy implements QueryBuilder {
 
 	/**
 	 * Order descending by a column
+	 *
 	 * @param name The column name to order by in descending order
 	 * @return This ORDER BY statement
 	 */
@@ -96,9 +101,9 @@ public class OrderBy implements QueryBuilder {
 		if (builder != null)
 			strings.add(builder.string(options));
 
-		if (sql != null) {
+		if (sql != null)
 			strings.add(sql);
-		} else {
+		else {
 			final StringJoiner orderStrings = new StringJoiner();
 			for (final OrderByTerm orderByTerm : orderByTerms)
 				orderStrings.add(orderByTerm.string(options));

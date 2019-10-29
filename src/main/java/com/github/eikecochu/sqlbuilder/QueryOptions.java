@@ -41,6 +41,7 @@ public class QueryOptions {
 	private int fetchSize = FETCH_ALL;
 	private int fetchDirection = ResultSet.FETCH_FORWARD;
 	private boolean escapeKeywords = false;
+	private String lineDelimiter = "\n";
 
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
@@ -61,14 +62,18 @@ public class QueryOptions {
 	}
 
 	String indentString() {
-		if (pretty && indent) {
+		if (pretty && indent)
 			return StringUtils.repeat(' ', indentLevel * padLength + (indentLevel == 0 ? 0 : 1));
-		} else
+		else
 			return "";
 	}
 
 	String newLine() {
-		return pretty ? "\n" + indentString() : " ";
+		return newLine(false);
+	}
+
+	String newLine(final boolean noSpace) {
+		return pretty ? lineDelimiter + indentString() : noSpace ? "" : " ";
 	}
 
 	String padCased(final String keyword) {
@@ -108,6 +113,7 @@ public class QueryOptions {
 				.fetchSize(fetchSize)
 				.fetchDirection(fetchDirection)
 				.escapeKeywords(escapeKeywords)
+				.lineDelimiter(lineDelimiter)
 				.indentLevel(indentLevel);
 	}
 
@@ -136,6 +142,7 @@ public class QueryOptions {
 
 	/**
 	 * Fetch all columns on query
+	 *
 	 * @return This QueryOptions instance
 	 */
 	public QueryOptions fetchAll() {
@@ -144,6 +151,7 @@ public class QueryOptions {
 
 	/**
 	 * Fetch the first row only on query
+	 *
 	 * @return This QueryOptions instance
 	 */
 	public QueryOptions fetchFirst() {
@@ -152,8 +160,9 @@ public class QueryOptions {
 
 	/**
 	 * Register a converter for a specific class to be used for value conversion
+	 *
 	 * @param clazz The class of the values to be converted
-	 * @param func The value converter
+	 * @param func  The value converter
 	 * @return This QueryOptions instance
 	 */
 	@SuppressWarnings("unchecked")
@@ -166,6 +175,7 @@ public class QueryOptions {
 
 	/**
 	 * Returns the default options
+	 *
 	 * @return The default options
 	 */
 	public static QueryOptions getDefaultOptions() {
@@ -174,6 +184,7 @@ public class QueryOptions {
 
 	/**
 	 * Sets the default options
+	 *
 	 * @param options The new default options
 	 */
 	public static void setDefaultOptions(final QueryOptions options) {

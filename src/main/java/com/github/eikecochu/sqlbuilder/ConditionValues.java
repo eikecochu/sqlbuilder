@@ -3,6 +3,8 @@ package com.github.eikecochu.sqlbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.eikecochu.sqlbuilder.ConditionPart.Operator;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -10,14 +12,17 @@ import lombok.Getter;
 public class ConditionValues<T extends Conditionable<T>> {
 
 	private final ConditionPart<T> part;
+	private final Operator operator;
 	private Object[] values;
 
-	protected ConditionValues(final ConditionPart<T> part) {
+	protected ConditionValues(final ConditionPart<T> part, final Operator operator) {
 		this.part = part;
+		this.operator = operator;
 	}
 
 	/**
 	 * Set multiple values to be used as conditions
+	 *
 	 * @param values The condition values
 	 * @return This instance
 	 */
@@ -28,6 +33,7 @@ public class ConditionValues<T extends Conditionable<T>> {
 
 	/**
 	 * Set multiple values to be used as conditions
+	 *
 	 * @param values The condition values
 	 * @return This instance
 	 */

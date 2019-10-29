@@ -7,6 +7,7 @@ public interface BeforeInsert extends QueryPart {
 
 	/**
 	 * Continue query with INSERT
+	 *
 	 * @param table The name of the table to insert to
 	 * @return The new INSERT statement
 	 */
@@ -16,6 +17,7 @@ public interface BeforeInsert extends QueryPart {
 
 	/**
 	 * Continue query with INSERT
+	 *
 	 * @param table The Table representation of the table to insert to
 	 * @return The new INSERT statement
 	 */
@@ -25,6 +27,7 @@ public interface BeforeInsert extends QueryPart {
 
 	/**
 	 * Accept an existing INSERT statement as predecessor
+	 *
 	 * @param insert The existing INSERT statement
 	 * @return Returns the passed INSERT statement
 	 */
@@ -34,6 +37,7 @@ public interface BeforeInsert extends QueryPart {
 
 	/**
 	 * Use plain SQL to form this INSERT statement
+	 *
 	 * @param sql The sql string
 	 * @return The new INSERT statement
 	 */

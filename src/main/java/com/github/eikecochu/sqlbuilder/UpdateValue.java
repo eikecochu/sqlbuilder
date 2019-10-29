@@ -18,6 +18,7 @@ public class UpdateValue {
 
 	/**
 	 * Set the updated value
+	 *
 	 * @param value The updated value
 	 * @return The UPDATE statement
 	 */
@@ -28,6 +29,7 @@ public class UpdateValue {
 
 	/**
 	 * Use an expression to update the value
+	 *
 	 * @param expr The update expression
 	 * @return The UPDATE statement
 	 */

@@ -43,6 +43,7 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 	/**
 	 * Create a new INSERT statement
+	 *
 	 * @param table The name of the table to insert into
 	 */
 	public Insert(final String table) {
@@ -51,6 +52,7 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 	/**
 	 * Create a new INSERT statement
+	 *
 	 * @param table The name of the table to insert into
 	 */
 	public Insert(final Table table) {
@@ -64,6 +66,7 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 	/**
 	 * Set this INSERT statement to be REPLACE
+	 *
 	 * @return This INSERT statement
 	 */
 	public Insert replace() {
@@ -72,6 +75,7 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 	/**
 	 * Set this INSERT statement to be INSERT OR REPLACE
+	 *
 	 * @return This INSERT statement
 	 */
 	public Insert orReplace() {
@@ -80,6 +84,7 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 	/**
 	 * Set this INSERT statement to be INSERT OR ROLLBACK
+	 *
 	 * @return This INSERT statement
 	 */
 	public Insert orRollback() {
@@ -88,6 +93,7 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 	/**
 	 * Set this INSERT statement to be INSERT OR ABORT
+	 *
 	 * @return This INSERT statement
 	 */
 	public Insert orAbort() {
@@ -96,6 +102,7 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 	/**
 	 * Set this INSERT statement to be INSERT OR FAIL
+	 *
 	 * @return This INSERT statement
 	 */
 	public Insert orFail() {
@@ -104,6 +111,7 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 	/**
 	 * Set this INSERT statement to be INSERT OR IGNORE
+	 *
 	 * @return This INSERT statement
 	 */
 	public Insert orIgnore() {
@@ -119,6 +127,7 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 	/**
 	 * Use a column to insert values into
+	 *
 	 * @param column The name of the column
 	 * @return The InsertValue instance to set the value to be inserted
 	 */
@@ -132,8 +141,9 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 	/**
 	 * Insert a value into a column by name
+	 *
 	 * @param column The name of the column
-	 * @param value The value to be inserted
+	 * @param value  The value to be inserted
 	 * @return This INSERT statement
 	 */
 	public Insert column(final String column, final Object value) {
@@ -142,6 +152,7 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 	/**
 	 * Insert multiple values by ValueHolder
+	 *
 	 * @param values The ValueHolder of the values to be inserted
 	 * @return This INSERT statement
 	 */
@@ -152,7 +163,9 @@ public class Insert implements QueryBuilder, BeforeSelect {
 	}
 
 	/**
-	 * Insert a value by value only. This will only work if no column names are specified.
+	 * Insert a value by value only. This will only work if no column names are
+	 * specified.
+	 *
 	 * @param value The value to be inserted
 	 * @return This INSERT statement
 	 */
@@ -162,7 +175,9 @@ public class Insert implements QueryBuilder, BeforeSelect {
 	}
 
 	/**
-	 * Insert multiple values by value only. This will only work if no column names are specified.
+	 * Insert multiple values by value only. This will only work if no column names
+	 * are specified.
+	 *
 	 * @param values The values to be inserted
 	 * @return This INSERT statement
 	 */
@@ -174,6 +189,7 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 	/**
 	 * Resets this INSERT statement columns and values
+	 *
 	 * @return This INSERT statement
 	 */
 	public Insert defaults() {
@@ -191,17 +207,17 @@ public class Insert implements QueryBuilder, BeforeSelect {
 			strings.add(options.newLine());
 		}
 
-		if (sql != null) {
+		if (sql != null)
 			strings.add(sql);
-		} else {
+		else {
 			strings.add(options.padCased(insertType.string(options)));
 
 			strings.add(" ");
 			strings.add(table);
 
-			if (defaultValues) {
+			if (defaultValues)
 				strings.add("DEFAULT VALUES");
-			} else {
+			else {
 				if (!onlyValues) {
 					strings.add(" (");
 
@@ -228,7 +244,7 @@ public class Insert implements QueryBuilder, BeforeSelect {
 								.add(options.padCased(""));
 					strings.add(" (");
 					final StringJoiner values = new StringJoiner();
-					for (final InsertValue insertValue : insertValues) {
+					for (final InsertValue insertValue : insertValues)
 						if (options.prepare()) {
 							values.add("?");
 							options.addPreparedValue(insertValue.getValues()
@@ -236,7 +252,6 @@ public class Insert implements QueryBuilder, BeforeSelect {
 						} else
 							values.add(QueryUtils.valueToString(options, insertValue.getValues()
 									.get(i)));
-					}
 					strings.add(values.toString(", "));
 					strings.add(")");
 				}

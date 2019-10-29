@@ -7,6 +7,7 @@ public interface BeforeWhere extends QueryPart {
 
 	/**
 	 * Continue query with WHERE
+	 *
 	 * @return The new WHERE statement
 	 */
 	default Where where() {
@@ -15,6 +16,7 @@ public interface BeforeWhere extends QueryPart {
 
 	/**
 	 * Continue query with WHERE
+	 *
 	 * @param values The ValueHolder to use as WHERE conditions
 	 * @return The new WHERE statement
 	 */
@@ -24,6 +26,7 @@ public interface BeforeWhere extends QueryPart {
 
 	/**
 	 * Accept an existing WHERE statement as predecessor
+	 *
 	 * @param where The existing WHERE statement
 	 * @return Returns the passed WHERE statement
 	 */
@@ -33,6 +36,7 @@ public interface BeforeWhere extends QueryPart {
 
 	/**
 	 * Use plain SQL to form this WHERE statement
+	 *
 	 * @param sql The sql string
 	 * @return The new WHERE statement
 	 */

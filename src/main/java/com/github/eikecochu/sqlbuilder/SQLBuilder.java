@@ -7,6 +7,7 @@ public abstract class SQLBuilder {
 
 	/**
 	 * Start with a WITH statement
+	 *
 	 * @param name The name of the WITH block
 	 * @return The new WITH statement
 	 */
@@ -16,6 +17,7 @@ public abstract class SQLBuilder {
 
 	/**
 	 * Start with a SELECT statement
+	 *
 	 * @param columns The columns to be selected
 	 * @return The new SELECT statement
 	 */
@@ -25,6 +27,7 @@ public abstract class SQLBuilder {
 
 	/**
 	 * Start with an INSERT statement
+	 *
 	 * @param table The table name of the table to insert into
 	 * @return The new INSERT statement
 	 */
@@ -34,6 +37,7 @@ public abstract class SQLBuilder {
 
 	/**
 	 * Start with an INSERT statement
+	 *
 	 * @param table The Table representation of the table to insert into
 	 * @return The new INSERT statement
 	 */
@@ -43,6 +47,7 @@ public abstract class SQLBuilder {
 
 	/**
 	 * Start with an UPDATE statement
+	 *
 	 * @param table The table name of the table to update
 	 * @return The new UPDATE statement
 	 */
@@ -52,6 +57,7 @@ public abstract class SQLBuilder {
 
 	/**
 	 * Start with an UPDATE statement
+	 *
 	 * @param table The Table representation of the table to update
 	 * @return The new UPDATE statement
 	 */
@@ -61,6 +67,7 @@ public abstract class SQLBuilder {
 
 	/**
 	 * Start with an DELETE statement
+	 *
 	 * @param table The table name of the table to delete from
 	 * @return The new DELETE statement
 	 */
@@ -70,6 +77,7 @@ public abstract class SQLBuilder {
 
 	/**
 	 * Start with an DELETE statement
+	 *
 	 * @param table The Table representation of the table to delete from
 	 * @return The new DELETE statement
 	 */

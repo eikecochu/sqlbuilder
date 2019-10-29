@@ -7,6 +7,7 @@ public interface BeforeWith extends QueryPart {
 
 	/**
 	 * Continue query with WITH
+	 *
 	 * @param name The name of the with-block
 	 * @return The new WITH statement
 	 */
@@ -16,6 +17,7 @@ public interface BeforeWith extends QueryPart {
 
 	/**
 	 * Accept an existing WITH statement as predecessor
+	 *
 	 * @param with The existing WITH statement
 	 * @return Returns the passed WITH statement
 	 */
@@ -25,6 +27,7 @@ public interface BeforeWith extends QueryPart {
 
 	/**
 	 * Use plain SQL to form this WITH statement
+	 *
 	 * @param sql The sql string
 	 * @return The new WITH statement
 	 */

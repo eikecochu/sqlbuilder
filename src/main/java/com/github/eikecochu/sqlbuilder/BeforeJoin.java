@@ -9,6 +9,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with the passed JOIN mode
+	 *
 	 * @param mode The JOIN mode to use
 	 * @return The new JOIN statement
 	 */
@@ -18,6 +19,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with INNER JOIN
+	 *
 	 * @return The new INNER JOIN statement
 	 */
 	default Join join() {
@@ -26,6 +28,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with JOIN
+	 *
 	 * @param table The name of the table to join to
 	 * @return The new JOIN statement
 	 */
@@ -35,6 +38,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with JOIN
+	 *
 	 * @param table The Table representation of the table to join to
 	 * @return The new JOIN statement
 	 */
@@ -44,6 +48,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Accept an existing JOIN statement as predecessor
+	 *
 	 * @param join The existing JOIN statement
 	 * @return Returns the passed JOIN statement
 	 */
@@ -53,6 +58,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Use plain SQL to form this JOIN statement
+	 *
 	 * @param sql The sql string
 	 * @return The new JOIN statement
 	 */
@@ -62,6 +68,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with INNER JOIN
+	 *
 	 * @return The new INNER JOIN statement
 	 */
 	default Join innerJoin() {
@@ -70,6 +77,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with INNER JOIN
+	 *
 	 * @param table The name of the table to join to
 	 * @return The new INNER JOIN statement
 	 */
@@ -79,6 +87,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with INNER JOIN
+	 *
 	 * @param table The Table representation of the table to join to
 	 * @return The new INNER JOIN statement
 	 */
@@ -88,6 +97,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with CROSS JOIN
+	 *
 	 * @return The new CROSS JOIN statement
 	 */
 	default Join crossJoin() {
@@ -96,6 +106,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with CROSS JOIN
+	 *
 	 * @param table The name of the table to join to
 	 * @return The new CROSS JOIN statement
 	 */
@@ -105,6 +116,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with CROSS JOIN
+	 *
 	 * @param table The Table representation of the table to join to
 	 * @return The new CROSS JOIN statement
 	 */
@@ -114,6 +126,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with OUTER JOIN
+	 *
 	 * @return The new OUTER JOIN statement
 	 */
 	default Join outerJoin() {
@@ -122,6 +135,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with OUTER JOIN
+	 *
 	 * @param table The name of the table to join to
 	 * @return The new OUTER JOIN statement
 	 */
@@ -131,6 +145,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with OUTER JOIN
+	 *
 	 * @param table The Table representation of the table to join to
 	 * @return The new OUTER JOIN statement
 	 */
@@ -140,6 +155,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with FULL OUTER JOIN
+	 *
 	 * @return The new FULL OUTER JOIN statement
 	 */
 	default Join fullOuterJoin() {
@@ -148,6 +164,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with FULL OUTER JOIN
+	 *
 	 * @param table The name of the table to join to
 	 * @return The new FULL OUTER JOIN statement
 	 */
@@ -157,6 +174,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with FULL OUTER JOIN
+	 *
 	 * @param table The Table representation of the table to join to
 	 * @return The new FULL OUTER JOIN statement
 	 */
@@ -166,6 +184,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with LEFT JOIN
+	 *
 	 * @return The new LEFT JOIN statement
 	 */
 	default Join leftJoin() {
@@ -174,6 +193,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with LEFT JOIN
+	 *
 	 * @param table The name of the table to join to
 	 * @return The new LEFT JOIN statement
 	 */
@@ -183,6 +203,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with LEFT JOIN
+	 *
 	 * @param table The Table representation of the table to join to
 	 * @return The new LEFT JOIN statement
 	 */
@@ -192,6 +213,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with LEFT OUTER JOIN
+	 *
 	 * @return The new LEFT OUTER JOIN statement
 	 */
 	default Join leftOuterJoin() {
@@ -200,6 +222,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with LEFT OUTER JOIN
+	 *
 	 * @param table The name of the table to join to
 	 * @return The new LEFT OUTER JOIN statement
 	 */
@@ -209,6 +232,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with LEFT OUTER JOIN
+	 *
 	 * @param table The Table representation of the table to join to
 	 * @return The new LEFT OUTER JOIN statement
 	 */
@@ -218,6 +242,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with RIGHT JOIN
+	 *
 	 * @return The new RIGHT JOIN statement
 	 */
 	default Join rightJoin() {
@@ -226,6 +251,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with RIGHT JOIN
+	 *
 	 * @param table The name of the table to join to
 	 * @return The new RIGHT JOIN statement
 	 */
@@ -235,6 +261,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with RIGHT JOIN
+	 *
 	 * @param table The Table representation of the table to join to
 	 * @return The new RIGHT JOIN statement
 	 */
@@ -244,6 +271,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with RIGHT OUTER JOIN
+	 *
 	 * @return The new RIGHT OUTER JOIN statement
 	 */
 	default Join rightOuterJoin() {
@@ -252,6 +280,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with RIGHT OUTER JOIN
+	 *
 	 * @param table The name of the table to join to
 	 * @return The new RIGHT OUTER JOIN statement
 	 */
@@ -261,6 +290,7 @@ public interface BeforeJoin extends QueryPart {
 
 	/**
 	 * Continue query with RIGHT OUTER JOIN
+	 *
 	 * @param table The Table representation of the table to join to
 	 * @return The new RIGHT OUTER JOIN statement
 	 */

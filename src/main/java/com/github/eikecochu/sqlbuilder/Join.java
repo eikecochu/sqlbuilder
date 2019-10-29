@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
 public class Join extends Conditionable<Join>
-		implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy {
+		implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
 
 	public enum JoinMode implements QueryPart {
 		INNER_JOIN("INNER JOIN"),
@@ -45,8 +45,9 @@ public class Join extends Conditionable<Join>
 
 	/**
 	 * Add a subquery as join target
+	 *
 	 * @param query The subquery to join to
-	 * @param name The name of the subquery
+	 * @param name  The name of the subquery
 	 * @return This JOIN statement
 	 */
 	public Join subquery(final Query query, final String name) {
@@ -57,6 +58,7 @@ public class Join extends Conditionable<Join>
 
 	/**
 	 * Join to a table by name
+	 *
 	 * @param name The name of the table to join to
 	 * @return This JOIN statement
 	 */
@@ -68,6 +70,7 @@ public class Join extends Conditionable<Join>
 
 	/**
 	 * Set join conditions
+	 *
 	 * @return The ON statement
 	 */
 	public Conditionable<Join> on() {
@@ -81,31 +84,29 @@ public class Join extends Conditionable<Join>
 		if (builder != null)
 			strings.add(builder.string(options));
 
-		if (sql != null) {
+		if (sql != null)
 			strings.add(sql);
-		} else {
-			if (name != null) {
-				strings.add(options.newLine());
+		else if (name != null) {
+			strings.add(options.newLine());
 
-				strings.add(options.padCased(joinMode.string(options)));
+			strings.add(options.padCased(joinMode.string(options)));
 
-				if (query != null) {
-					strings.add(" ");
-					strings.add(query.string(options));
-				}
-
+			if (query != null) {
 				strings.add(" ");
-				strings.add(QueryUtils.splitName(options, name)
-						.string(options));
+				strings.add(query.string(options));
+			}
 
-				final String condition = super.string(options);
+			strings.add(" ");
+			strings.add(QueryUtils.splitName(options, name)
+					.string(options));
 
-				if (condition != null) {
-					strings.add(" ");
-					strings.add(options.cased("ON"));
-					strings.add(" ");
-					strings.add(condition);
-				}
+			final String condition = super.string(options);
+
+			if (condition != null) {
+				strings.add(" ");
+				strings.add(options.cased("ON"));
+				strings.add(" ");
+				strings.add(condition);
 			}
 		}
 

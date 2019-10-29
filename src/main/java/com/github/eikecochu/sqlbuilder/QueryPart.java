@@ -4,6 +4,7 @@ public interface QueryPart {
 
 	/**
 	 * Transforms this statement into an SQL string using the default QueryOptions
+	 *
 	 * @return The created SQL string
 	 */
 	default String string() {
@@ -12,6 +13,7 @@ public interface QueryPart {
 
 	/**
 	 * Transforms this statement into an SQL string
+	 *
 	 * @param options The QueryOptions to apply for transformation
 	 * @return The created SQL string
 	 */

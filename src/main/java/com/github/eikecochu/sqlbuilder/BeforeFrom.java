@@ -10,6 +10,7 @@ public interface BeforeFrom extends QueryPart {
 
 	/**
 	 * Continue query with FROM
+	 *
 	 * @return The new FROM statement
 	 */
 	default From from() {
@@ -18,6 +19,7 @@ public interface BeforeFrom extends QueryPart {
 
 	/**
 	 * Continue query with FROM
+	 *
 	 * @param tables The names of the tables to select from
 	 * @return The new FROM statement
 	 */
@@ -27,6 +29,7 @@ public interface BeforeFrom extends QueryPart {
 
 	/**
 	 * Continue query with FROM
+	 *
 	 * @param tables The Table representations of the tables to select from
 	 * @return The new FROM statement
 	 */
@@ -39,6 +42,7 @@ public interface BeforeFrom extends QueryPart {
 
 	/**
 	 * Accept an existing FROM statement as predecessor
+	 *
 	 * @param from The existing FROM statement
 	 * @return Returns the passed FROM statement
 	 */
@@ -48,6 +52,7 @@ public interface BeforeFrom extends QueryPart {
 
 	/**
 	 * Use plain SQL to form this FROM statement
+	 *
 	 * @param sql The sql string
 	 * @return The new FROM statement
 	 */

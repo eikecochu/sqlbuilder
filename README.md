@@ -104,3 +104,7 @@ and the parameters:
 ```java
 [5, "%test"]
 ```
+
+## More examples
+
+For more examples, refer to the Tests class in the test directory

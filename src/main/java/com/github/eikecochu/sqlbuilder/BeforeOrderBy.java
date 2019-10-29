@@ -7,6 +7,7 @@ public interface BeforeOrderBy extends QueryPart {
 
 	/**
 	 * Continue query with ORDER BY
+	 *
 	 * @return The new ORDER BY statement
 	 */
 	default OrderBy orderBy() {
@@ -15,6 +16,7 @@ public interface BeforeOrderBy extends QueryPart {
 
 	/**
 	 * Continue query with ORDER BY
+	 *
 	 * @param columns The column names to order by
 	 * @return The new ORDER BY statement
 	 */
@@ -24,6 +26,7 @@ public interface BeforeOrderBy extends QueryPart {
 
 	/**
 	 * Accept an existing ORDER BY statement as predecessor
+	 *
 	 * @param orderBy The existing ORDER BY statement
 	 * @return Returns the passed ORDER BY statement
 	 */
@@ -33,6 +36,7 @@ public interface BeforeOrderBy extends QueryPart {
 
 	/**
 	 * Use plain SQL to form this ORDER BY statement
+	 *
 	 * @param sql The sql string
 	 * @return The new ORDER BY statement
 	 */

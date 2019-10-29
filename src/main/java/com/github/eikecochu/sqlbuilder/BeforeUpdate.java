@@ -7,6 +7,7 @@ public interface BeforeUpdate extends QueryPart {
 
 	/**
 	 * Continue query with UPDATE
+	 *
 	 * @param table The name of table to be updated
 	 * @return The new UPDATE statement
 	 */
@@ -16,6 +17,7 @@ public interface BeforeUpdate extends QueryPart {
 
 	/**
 	 * Continue query with UPDATE
+	 *
 	 * @param table The Table representation of table to be updated
 	 * @return The new UPDATE statement
 	 */
@@ -25,6 +27,7 @@ public interface BeforeUpdate extends QueryPart {
 
 	/**
 	 * Accept an existing UPDATE statement as predecessor
+	 *
 	 * @param update The existing UPDATE statement
 	 * @return Returns the passed UPDATE statement
 	 */
@@ -34,6 +37,7 @@ public interface BeforeUpdate extends QueryPart {
 
 	/**
 	 * Use plain SQL to form this UPDATE statement
+	 *
 	 * @param sql The sql string
 	 * @return The new UPDATE statement
 	 */

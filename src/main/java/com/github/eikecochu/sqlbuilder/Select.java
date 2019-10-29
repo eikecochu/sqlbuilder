@@ -21,6 +21,7 @@ public class Select implements QueryPart, BeforeFrom {
 
 	/**
 	 * Create a new SELECT statement
+	 *
 	 * @param columns The column names to select
 	 */
 	public Select(final String... columns) {
@@ -33,6 +34,7 @@ public class Select implements QueryPart, BeforeFrom {
 
 	/**
 	 * Enable DISTINCT selection. Disables ALL selection.
+	 *
 	 * @return This SELECT statement
 	 */
 	public Select distinct() {
@@ -43,6 +45,7 @@ public class Select implements QueryPart, BeforeFrom {
 
 	/**
 	 * Enable ALL selection. Disables DISTINCT selection.
+	 *
 	 * @return This SELECT statement
 	 */
 	public Select all() {
@@ -53,6 +56,7 @@ public class Select implements QueryPart, BeforeFrom {
 
 	/**
 	 * Select a column by name
+	 *
 	 * @param column The column name of the column to select
 	 * @return This SELECT statement
 	 */
@@ -63,6 +67,7 @@ public class Select implements QueryPart, BeforeFrom {
 
 	/**
 	 * Select multiple columns by name
+	 *
 	 * @param columns The column names of the columns to select
 	 * @return This SELECT statement
 	 */
@@ -82,9 +87,9 @@ public class Select implements QueryPart, BeforeFrom {
 			strings.add(options.newLine());
 		}
 
-		if (sql != null) {
+		if (sql != null)
 			strings.add(sql);
-		} else {
+		else {
 			strings.add(options.padCased("SELECT"));
 
 			if (distinct) {
@@ -95,9 +100,9 @@ public class Select implements QueryPart, BeforeFrom {
 				strings.add(options.cased("ALL"));
 			}
 
-			if (columns.isEmpty()) {
+			if (columns.isEmpty())
 				strings.add(" *");
-			} else {
+			else {
 				final StringJoiner columnsStrings = new StringJoiner();
 				for (final String column : columns)
 					columnsStrings.add(QueryUtils.splitName(options, column)

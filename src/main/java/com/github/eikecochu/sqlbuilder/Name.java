@@ -148,8 +148,10 @@ public class Name implements QueryPart {
 	}
 
 	/**
-	 * Returns true if the passed string is recognized as a keyword. This is an estimation, as the target database is
-	 * not taken into account. To modify the keyword list, change or overwrite Name.KEYWORDS
+	 * Returns true if the passed string is recognized as a keyword. This is an
+	 * estimation, as the target database is not taken into account. To modify the
+	 * keyword list, change or overwrite Name.KEYWORDS
+	 *
 	 * @param str
 	 * @return
 	 */

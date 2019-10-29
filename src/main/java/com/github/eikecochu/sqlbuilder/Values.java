@@ -9,7 +9,8 @@ public class Values extends HashMap<String, Object> implements ValueHolder {
 
 	/**
 	 * Add a value
-	 * @param key The key of the value
+	 *
+	 * @param key   The key of the value
 	 * @param value The value
 	 * @return This Values instance
 	 */
