@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Insert implements QueryBuilder, BeforeSelect {
+public class Insert extends SQLQueryPart<Insert> implements QueryBuilder, BeforeSelect {
 
 	private enum InsertType implements QueryPart {
 		INSERT("INSERT INTO"),
@@ -39,7 +39,6 @@ public class Insert implements QueryBuilder, BeforeSelect {
 	private final List<InsertValue> insertValues = new ArrayList<>();
 	private boolean defaultValues = false;
 	private boolean onlyValues = true;
-	private String sql;
 
 	/**
 	 * Create a new INSERT statement
@@ -207,8 +206,8 @@ public class Insert implements QueryBuilder, BeforeSelect {
 			strings.add(options.newLine());
 		}
 
-		if (sql != null)
-			strings.add(sql);
+		if (sql() != null)
+			strings.add(sql());
 		else {
 			strings.add(options.padCased(insertType.string(options)));
 
@@ -232,8 +231,6 @@ public class Insert implements QueryBuilder, BeforeSelect {
 
 				strings.add(options.newLine());
 				strings.add(options.padCased("VALUES"));
-
-				assert (!insertValues.isEmpty());
 
 				final int count = insertValues.get(0)
 						.getValues()

@@ -21,6 +21,7 @@ public class Tests {
 						.from("TEST"))
 				.select()
 				.from("A")
+				.query()
 				.string(testOptions());
 
 		Assertions.assertEquals("WITH A AS (SELECT * FROM TEST) SELECT * FROM A", string);
@@ -35,6 +36,7 @@ public class Tests {
 				.eq(1)
 				.or()
 				.col("COL2", true)
+				.query()
 				.string(testOptions());
 
 		Assertions.assertEquals("SELECT COL1, COL2 FROM TEST WHERE COL1 = 1 OR COL2 = 1", string);
@@ -49,6 +51,7 @@ public class Tests {
 				.and()
 				.exists(SQLBuilder.Select("COL1")
 						.from("TEST"))
+				.query()
 				.string(testOptions());
 
 		Assertions.assertEquals("SELECT * FROM TEST WHERE A = 1 AND EXISTS (SELECT COL1 FROM TEST)", string);
@@ -61,9 +64,59 @@ public class Tests {
 				.union()
 				.select("COL2")
 				.from("TEST2")
+				.query()
 				.string(testOptions());
 
 		Assertions.assertEquals("SELECT COL1 FROM TEST1 UNION SELECT COL2 FROM TEST2", string);
+	}
+
+	@Test
+	public void testNested1() {
+		final String string = SQLBuilder.Select("COL1")
+				.from("TEST")
+				.where()
+				.groupStart()
+				.col("A", 1)
+				.or()
+				.col("B", 2)
+				.groupEnd()
+				.and()
+				.col("C", 3)
+				.query()
+				.string(testOptions());
+
+		Assertions.assertEquals("SELECT COL1 FROM TEST WHERE (A = 1 OR B = 2) AND C = 3", string);
+	}
+
+	@Test
+	public void testNested2() {
+		final String string = SQLBuilder.Select("COL1")
+				.from("TEST")
+				.where()
+				.group(new Condition().col("A", 1)
+						.or()
+						.col("B", 2))
+				.and()
+				.col("C", 3)
+				.query()
+				.string(testOptions());
+
+		Assertions.assertEquals("SELECT COL1 FROM TEST WHERE (A = 1 OR B = 2) AND C = 3", string);
+	}
+
+	@Test
+	public void testDoubleNegate() {
+		final String string = SQLBuilder.Select("COL1")
+				.from("TEST")
+				.where()
+				.col("COL1")
+				.not()
+				.not()
+				.eq(1)
+				.query()
+				.string(testOptions());
+
+		Assertions.assertEquals("SELECT COL1 FROM TEST WHERE COL1 = 1", string);
 	}
 
 	@Test
@@ -74,6 +127,7 @@ public class Tests {
 				.col("COL1")
 				.between()
 				.values(5, 10)
+				.query()
 				.string(testOptions());
 
 		Assertions.assertEquals("SELECT COL1 FROM TEST WHERE COL1 BETWEEN 5 AND 10", string);
@@ -88,6 +142,7 @@ public class Tests {
 				.le()
 				.any(SQLBuilder.Select("COL1")
 						.from("TEST"))
+				.query()
 				.string(testOptions());
 
 		Assertions.assertEquals("SELECT COL1 FROM TEST WHERE COL1 <= ANY (SELECT COL1 FROM TEST)", string);
@@ -99,6 +154,7 @@ public class Tests {
 				.column("COL1", 1)
 				.column("COL2")
 				.value(true)
+				.query()
 				.string(testOptions());
 
 		Assertions.assertEquals("INSERT INTO TEST (COL1, COL2) VALUES (1, 1)", string);
@@ -112,6 +168,7 @@ public class Tests {
 				.set("COL2", true)
 				.where()
 				.col("COL1", 1)
+				.query()
 				.string(testOptions());
 
 		Assertions.assertEquals("UPDATE TEST SET COL1 = 2, COL2 = 1 WHERE COL1 = 1", string);
@@ -127,6 +184,7 @@ public class Tests {
 				.col("COL2")
 				.not()
 				.eq(true)
+				.query()
 				.string(testOptions());
 
 		Assertions.assertEquals("DELETE FROM TEST WHERE COL1 = 1 AND NOT COL2 = 1", string);
@@ -141,6 +199,7 @@ public class Tests {
 				.eq(null)
 				.and()
 				.col("COL2", 1)
+				.query()
 				.string(testOptions());
 
 		Assertions.assertEquals("SELECT COL1 FROM TEST WHERE COL2 = 1", string);
@@ -157,9 +216,23 @@ public class Tests {
 				.eq(null)
 				.or()
 				.col("COL3", 2)
+				.query()
 				.string(testOptions());
 
 		Assertions.assertEquals("SELECT COL1 FROM TEST WHERE COL1 = 1 OR COL3 = 2", string);
+	}
+
+	@Test
+	public void testSQLParts() {
+		final String string = SQLBuilder.Select("COL1")
+				.from()
+				.sql("FROM TEST")
+				.where()
+				.sql("WHERE COL1 = 1")
+				.query()
+				.string(testOptions());
+
+		Assertions.assertEquals("SELECT COL1 FROM TEST WHERE COL1 = 1", string);
 	}
 
 }

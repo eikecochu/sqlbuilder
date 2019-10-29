@@ -12,7 +12,6 @@ public class Having extends Conditionable<Having> implements QueryBuilder, Befor
 
 	private BeforeHaving builder;
 	private Conditionable<Having> condition;
-	private String sql;
 
 	protected Having(final BeforeHaving builder) {
 		this.builder = builder;
@@ -25,8 +24,8 @@ public class Having extends Conditionable<Having> implements QueryBuilder, Befor
 		if (builder != null)
 			strings.add(builder.string(options));
 
-		if (sql != null)
-			strings.add(sql);
+		if (sql() != null)
+			strings.add(sql());
 		else if (condition != null) {
 			strings.add(options.newLine());
 			strings.add(options.padCased("HAVING"));

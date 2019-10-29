@@ -77,17 +77,21 @@ public class QueryOptions {
 	}
 
 	String padCased(final String keyword) {
-		if (pretty && keyword != null) {
-			final int length = Math.max(0, padLength - keyword.split("\\s+")[0].length());
-			return StringUtils.leftPad("", length) + cased(keyword);
-		}
-		return cased(keyword);
+		return cased(padded(keyword));
 	}
 
 	String ticked(final String string) {
 		if (string == null)
 			return null;
 		return quote || (escapeKeywords && Name.isKeyword(string)) ? quoteStartChar + string + quoteEndChar : string;
+	}
+
+	String padded(final String keyword) {
+		if (pretty && keyword != null) {
+			final int length = Math.max(0, padLength - keyword.split("\\s+")[0].length());
+			return StringUtils.leftPad("", length) + cased(keyword);
+		}
+		return keyword;
 	}
 
 	String cased(final String string) {

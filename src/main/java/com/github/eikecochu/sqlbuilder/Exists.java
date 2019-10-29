@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Exists implements QueryBuilder {
+public class Exists extends SQLQueryPart<Exists> implements QueryBuilder {
 
 	private QueryBuilder builder;
 
@@ -18,7 +18,9 @@ public class Exists implements QueryBuilder {
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder != null) {
+		if (sql() != null) {
+			strings.add(sql());
+		} else if (builder != null) {
 			strings.add(options.padCased("EXISTS ("));
 
 			final QueryOptions subOptions = options.copy()

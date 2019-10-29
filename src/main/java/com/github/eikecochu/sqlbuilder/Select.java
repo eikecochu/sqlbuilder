@@ -11,13 +11,12 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Select implements QueryPart, BeforeFrom {
+public class Select extends SQLQueryPart<Select> implements BeforeFrom {
 
 	private final List<String> columns = new ArrayList<>();
 	private boolean distinct = false;
 	private boolean all = false;
 	private BeforeSelect builder;
-	private String sql;
 
 	/**
 	 * Create a new SELECT statement
@@ -87,8 +86,8 @@ public class Select implements QueryPart, BeforeFrom {
 			strings.add(options.newLine());
 		}
 
-		if (sql != null)
-			strings.add(sql);
+		if (sql() != null)
+			strings.add(sql());
 		else {
 			strings.add(options.padCased("SELECT"));
 

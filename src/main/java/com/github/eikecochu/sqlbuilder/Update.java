@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Update implements QueryBuilder, BeforeWhere {
+public class Update extends SQLQueryPart<Update> implements QueryBuilder, BeforeWhere {
 
 	protected enum UpdateType implements QueryPart {
 		UPDATE("UPDATE"),
@@ -36,7 +36,6 @@ public class Update implements QueryBuilder, BeforeWhere {
 	private BeforeUpdate builder;
 	private final String table;
 	private final List<UpdateValue> updateValues = new ArrayList<>();
-	private String sql;
 
 	/**
 	 * Create a new UPDATE statement
@@ -155,8 +154,8 @@ public class Update implements QueryBuilder, BeforeWhere {
 			strings.add(options.newLine());
 		}
 
-		if (sql != null)
-			strings.add(sql);
+		if (sql() != null)
+			strings.add(sql());
 		else {
 			strings.add(options.padCased(updateType.string(options)));
 

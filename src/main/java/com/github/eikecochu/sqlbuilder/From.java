@@ -12,7 +12,8 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
+public class From extends SQLQueryPart<From>
+		implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
 
 	@Data
 	@Accessors(fluent = true)
@@ -34,7 +35,6 @@ public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupB
 
 	private BeforeFrom builder;
 	private final List<FromOrigin> origins = new ArrayList<>();
-	private String sql;
 
 	protected From(final BeforeFrom builder) {
 		this.builder = builder;
@@ -110,8 +110,6 @@ public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupB
 
 	@Override
 	public String string(final QueryOptions options) {
-		assert sql == null && !origins.isEmpty() : "from statement must have at least one target";
-
 		final StringJoiner strings = new StringJoiner();
 
 		if (builder != null) {
@@ -119,8 +117,8 @@ public class From implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupB
 			strings.add(options.newLine());
 		}
 
-		if (sql != null)
-			strings.add(sql);
+		if (sql() != null)
+			strings.add(sql());
 		else {
 			strings.add(options.padCased("FROM"));
 			strings.add(" ");

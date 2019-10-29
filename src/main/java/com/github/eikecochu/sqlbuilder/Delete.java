@@ -6,11 +6,10 @@ import lombok.experimental.Accessors;
 
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Delete implements QueryBuilder, BeforeWhere {
+public class Delete extends SQLQueryPart<Delete> implements QueryBuilder, BeforeWhere {
 
 	private BeforeDelete builder;
 	private final String table;
-	private String sql;
 
 	/**
 	 * Create a new DELETE statement
@@ -44,8 +43,8 @@ public class Delete implements QueryBuilder, BeforeWhere {
 			strings.add(options.newLine());
 		}
 
-		if (sql != null)
-			strings.add(sql);
+		if (sql() != null)
+			strings.add(sql());
 		else {
 			strings.add(options.padCased("DELETE FROM"));
 

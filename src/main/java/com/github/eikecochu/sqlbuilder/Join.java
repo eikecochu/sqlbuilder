@@ -32,7 +32,6 @@ public class Join extends Conditionable<Join>
 	private final JoinMode joinMode;
 	private Query query;
 	private String name;
-	private String sql;
 
 	protected Join(final BeforeJoin builder) {
 		this(builder, JoinMode.INNER_JOIN);
@@ -84,8 +83,8 @@ public class Join extends Conditionable<Join>
 		if (builder != null)
 			strings.add(builder.string(options));
 
-		if (sql != null)
-			strings.add(sql);
+		if (sql() != null)
+			strings.add(sql());
 		else if (name != null) {
 			strings.add(options.newLine());
 

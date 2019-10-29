@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Union implements QueryBuilder, BeforeSelect, BeforeWith {
+public class Union extends SQLQueryPart<Union> implements QueryBuilder, BeforeSelect, BeforeWith {
 
 	private boolean all = false;
 	private BeforeUnion builder;
@@ -26,11 +26,15 @@ public class Union implements QueryBuilder, BeforeSelect, BeforeWith {
 			strings.add(options.newLine());
 		}
 
-		strings.add(options.padCased("UNION"));
+		if (sql() != null) {
+			strings.add(sql());
+		} else {
+			strings.add(options.padCased("UNION"));
 
-		if (all) {
-			strings.add(" ");
-			strings.add(options.cased("ALL"));
+			if (all) {
+				strings.add(" ");
+				strings.add(options.cased("ALL"));
+			}
 		}
 
 		return strings.toString();

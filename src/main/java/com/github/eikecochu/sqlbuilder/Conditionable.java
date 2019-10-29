@@ -14,7 +14,7 @@ import lombok.Getter;
  * @param <T> The type which allows setting conditions
  */
 @Getter(AccessLevel.PROTECTED)
-public abstract class Conditionable<T extends Conditionable<T>> implements QueryPart {
+public abstract class Conditionable<T extends Conditionable<T>> extends SQLQueryPart<T> {
 
 	public enum Operator implements QueryPart {
 		AND("AND"),
@@ -102,13 +102,19 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 	 * @param group The subgroup
 	 * @return This instance
 	 */
-	@SuppressWarnings("unchecked")
 	public T group(final Condition group) {
-		if (!parts.isEmpty() && !(parts.get(parts.size() - 1) instanceof Operator))
-			this.and();
+		return addPart(group);
+	}
 
-		parts.add(group);
-		return (T) conditionable;
+	/**
+	 * Start a nested condition group
+	 *
+	 * @return The new nested condition group
+	 */
+	public NestedCondition<T> groupStart() {
+		final NestedCondition<T> group = new NestedCondition<>(this);
+		addPart(group);
+		return group;
 	}
 
 	/**
@@ -141,6 +147,9 @@ public abstract class Conditionable<T extends Conditionable<T>> implements Query
 
 	@Override
 	public String string(final QueryOptions options) {
+		if (sql() != null)
+			return sql();
+
 		if (parts.isEmpty())
 			return null;
 

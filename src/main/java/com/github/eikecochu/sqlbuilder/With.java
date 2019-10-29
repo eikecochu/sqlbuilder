@@ -11,14 +11,14 @@ import lombok.experimental.Accessors;
 
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class With implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, BeforeDelete, BeforeInsert {
+public class With extends SQLQueryPart<With>
+		implements BeforeWith, BeforeSelect, BeforeUpdate, BeforeDelete, BeforeInsert {
 
 	private BeforeWith builder;
 	private final String name;
 	private final List<String> columns = new ArrayList<>();
 	private QueryBuilder query;
 	private boolean recursive;
-	private String sql;
 
 	/**
 	 * Create a new WITH statement
@@ -83,7 +83,7 @@ public class With implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, 
 		final StringJoiner strings = new StringJoiner();
 
 		if (builder == null) {
-			if (sql == null) {
+			if (sql() == null) {
 				strings.add(options.padCased("WITH"));
 
 				if (recursive) {
@@ -97,10 +97,12 @@ public class With implements QueryPart, BeforeWith, BeforeSelect, BeforeUpdate, 
 			strings.add(",");
 		}
 
-		if (sql != null)
-			strings.add(sql);
-		else {
+		if (!strings.isEmpty())
 			strings.add(" ");
+
+		if (sql() != null) {
+			strings.add(sql());
+		} else {
 			strings.add(name);
 
 			if (!columns.isEmpty()) {

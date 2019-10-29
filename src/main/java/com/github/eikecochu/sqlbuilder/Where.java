@@ -11,7 +11,6 @@ import lombok.experimental.Accessors;
 public class Where extends Conditionable<Where> implements QueryBuilder, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
 
 	private BeforeWhere builder;
-	private String sql;
 
 	protected Where(final BeforeWhere builder) {
 		this.builder = builder;
@@ -28,13 +27,16 @@ public class Where extends Conditionable<Where> implements QueryBuilder, BeforeG
 		if (builder != null)
 			strings.add(builder.string(options));
 
-		if (sql != null)
-			strings.add(sql);
-		else {
+		if (sql() != null) {
+			if (!strings.isEmpty())
+				strings.add(options.newLine());
+			strings.add(options.padded(sql()));
+		} else {
 			final String condition = super.string(options);
 
 			if (condition != null && !condition.isEmpty()) {
-				strings.add(options.newLine());
+				if (!strings.isEmpty())
+					strings.add(options.newLine());
 				strings.add(options.padCased("WHERE"));
 				strings.add(" ");
 				strings.add(condition);

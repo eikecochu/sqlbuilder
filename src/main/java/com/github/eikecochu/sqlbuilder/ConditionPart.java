@@ -54,7 +54,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionPart<T> not() {
-		this.not = true;
+		this.not = !this.not;
 		return this;
 	}
 
@@ -68,12 +68,32 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	}
 
 	/**
+	 * The EQUALS operator. Only accepts values
+	 *
+	 * @param value The value to compare to
+	 * @return The previous instance
+	 */
+	public T eq(final Object value) {
+		return op(value, Operator.EQUALS);
+	}
+
+	/**
 	 * The NOT EQUALS operator
 	 *
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionValue<T> notEq() {
 		return new ConditionValue<>(this, Operator.NOT_EQUALS);
+	}
+
+	/**
+	 * The NOT EQUALS operator. Only accepts values
+	 *
+	 * @param value The value to compare to
+	 * @return The previous instance
+	 */
+	public T notEq(final Object value) {
+		return op(value, Operator.NOT_EQUALS);
 	}
 
 	/**
@@ -86,12 +106,32 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	}
 
 	/**
+	 * The GREATER EQUALS operator. Only accepts values
+	 *
+	 * @param value The value to compare to
+	 * @return The previous instance
+	 */
+	public T ge(final Object value) {
+		return op(value, Operator.GE);
+	}
+
+	/**
 	 * The GREATER THAN operator
 	 *
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionValue<T> gt() {
 		return new ConditionValue<>(this, Operator.GT);
+	}
+
+	/**
+	 * The GREATER THAN operator. Only accepts values
+	 *
+	 * @param value The value to compare to
+	 * @return The previous instance
+	 */
+	public T gt(final Object value) {
+		return op(value, Operator.GT);
 	}
 
 	/**
@@ -104,12 +144,32 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	}
 
 	/**
+	 * The LESSER EQUALS operator. Only accepts values
+	 *
+	 * @param value The value to compare to
+	 * @return The previous instance
+	 */
+	public T le(final Object value) {
+		return op(value, Operator.LE);
+	}
+
+	/**
 	 * The LESSER THAN operator
 	 *
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionValue<T> lt() {
 		return new ConditionValue<>(this, Operator.LT);
+	}
+
+	/**
+	 * The LESSER THAN operator. Only accepts values
+	 *
+	 * @param value The value to compare to
+	 * @return The previous instance
+	 */
+	public T lt(final Object value) {
+		return op(value, Operator.LT);
 	}
 
 	/**
@@ -122,12 +182,42 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	}
 
 	/**
+	 * The LIKE operator. Only accepts values
+	 *
+	 * @param value The value to compare to
+	 * @return The previous instance
+	 */
+	public T like(final Object value) {
+		return op(value, Operator.LIKE);
+	}
+
+	/**
 	 * The IN operator
 	 *
 	 * @return The value instance to set the compare values
 	 */
 	public ConditionValues<T> in() {
 		return new ConditionValues<>(this, Operator.IN);
+	}
+
+	/**
+	 * The IN operator. Only accepts values
+	 *
+	 * @param values The values to compare to
+	 * @return The previous instance
+	 */
+	public T in(final Object... values) {
+		return in().values(values);
+	}
+
+	/**
+	 * The IN operator. Only accepts values
+	 *
+	 * @param values The values to compare to
+	 * @return The previous instance
+	 */
+	public T in(final Iterable<Object> values) {
+		return in().values(values);
 	}
 
 	/**
@@ -139,86 +229,15 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 		return new ConditionBiValue<>(this, Operator.BETWEEN);
 	}
 
-	@SuppressWarnings("unchecked")
-	protected T condition(final ConditionValue<T> conditionValue) {
-		this.operator = conditionValue.getOperator();
-		this.value = conditionValue.getValue();
-		this.type = conditionValue.getType();
-		return (T) conditionable;
-	}
-
-	@SuppressWarnings("unchecked")
-	protected T condition(final ConditionValues<T> conditionValues) {
-		this.values = conditionValues.getValues();
-		this.operator = conditionValues.getOperator();
-		return (T) conditionable;
-	}
-
-	@SuppressWarnings("unchecked")
-	protected T condition(final ConditionBiValue<T> conditionValues) {
-		this.values = conditionValues.getValues();
-		this.operator = conditionValues.getOperator();
-		return (T) conditionable;
-	}
-
 	/**
-	 * The EQUALS operator
+	 * The BETWEEN operator
 	 *
-	 * @param value The value to compare to
+	 * @param value1 The first value
+	 * @param value2 The second value
 	 * @return The previous instance
 	 */
-	public T eq(final Object value) {
-		return op(value, Operator.EQUALS);
-	}
-
-	/**
-	 * The GREATER EQUALS operator
-	 *
-	 * @param value The value to compare to
-	 * @return The previous instance
-	 */
-	public T ge(final Object value) {
-		return op(value, Operator.GE);
-	}
-
-	/**
-	 * The GREATER THAN operator
-	 *
-	 * @param value The value to compare to
-	 * @return The previous instance
-	 */
-	public T gt(final Object value) {
-		return op(value, Operator.GT);
-	}
-
-	/**
-	 * The LESSER EQUALS operator
-	 *
-	 * @param value The value to compare to
-	 * @return The previous instance
-	 */
-	public T le(final Object value) {
-		return op(value, Operator.LE);
-	}
-
-	/**
-	 * The LESSER THAN operator
-	 *
-	 * @param value The value to compare to
-	 * @return The previous instance
-	 */
-	public T lt(final Object value) {
-		return op(value, Operator.LT);
-	}
-
-	/**
-	 * The LIKE operator
-	 *
-	 * @param value The value to compare to
-	 * @return The previous instance
-	 */
-	public T like(final Object value) {
-		return op(value, Operator.LIKE);
+	public T between(final Object value1, final Object value2) {
+		return between().values(value1, value2);
 	}
 
 	/**
@@ -231,24 +250,26 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 		return op(null, Operator.IS_NULL);
 	}
 
-	/**
-	 * The IN operator
-	 *
-	 * @param values The values to compare to
-	 * @return The previous instance
-	 */
-	public T in(final Object... values) {
-		return in().values(values);
+	protected T condition(final ConditionValue<T> conditionValue) {
+		return condition(conditionValue.getValue(), null, conditionValue.getOperator(), conditionValue.getType());
 	}
 
-	/**
-	 * The IN operator
-	 *
-	 * @param values The values to compare to
-	 * @return The previous instance
-	 */
-	public T in(final Iterable<Object> values) {
-		return in().values(values);
+	protected T condition(final ConditionValues<T> conditionValues) {
+		return condition(null, conditionValues.getValues(), conditionValues.getOperator(), null);
+	}
+
+	protected T condition(final ConditionBiValue<T> conditionValues) {
+		return condition(null, conditionValues.getValues(), conditionValues.getOperator(), null);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected T condition(final Object value, final Object[] values, final Operator operator,
+			final ConditionValueType type) {
+		this.value = value;
+		this.values = values;
+		this.operator = operator;
+		this.type = type;
+		return (T) conditionable;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -261,40 +282,39 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	@Override
 	public String string(final QueryOptions options) {
+		final StringJoiner strings = new StringJoiner();
+
 		if (value != null || (values != null && values.length > 0) || operator == Operator.IS_NULL
 				|| operator == Operator.IS_NOT_NULL) {
-			final StringJoiner strings = new StringJoiner();
-			if (not && operator == Operator.IS_NULL) {
-				not = false;
-				operator = Operator.IS_NOT_NULL;
-			}
 
 			if (not) {
 				strings.add(options.cased("NOT"));
 				strings.add(" ");
 			}
 
-			strings.add(QueryUtils.splitName(options, name)
-					.string(options));
-			strings.add(" ");
+			if (name != null) {
+				strings.add(QueryUtils.splitName(options, name)
+						.string(options));
+				strings.add(" ");
+			}
 
-			strings.add(operator.string(options));
+			if (operator != null)
+				strings.add(operator.string(options));
 
 			if (operator != Operator.IS_NULL && operator != Operator.IS_NOT_NULL) {
 				strings.add(" ");
+
 				if (type != null) {
-					if (type == ConditionValueType.EXPRESSION)
+					switch (type) {
+					case EXPRESSION:
 						strings.add(QueryUtils.valueToString(options, value));
-					else if (type == ConditionValueType.COLUMN)
+						break;
+					case COLUMN:
 						strings.add(QueryUtils.splitName(options, value.toString())
 								.string(options));
-					else if (type == ConditionValueType.VALUE) {
-						if (options.prepare()) {
-							strings.add("?");
-							options.addPreparedValue(value);
-						} else
-							strings.add(QueryUtils.valueToString(options, value));
-					} else if (type == ConditionValueType.ALL || type == ConditionValueType.ANY) {
+						break;
+					case ALL:
+					case ANY:
 						strings.add(type.toString());
 						strings.add(" (");
 
@@ -305,6 +325,16 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 								.trim());
 
 						strings.add(")");
+						break;
+					case VALUE:
+					default:
+						if (options.prepare()) {
+							strings.add("?");
+							options.addPreparedValue(value);
+						} else
+							strings.add(QueryUtils.valueToString(options, value));
+						break;
+
 					}
 				} else if (operator == Operator.BETWEEN) {
 					if (options.prepare()) {
@@ -327,11 +357,9 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 					strings.add(")");
 				}
 			}
-
-			return strings.toString();
 		}
 
-		return "";
+		return strings.toString();
 	}
 
 }

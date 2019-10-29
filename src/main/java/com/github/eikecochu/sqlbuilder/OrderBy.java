@@ -11,11 +11,10 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class OrderBy implements QueryBuilder, BeforeUnion {
+public class OrderBy extends SQLQueryPart<OrderBy> implements QueryBuilder, BeforeUnion {
 
 	private BeforeOrderBy builder;
 	private final List<OrderByTerm> orderByTerms = new ArrayList<>();
-	private String sql;
 
 	protected OrderBy(final BeforeOrderBy builder) {
 		this.builder = builder;
@@ -101,8 +100,8 @@ public class OrderBy implements QueryBuilder, BeforeUnion {
 		if (builder != null)
 			strings.add(builder.string(options));
 
-		if (sql != null)
-			strings.add(sql);
+		if (sql() != null)
+			strings.add(sql());
 		else {
 			final StringJoiner orderStrings = new StringJoiner();
 			for (final OrderByTerm orderByTerm : orderByTerms)

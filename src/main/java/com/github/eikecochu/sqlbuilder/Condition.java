@@ -11,7 +11,8 @@ public class Condition extends Conditionable<Condition> implements QueryPart {
 
 	@Override
 	public String string(final QueryOptions options) {
-		return "(" + super.string(options) + ")";
+		final String condition = super.string(options);
+		return condition == null || condition.isEmpty() ? "" : "(" + condition + ")";
 	}
 
 }

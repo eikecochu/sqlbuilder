@@ -11,11 +11,10 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class GroupBy implements QueryBuilder, BeforeOrderBy, BeforeHaving, BeforeUnion {
+public class GroupBy extends SQLQueryPart<GroupBy> implements QueryBuilder, BeforeOrderBy, BeforeHaving, BeforeUnion {
 
 	private BeforeGroupBy builder;
 	private final List<String> columns = new ArrayList<>();
-	private String sql;
 
 	protected GroupBy(final BeforeGroupBy builder) {
 		this.builder = builder;
@@ -52,8 +51,8 @@ public class GroupBy implements QueryBuilder, BeforeOrderBy, BeforeHaving, Befor
 		if (builder != null)
 			strings.add(builder.string(options));
 
-		if (sql != null)
-			strings.add(sql);
+		if (sql() != null)
+			strings.add(sql());
 		else if (!columns.isEmpty()) {
 			strings.add(options.newLine());
 			strings.add(options.padCased("GROUP BY"));
