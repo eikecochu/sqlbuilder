@@ -11,7 +11,7 @@ import lombok.ToString;
 public class ConditionValue<T extends Conditionable<T>> {
 
 	@ToString
-	public static enum ConditionValueType implements QueryPart {
+	public enum ConditionValueType implements QueryPart {
 		VALUE,
 		COLUMN,
 		EXPRESSION,
@@ -19,7 +19,7 @@ public class ConditionValue<T extends Conditionable<T>> {
 		ANY;
 
 		@Override
-		public String string(QueryOptions options) {
+		public String string(final QueryOptions options) {
 			if (this == ALL)
 				return "ALL";
 			if (this == ANY)

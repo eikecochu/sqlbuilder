@@ -12,7 +12,7 @@ public class Join extends Conditionable<Join>
 		implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
 
 	@ToString
-	public static enum JoinMode implements QueryPart {
+	public enum JoinMode implements QueryPart {
 		INNER_JOIN("INNER JOIN"),
 		OUTER_JOIN("OUTER JOIN"),
 		LEFT_JOIN("LEFT JOIN"),

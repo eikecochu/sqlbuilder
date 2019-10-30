@@ -19,7 +19,7 @@ import lombok.ToString;
 public abstract class Conditionable<T extends Conditionable<T>> extends SQLQueryPart<T> {
 
 	@ToString
-	public static enum Operator implements QueryPart {
+	public enum Operator implements QueryPart {
 		AND("AND"),
 		OR("OR");
 
@@ -66,15 +66,6 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 		final ConditionPart<T> part = new ConditionPart<>(conditionable(), name);
 		addPart(part);
 		return part;
-	}
-
-	@SuppressWarnings("unchecked")
-	T addPart(final QueryPart part) {
-		if (!parts.isEmpty() && !(parts.get(parts.size() - 1) instanceof Operator))
-			this.and();
-
-		parts.add(part);
-		return (T) conditionable;
 	}
 
 	/**
@@ -125,11 +116,8 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 	 *
 	 * @return This instance
 	 */
-	@SuppressWarnings("unchecked")
 	public T and() {
-		if (!parts.isEmpty() && parts.size() % 2 == 1)
-			parts.add(Operator.AND);
-		return (T) this;
+		return op(Operator.AND);
 	}
 
 	/**
@@ -137,10 +125,23 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 	 *
 	 * @return This instance
 	 */
-	@SuppressWarnings("unchecked")
 	public T or() {
+		return op(Operator.OR);
+	}
+
+	@SuppressWarnings("unchecked")
+	T addPart(final QueryPart part) {
+		if (!parts.isEmpty() && !(parts.get(parts.size() - 1) instanceof Operator))
+			this.and();
+
+		parts.add(part);
+		return (T) conditionable;
+	}
+
+	@SuppressWarnings("unchecked")
+	private T op(final Operator operator) {
 		if (!parts.isEmpty() && parts.size() % 2 == 1)
-			parts.add(Operator.OR);
+			parts.add(operator);
 		return (T) this;
 	}
 
@@ -193,16 +194,22 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 					.string(options);
 
 			if (needsOp) {
-				if (op != null && !op.isEmpty() && val != null && !val.isEmpty())
-					strings.add(op)
-							.add(val);
+				if (op != null && !op.isEmpty() && val != null && !val.isEmpty()) {
+					if (options.conditionOnNewline()) {
+						strings.add(options.newLine());
+						strings.add(options.padded(op));
+						strings.add(" ");
+					} else
+						strings.add(op);
+					strings.add(val);
+				}
 			} else if (val != null && !val.isEmpty()) {
 				needsOp = true;
 				strings.add(val);
 			}
 		}
 
-		return strings.toString(" ");
+		return strings.toString(options.conditionOnNewline() ? "" : " ");
 
 	}
 

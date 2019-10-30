@@ -25,23 +25,113 @@ public class QueryOptions {
 
 	static QueryOptions DEFAULT_OPTIONS = new QueryOptions();
 
+	/**
+	 * The default length to pad to. If pretty printing is enabled, keywords on new
+	 * lines are left padded with whitespace to align the right side of each keyword
+	 * in the statement to this number.
+	 *
+	 * Default is set to the length of the word "SELECT" = 6.
+	 */
 	private int padLength = "SELECT".length();
+
+	/**
+	 * Enable to try to split names, such as table and column names, by schema and
+	 * alias etc to enable better quotation support if required and enabled.
+	 */
 	private boolean splitNames = true;
+
+	/**
+	 * Enable to pretty print outputted strings. Will align keywords right to the
+	 * length set in the padLength variable.
+	 */
 	private boolean pretty = true;
+
+	/**
+	 * Enable to indent when pretty printing. Will indent subqueries to the left of
+	 * the padded minimum length.
+	 */
 	private boolean indent = true;
+
+	/**
+	 * Enable to convert keywords etc to uppercase.
+	 */
 	private boolean uppercase = true;
+
+	/**
+	 * Enable to wrap keywords etc in what is set in the quoteStartChar and
+	 * quoteEndChar. If disabled, conflicting keywords may still be quoted, unless
+	 * explicitly disabled via escapeKeywords variable.
+	 */
 	private boolean quote = false;
+
+	/**
+	 * Use as starting quote character. Used when quote is enabled.
+	 */
 	private char quoteStartChar = '"';
+
+	/**
+	 * Use as ending quote character. Used when quote is enabled.
+	 */
 	private char quoteEndChar = '"';
+
+	/**
+	 * The date format used to parse strings.
+	 */
 	private String dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
+	/**
+	 * The SQL postprocessor used when an SQL string is generated, before it is
+	 * returned.
+	 */
 	private PostProcessor<String> sqlPostprocessor = null;
+
+	/**
+	 * The Statement postprocessor used when a statement is prepared, before it is
+	 * returned.
+	 */
 	private PostProcessor<PreparedStatement> stmtPostprocessor = null;
+
+	/**
+	 * Value converters used to convert values of classes into other values. To add
+	 * a value converter for booleans for example, call convert(Boolean.class, b ->
+	 * ...) to register the converter. Only one converter per class type is allowed.
+	 */
 	private Map<Class<?>, Function<Object, Object>> valueConverters = null;
+
+	/**
+	 * Fetch option. Will enable returning generated database keys after the
+	 * statement is executed.
+	 */
 	private boolean returnGeneratedKeys = false;
+
+	/**
+	 * Fetch option. Will set the maximum number of records fetched from the
+	 * database when the statement is executed.
+	 */
 	private int fetchSize = FETCH_ALL;
+
+	/**
+	 * Fetch option. Will set the fetch direction if the fetch size is limited. Set
+	 * to any value available in ResultSet.FETCH_FORWARD etc.
+	 */
 	private int fetchDirection = ResultSet.FETCH_FORWARD;
+
+	/**
+	 * Enable to escape keywords regardless of what the quote setting is set to.
+	 * Disable with quote to disable all quoting.
+	 */
 	private boolean escapeKeywords = false;
+
+	/**
+	 * The line delimiter used to create pretty printed statements.
+	 */
 	private String lineDelimiter = "\n";
+
+	/**
+	 * Will push each condition of a list of conditions, separated by operators, on
+	 * a new line. For example WHERE A = 1(NEWLINE)AND B = 2.
+	 */
+	private boolean conditionOnNewline = false;
 
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
@@ -118,6 +208,7 @@ public class QueryOptions {
 				.fetchDirection(fetchDirection)
 				.escapeKeywords(escapeKeywords)
 				.lineDelimiter(lineDelimiter)
+				.conditionOnNewline(conditionOnNewline)
 				.indentLevel(indentLevel);
 	}
 

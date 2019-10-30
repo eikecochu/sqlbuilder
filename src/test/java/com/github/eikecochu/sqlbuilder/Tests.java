@@ -383,4 +383,163 @@ public class Tests {
 		Assertions.assertEquals(ugly, query.string(testOptions().pretty(true)));
 	}
 
+	@Test
+	public void testComplex() {
+		final Query query = SQLBuilder.With("Recents")
+				.columns("ITEM_ID", "ITEM_PUID", "TIME_CREATED")
+				.as(SQLBuilder.Select()
+						.distinct()
+						.columns("ITEM_ID", "ITEM_PUID", "MAX(TIME_CREATED) TIME_CREATED")
+						.from("RECENT_HISTORY")
+						.where()
+						.col("UPPER(USER_NAME)")
+						.eq("JOE")
+						.groupBy("ITEM_ID", "ITEM_PUID")
+						.orderBy("TIME_CREATED DESC"))
+				.select("rh.TYPE", "rh.ACTION", "rh.ITEM_ID", "rh.ITEM_PUID", "rh.USER_NAME", "rh.TIME_CREATED",
+						"dt.SCRIPT_NAME", "kw.NAME AS KEYWORD_NAME", "cd.CLASS_NAME", "la.VALUE AS REQ_NAME",
+						"dt.GRAPHICAL_REPORT_TYPE", "dt.IS_TRACE_REPORT", "dt.REPORT_TYPE",
+						"dt.DESCRIPTION AS SCRIPT_DESCRIPTION", "kw.DESCRIPTION AS KEYWORD_DESCRIPTION",
+						"ta.VALUE AS REQ_DESCRIPTION1", "ta.IS_HTML AS IS_HTML1", "ca.VALUE AS REQ_DESCRIPTION2",
+						"ca.IS_HTML AS IS_HTML2")
+				.from("RECENT_HISTORY rh")
+				.leftJoin("DOCTOOL_SCRIPTS dt")
+				.on()
+				.col("rh.TYPE", 1)
+				.col("rh.ITEM_ID")
+				.eq()
+				.col("dt.SCRIPT_ID")
+				.leftJoin("KEYWORDS kw")
+				.on()
+				.col("rh.TYPE")
+				.in(3, 4, 5, 6)
+				.col("rh.ITEM_ID")
+				.eq()
+				.col("kw.KEYWORD_ID")
+				.leftJoin("OBJECT1 o1")
+				.on()
+				.col("rh.TYPE", 2)
+				.col("rh.ITEM_ID")
+				.eq()
+				.col("o1.CLASS_ID")
+				.col("rh.ITEM_PUID")
+				.eq()
+				.col("o1.PUID")
+				.col("o1.STATUS")
+				.eq("Current")
+				.leftJoin("CLASS_DEFINITION cd")
+				.on()
+				.group(new Condition().col("rh.TYPE", 2)
+						.col("rh.ITEM_ID")
+						.eq()
+						.col("cd.CLASS_ID"))
+				.or()
+				.group(new Condition().col("rh.TYPE", 1)
+						.col("dt.CLASS_ID")
+						.eq()
+						.col("cd.CLASS_ID"))
+				.leftJoin("LINE_ATTRIBUTE1 la")
+				.on()
+				.col("rh.TYPE", 2)
+				.col("la.ATTRIBUTE_ID")
+				.eq()
+				.col("cd.DEFAULT_TITLE")
+				.col("la.OBJECT_ID")
+				.eq()
+				.col("o1.OBJECT_ID")
+				.col("la.CLASS_ID")
+				.eq()
+				.col("rh.ITEM_ID")
+				.leftJoin("TEXT_ATTRIBUTE1 ta")
+				.on()
+				.col("rh.TYPE", 2)
+				.col("ta.ATTRIBUTE_ID")
+				.eq()
+				.col("cd.DEFAULT_DESCRIPTION")
+				.col("ta.OBJECT_ID")
+				.eq()
+				.col("o1.OBJECT_ID")
+				.col("ta.CLASS_ID")
+				.eq()
+				.col("rh.ITEM_ID")
+				.leftJoin("CORE_TEXT_ATTRIBUTE1 ca")
+				.on()
+				.col("rh.TYPE", 2)
+				.col("ca.ATTRIBUTE_ID")
+				.eq()
+				.col("cd.DEFAULT_DESCRIPTION")
+				.col("ca.OBJECT_ID")
+				.eq()
+				.col("o1.OBJECT_ID")
+				.col("ca.CLASS_ID")
+				.eq()
+				.col("rh.ITEM_ID")
+				.innerJoin("Recents")
+				.on()
+				.col("rh.ITEM_ID")
+				.eq()
+				.col("Recents.ITEM_ID")
+				.col("rh.TIME_CREATED")
+				.eq()
+				.col("Recents.TIME_CREATED")
+				.and()
+				.group(new Condition().col("rh.ITEM_PUID")
+						.eq()
+						.col("Recents.ITEM_PUID")
+						.or()
+						.group(new Condition().col("rh.ITEM_PUID")
+								.isNull()
+								.and()
+								.col("Recents.ITEM_PUID")
+								.isNull()))
+				.where()
+				.col("rh.TYPE")
+				.in(1, 2, 3, 4, 5, 6)
+				.col("UPPER(rh.USER_NAME)", "JOE")
+				.orderBy("rh.TIME_CREATED DESC")
+				.query();
+
+		final String ugly = "WITH Recents (ITEM_ID, ITEM_PUID, TIME_CREATED) AS (SELECT DISTINCT ITEM_ID, ITEM_PUID, MAX(TIME_CREATED) "
+				+ "TIME_CREATED FROM RECENT_HISTORY WHERE UPPER(USER_NAME) = 'JOE' GROUP BY ITEM_ID, ITEM_PUID ORDER BY TIME_CREATED DESC) "
+				+ "SELECT RH.TYPE, RH.ACTION, RH.ITEM_ID, RH.ITEM_PUID, RH.USER_NAME, RH.TIME_CREATED, DT.SCRIPT_NAME, KW.NAME KEYWORD_NAME, "
+				+ "CD.CLASS_NAME, LA.VALUE REQ_NAME, DT.GRAPHICAL_REPORT_TYPE, DT.IS_TRACE_REPORT, DT.REPORT_TYPE, DT.DESCRIPTION SCRIPT_DESCRIPTION, "
+				+ "KW.DESCRIPTION KEYWORD_DESCRIPTION, TA.VALUE REQ_DESCRIPTION1, TA.IS_HTML IS_HTML1, CA.VALUE REQ_DESCRIPTION2, CA.IS_HTML IS_HTML2 "
+				+ "FROM RECENT_HISTORY rh LEFT JOIN DOCTOOL_SCRIPTS dt ON RH.TYPE = 1 AND RH.ITEM_ID = DT.SCRIPT_ID LEFT JOIN KEYWORDS kw ON RH.TYPE "
+				+ "IN (3, 4, 5, 6) AND RH.ITEM_ID = KW.KEYWORD_ID LEFT JOIN OBJECT1 o1 ON RH.TYPE = 2 AND RH.ITEM_ID = O1.CLASS_ID AND RH.ITEM_PUID = "
+				+ "O1.PUID AND O1.STATUS = 'Current' LEFT JOIN CLASS_DEFINITION cd ON (RH.TYPE = 2 AND RH.ITEM_ID = CD.CLASS_ID) OR (RH.TYPE = 1 AND "
+				+ "DT.CLASS_ID = CD.CLASS_ID) LEFT JOIN LINE_ATTRIBUTE1 la ON RH.TYPE = 2 AND LA.ATTRIBUTE_ID = CD.DEFAULT_TITLE AND LA.OBJECT_ID = "
+				+ "O1.OBJECT_ID AND LA.CLASS_ID = RH.ITEM_ID LEFT JOIN TEXT_ATTRIBUTE1 ta ON RH.TYPE = 2 AND TA.ATTRIBUTE_ID = CD.DEFAULT_DESCRIPTION "
+				+ "AND TA.OBJECT_ID = O1.OBJECT_ID AND TA.CLASS_ID = RH.ITEM_ID LEFT JOIN CORE_TEXT_ATTRIBUTE1 ca ON RH.TYPE = 2 AND CA.ATTRIBUTE_ID = "
+				+ "CD.DEFAULT_DESCRIPTION AND CA.OBJECT_ID = O1.OBJECT_ID AND CA.CLASS_ID = RH.ITEM_ID INNER JOIN RECENTS ON RH.ITEM_ID = RECENTS.ITEM_ID "
+				+ "AND RH.TIME_CREATED = RECENTS.TIME_CREATED AND (RH.ITEM_PUID = RECENTS.ITEM_PUID OR (RH.ITEM_PUID IS NULL AND RECENTS.ITEM_PUID IS "
+				+ "NULL)) WHERE RH.TYPE IN (1, 2, 3, 4, 5, 6) AND UPPER(RH.USER_NAME) = 'JOE' ORDER BY RH.TIME_CREATED DESC";
+
+		// @formatter:off
+		final String pretty =
+				"  WITH Recents (ITEM_ID, ITEM_PUID, TIME_CREATED) AS (" + NL +
+				"       SELECT DISTINCT ITEM_ID, ITEM_PUID, MAX(TIME_CREATED) TIME_CREATED" + NL +
+				"         FROM RECENT_HISTORY" + NL +
+				"        WHERE UPPER(USER_NAME) = 'JOE'" + NL +
+				"        GROUP BY ITEM_ID, ITEM_PUID" + NL +
+				"        ORDER BY TIME_CREATED DESC)" + NL +
+				"SELECT RH.TYPE, RH.ACTION, RH.ITEM_ID, RH.ITEM_PUID, RH.USER_NAME, RH.TIME_CREATED, DT.SCRIPT_NAME, KW.NAME KEYWORD_NAME, CD.CLASS_NAME, " +
+				        "LA.VALUE REQ_NAME, DT.GRAPHICAL_REPORT_TYPE, DT.IS_TRACE_REPORT, DT.REPORT_TYPE, DT.DESCRIPTION SCRIPT_DESCRIPTION, KW.DESCRIPTION " +
+				        "KEYWORD_DESCRIPTION, TA.VALUE REQ_DESCRIPTION1, TA.IS_HTML IS_HTML1, CA.VALUE REQ_DESCRIPTION2, CA.IS_HTML IS_HTML2" + NL +
+				"  FROM RECENT_HISTORY rh" + NL +
+				"  LEFT JOIN DOCTOOL_SCRIPTS dt ON RH.TYPE = 1 AND RH.ITEM_ID = DT.SCRIPT_ID" + NL +
+				"  LEFT JOIN KEYWORDS kw ON RH.TYPE IN (3, 4, 5, 6) AND RH.ITEM_ID = KW.KEYWORD_ID" + NL +
+				"  LEFT JOIN OBJECT1 o1 ON RH.TYPE = 2 AND RH.ITEM_ID = O1.CLASS_ID AND RH.ITEM_PUID = O1.PUID AND O1.STATUS = 'Current'" + NL +
+				"  LEFT JOIN CLASS_DEFINITION cd ON (RH.TYPE = 2 AND RH.ITEM_ID = CD.CLASS_ID) OR (RH.TYPE = 1 AND DT.CLASS_ID = CD.CLASS_ID)" + NL +
+				"  LEFT JOIN LINE_ATTRIBUTE1 la ON RH.TYPE = 2 AND LA.ATTRIBUTE_ID = CD.DEFAULT_TITLE AND LA.OBJECT_ID = O1.OBJECT_ID AND LA.CLASS_ID = RH.ITEM_ID" + NL +
+				"  LEFT JOIN TEXT_ATTRIBUTE1 ta ON RH.TYPE = 2 AND TA.ATTRIBUTE_ID = CD.DEFAULT_DESCRIPTION AND TA.OBJECT_ID = O1.OBJECT_ID AND TA.CLASS_ID = RH.ITEM_ID" + NL +
+				"  LEFT JOIN CORE_TEXT_ATTRIBUTE1 ca ON RH.TYPE = 2 AND CA.ATTRIBUTE_ID = CD.DEFAULT_DESCRIPTION AND CA.OBJECT_ID = O1.OBJECT_ID AND CA.CLASS_ID = RH.ITEM_ID" + NL +
+				" INNER JOIN RECENTS ON RH.ITEM_ID = RECENTS.ITEM_ID AND RH.TIME_CREATED = RECENTS.TIME_CREATED AND (RH.ITEM_PUID = RECENTS.ITEM_PUID OR (RH.ITEM_PUID IS NULL AND RECENTS.ITEM_PUID IS NULL))" + NL +
+				" WHERE RH.TYPE IN (1, 2, 3, 4, 5, 6) AND UPPER(RH.USER_NAME) = 'JOE'" + NL +
+				" ORDER BY RH.TIME_CREATED DESC";
+		// @formatter:on
+
+		Assertions.assertEquals(ugly, query.string(testOptions()));
+		Assertions.assertEquals(pretty, query.string(testOptions().pretty(true)));
+	}
+
 }

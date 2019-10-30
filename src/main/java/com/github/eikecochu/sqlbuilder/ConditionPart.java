@@ -11,7 +11,7 @@ import lombok.ToString;
 public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
 	@ToString
-	public static enum Operator implements QueryPart {
+	public enum Operator implements QueryPart {
 		EQUALS("="),
 		NOT_EQUALS("<>"),
 		LIKE("LIKE"),
