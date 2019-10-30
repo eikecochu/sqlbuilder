@@ -2,15 +2,17 @@ package com.github.eikecochu.sqlbuilder;
 
 import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
+@ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
 public class Exists extends SQLQueryPart<Exists> implements QueryBuilder {
 
 	private QueryBuilder builder;
 
-	Exists(final QueryBuilder builder) {
+	protected Exists(final QueryBuilder builder) {
 		this.builder = builder;
 	}
 
@@ -18,9 +20,9 @@ public class Exists extends SQLQueryPart<Exists> implements QueryBuilder {
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (sql() != null) {
+		if (sql() != null)
 			strings.add(sql());
-		} else if (builder != null) {
+		else if (builder != null) {
 			strings.add(options.padCased("EXISTS ("));
 
 			final QueryOptions subOptions = options.copy()

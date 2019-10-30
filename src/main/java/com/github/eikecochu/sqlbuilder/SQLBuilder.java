@@ -21,6 +21,16 @@ public abstract class SQLBuilder {
 	 * @param columns The columns to be selected
 	 * @return The new SELECT statement
 	 */
+	public static Select Select() {
+		return new Select();
+	}
+
+	/**
+	 * Start with a SELECT statement
+	 *
+	 * @param columns The columns to be selected
+	 * @return The new SELECT statement
+	 */
 	public static Select Select(final String... columns) {
 		return new Select(columns);
 	}
@@ -83,6 +93,16 @@ public abstract class SQLBuilder {
 	 */
 	public static Delete Delete(final Table table) {
 		return new Delete(table);
+	}
+
+	/**
+	 * Create a final Query
+	 *
+	 * @param sql The SQL statement to use
+	 * @return The new Query
+	 */
+	public static Query Query(final String sql) {
+		return new Query(null).sql(sql);
 	}
 
 }

@@ -6,12 +6,15 @@ import java.util.Map.Entry;
 
 import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
+@ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
 public class Insert extends SQLQueryPart<Insert> implements QueryBuilder, BeforeSelect {
 
+	@ToString
 	private enum InsertType implements QueryPart {
 		INSERT("INSERT INTO"),
 		REPLACE("REPLACE INTO"),

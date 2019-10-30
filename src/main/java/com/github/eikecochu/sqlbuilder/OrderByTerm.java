@@ -2,7 +2,9 @@ package com.github.eikecochu.sqlbuilder;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter(AccessLevel.PROTECTED)
 public class OrderByTerm implements QueryPart {
 

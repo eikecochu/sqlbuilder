@@ -5,7 +5,9 @@ import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter(AccessLevel.PROTECTED)
 public class InsertValue {
 

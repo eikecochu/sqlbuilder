@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
+@ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
 public class From extends SQLQueryPart<From>
 		implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
 
-	@Data
+	@ToString
+	@Getter
+	@Setter
 	@Accessors(fluent = true)
 	private class FromOrigin implements QueryPart {
 
@@ -118,7 +122,7 @@ public class From extends SQLQueryPart<From>
 		}
 
 		if (sql() != null)
-			strings.add(sql());
+			strings.add(options.padded(sql()));
 		else {
 			strings.add(options.padCased("FROM"));
 			strings.add(" ");

@@ -6,12 +6,15 @@ import java.util.Map.Entry;
 
 import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
+@ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
 public class Update extends SQLQueryPart<Update> implements QueryBuilder, BeforeWhere {
 
+	@ToString
 	protected enum UpdateType implements QueryPart {
 		UPDATE("UPDATE"),
 		UPDATE_OR_ROLLBACK("UPDATE OR ROLLBACK"),

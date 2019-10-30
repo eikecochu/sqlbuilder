@@ -4,10 +4,14 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@Data
+@ToString
+@Getter
+@Setter
 @Accessors(fluent = true)
 public class Name implements QueryPart {
 

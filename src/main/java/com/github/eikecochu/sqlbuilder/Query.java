@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 @Getter(AccessLevel.PROTECTED)
-public class Query implements QueryBuilder {
+public class Query extends SQLQueryPart<Query> implements QueryBuilder {
 
 	@Getter(AccessLevel.PUBLIC)
 	@Accessors(fluent = true)
@@ -39,7 +39,9 @@ public class Query implements QueryBuilder {
 	 * @return The created SQL string
 	 */
 	public String string(final QueryOptions options, final Connection connection) {
-		String sql = builder.string(safeOptions(options));
+		String sql = sql();
+		if (sql == null)
+			sql = builder.string(safeOptions(options));
 
 		if (options.sqlPostprocessor() != null)
 			sql = options.sqlPostprocessor()

@@ -9,15 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@Data
+@ToString
+@Getter
+@Setter
 @Accessors(fluent = true)
 public class QueryOptions {
 

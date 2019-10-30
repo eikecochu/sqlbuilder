@@ -4,16 +4,28 @@ import com.github.eikecochu.sqlbuilder.ConditionPart.Operator;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter(AccessLevel.PROTECTED)
 public class ConditionValue<T extends Conditionable<T>> {
 
-	public enum ConditionValueType {
+	@ToString
+	public static enum ConditionValueType implements QueryPart {
 		VALUE,
 		COLUMN,
 		EXPRESSION,
 		ALL,
-		ANY
+		ANY;
+
+		@Override
+		public String string(QueryOptions options) {
+			if (this == ALL)
+				return "ALL";
+			if (this == ANY)
+				return "ANY";
+			return null;
+		}
 	}
 
 	private final ConditionPart<T> part;

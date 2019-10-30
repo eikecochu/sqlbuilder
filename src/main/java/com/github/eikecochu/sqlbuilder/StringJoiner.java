@@ -3,8 +3,6 @@ package com.github.eikecochu.sqlbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class StringJoiner {
 
 	private final List<String> strings = new ArrayList<>();
@@ -20,7 +18,12 @@ public class StringJoiner {
 	}
 
 	public String toString(final String delimiter) {
-		return StringUtils.join(strings, delimiter);
+		if (strings.isEmpty())
+			return null;
+		final String s = StringUtils.join(strings, delimiter);
+		if (s.isBlank())
+			return null;
+		return s;
 	}
 
 	public boolean isEmpty() {

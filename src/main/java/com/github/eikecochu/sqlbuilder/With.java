@@ -3,12 +3,12 @@ package com.github.eikecochu.sqlbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
+@ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
 public class With extends SQLQueryPart<With>
@@ -30,7 +30,7 @@ public class With extends SQLQueryPart<With>
 	}
 
 	protected With(final BeforeWith builder, final String name) {
-		this.name = name;
+		this(name);
 		this.builder = builder;
 	}
 
@@ -100,9 +100,9 @@ public class With extends SQLQueryPart<With>
 		if (!strings.isEmpty())
 			strings.add(" ");
 
-		if (sql() != null) {
+		if (sql() != null)
 			strings.add(sql());
-		} else {
+		else {
 			strings.add(name);
 
 			if (!columns.isEmpty()) {

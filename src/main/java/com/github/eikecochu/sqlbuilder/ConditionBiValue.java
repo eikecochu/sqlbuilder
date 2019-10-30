@@ -4,7 +4,9 @@ import com.github.eikecochu.sqlbuilder.ConditionPart.Operator;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter(AccessLevel.PROTECTED)
 public class ConditionBiValue<T extends Conditionable<T>> {
 

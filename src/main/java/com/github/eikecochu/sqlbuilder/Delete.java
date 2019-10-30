@@ -2,8 +2,10 @@ package com.github.eikecochu.sqlbuilder;
 
 import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
+@ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
 public class Delete extends SQLQueryPart<Delete> implements QueryBuilder, BeforeWhere {

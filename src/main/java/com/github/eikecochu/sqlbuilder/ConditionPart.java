@@ -1,16 +1,17 @@
 package com.github.eikecochu.sqlbuilder;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.github.eikecochu.sqlbuilder.ConditionValue.ConditionValueType;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @Getter(AccessLevel.PROTECTED)
 public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 
-	public enum Operator implements QueryPart {
+	@ToString
+	public static enum Operator implements QueryPart {
 		EQUALS("="),
 		NOT_EQUALS("<>"),
 		LIKE("LIKE"),
@@ -74,7 +75,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	 * @return The previous instance
 	 */
 	public T eq(final Object value) {
-		return op(value, Operator.EQUALS);
+		return condition(value, null, Operator.EQUALS, ConditionValueType.VALUE);
 	}
 
 	/**
@@ -93,7 +94,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	 * @return The previous instance
 	 */
 	public T notEq(final Object value) {
-		return op(value, Operator.NOT_EQUALS);
+		return condition(value, null, Operator.NOT_EQUALS, ConditionValueType.VALUE);
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	 * @return The previous instance
 	 */
 	public T ge(final Object value) {
-		return op(value, Operator.GE);
+		return condition(value, null, Operator.GE, ConditionValueType.VALUE);
 	}
 
 	/**
@@ -131,7 +132,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	 * @return The previous instance
 	 */
 	public T gt(final Object value) {
-		return op(value, Operator.GT);
+		return condition(value, null, Operator.GT, ConditionValueType.VALUE);
 	}
 
 	/**
@@ -150,7 +151,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	 * @return The previous instance
 	 */
 	public T le(final Object value) {
-		return op(value, Operator.LE);
+		return condition(value, null, Operator.LE, ConditionValueType.VALUE);
 	}
 
 	/**
@@ -169,7 +170,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	 * @return The previous instance
 	 */
 	public T lt(final Object value) {
-		return op(value, Operator.LT);
+		return condition(value, null, Operator.LT, ConditionValueType.VALUE);
 	}
 
 	/**
@@ -188,7 +189,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	 * @return The previous instance
 	 */
 	public T like(final Object value) {
-		return op(value, Operator.LIKE);
+		return condition(value, null, Operator.LIKE, ConditionValueType.VALUE);
 	}
 
 	/**
@@ -247,7 +248,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	 * @return The previous instance
 	 */
 	public T isNull() {
-		return op(null, Operator.IS_NULL);
+		return condition(null, null, Operator.IS_NULL, ConditionValueType.VALUE);
 	}
 
 	protected T condition(final ConditionValue<T> conditionValue) {
@@ -269,14 +270,6 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 		this.values = values;
 		this.operator = operator;
 		this.type = type;
-		return (T) conditionable;
-	}
-
-	@SuppressWarnings("unchecked")
-	protected T op(final Object value, final Operator operator) {
-		this.value = value;
-		this.operator = operator;
-		this.type = ConditionValueType.VALUE;
 		return (T) conditionable;
 	}
 
@@ -304,7 +297,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 			if (operator != Operator.IS_NULL && operator != Operator.IS_NOT_NULL) {
 				strings.add(" ");
 
-				if (type != null) {
+				if (type != null)
 					switch (type) {
 					case EXPRESSION:
 						strings.add(QueryUtils.valueToString(options, value));
@@ -315,7 +308,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 						break;
 					case ALL:
 					case ANY:
-						strings.add(type.toString());
+						strings.add(type.string(options));
 						strings.add(" (");
 
 						final QueryOptions subOptions = options.copy()
@@ -336,7 +329,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 						break;
 
 					}
-				} else if (operator == Operator.BETWEEN) {
+				else if (operator == Operator.BETWEEN) {
 					if (options.prepare()) {
 						strings.add("? AND ?");
 						options.addPreparedValue(values[0]);

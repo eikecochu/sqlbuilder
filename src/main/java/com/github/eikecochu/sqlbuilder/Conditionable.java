@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Abstract base class for condition like statements, generic to allow multiple
@@ -13,10 +14,12 @@ import lombok.Getter;
  *
  * @param <T> The type which allows setting conditions
  */
+@ToString
 @Getter(AccessLevel.PROTECTED)
 public abstract class Conditionable<T extends Conditionable<T>> extends SQLQueryPart<T> {
 
-	public enum Operator implements QueryPart {
+	@ToString
+	public static enum Operator implements QueryPart {
 		AND("AND"),
 		OR("OR");
 
@@ -150,14 +153,26 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 		if (sql() != null)
 			return sql();
 
+		// check for alternating value - operator pairs
+		final List<QueryPart> validParts = new ArrayList<>(parts.size());
+		boolean valueNext = true;
+		for (final QueryPart part : parts) {
+			if (valueNext == !(part instanceof Operator))
+				validParts.add(part);
+			valueNext = !valueNext;
+		}
+
+		// remove trailing operators
+		while (!parts.isEmpty() && parts.get(parts.size() - 1) instanceof Operator)
+			parts.remove(parts.size() - 1);
+
+		// check if empty
 		if (parts.isEmpty())
 			return null;
 
-		if (parts.size() % 2 != 1)
-			throw new RuntimeException("wrong part count");
-
 		final StringJoiner strings = new StringJoiner();
 
+		// get the first part
 		final String first = parts.get(0)
 				.string(options);
 		boolean needsOp = false;
@@ -167,6 +182,10 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 			strings.add(first);
 		}
 
+		// loop through remaining parts
+		// this makes sure that not only values and operators alternate, but it also
+		// ensures that parts which evaluate to "" are handled and following operators
+		// are ignored
 		for (int i = 1; i < parts.size(); i += 2) {
 			final String op = parts.get(i)
 					.string(options);
@@ -184,6 +203,7 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 		}
 
 		return strings.toString(" ");
+
 	}
 
 }

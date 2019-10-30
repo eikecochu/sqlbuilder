@@ -3,8 +3,10 @@ package com.github.eikecochu.sqlbuilder;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
+@ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
@@ -13,8 +15,21 @@ public class Union extends SQLQueryPart<Union> implements QueryBuilder, BeforeSe
 	private boolean all = false;
 	private BeforeUnion builder;
 
-	Union(final BeforeUnion builder) {
+	protected Union(final BeforeUnion builder) {
 		this.builder = builder;
+	}
+
+	public Union all() {
+		return all(true);
+	}
+
+	public Union distinct() {
+		return all(false);
+	}
+
+	public Union all(final boolean all) {
+		this.all = all;
+		return this;
 	}
 
 	@Override
@@ -26,9 +41,9 @@ public class Union extends SQLQueryPart<Union> implements QueryBuilder, BeforeSe
 			strings.add(options.newLine());
 		}
 
-		if (sql() != null) {
+		if (sql() != null)
 			strings.add(sql());
-		} else {
+		else {
 			strings.add(options.padCased("UNION"));
 
 			if (all) {

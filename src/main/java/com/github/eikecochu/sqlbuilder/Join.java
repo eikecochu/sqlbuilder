@@ -2,14 +2,17 @@ package com.github.eikecochu.sqlbuilder;
 
 import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
+@ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
 public class Join extends Conditionable<Join>
 		implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
 
-	public enum JoinMode implements QueryPart {
+	@ToString
+	public static enum JoinMode implements QueryPart {
 		INNER_JOIN("INNER JOIN"),
 		OUTER_JOIN("OUTER JOIN"),
 		LEFT_JOIN("LEFT JOIN"),
