@@ -244,7 +244,6 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	/**
 	 * The IS NULL operator
 	 *
-	 * @param value The value to compare to
 	 * @return The previous instance
 	 */
 	public T isNull() {

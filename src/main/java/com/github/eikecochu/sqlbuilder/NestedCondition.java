@@ -9,8 +9,7 @@ import lombok.ToString;
  */
 @ToString
 @Getter(AccessLevel.PROTECTED)
-public class NestedCondition<T extends Conditionable<T>> extends Conditionable<NestedCondition<T>>
-		implements QueryPart {
+public class NestedCondition<T extends Conditionable<T>> extends Conditionable<NestedCondition<T>> {
 
 	private final Conditionable<T> parent;
 

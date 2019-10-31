@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 public class Update extends SQLQueryPart<Update> implements QueryBuilder, BeforeWhere {
 
 	@ToString
-	protected enum UpdateType implements QueryPart {
+	private enum UpdateType implements QueryPart {
 		UPDATE("UPDATE"),
 		UPDATE_OR_ROLLBACK("UPDATE OR ROLLBACK"),
 		UPDATE_OR_ABORT("UPDATE OR ABORT"),

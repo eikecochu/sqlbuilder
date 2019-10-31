@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public abstract class QueryUtils {
+abstract class QueryUtils {
 
 	private static final Pattern namePattern = Pattern.compile(
 			"^\\s*((?<fn>\\w+)\\()?(`?(?<a1>\\w+)`?\\.)?(`?(?<a2>\\w+)`?\\.)?(`?(?<name>\\w+|\\*)`?)\\)?(\\s+[Aa][Ss])?(\\s+`?(?<alias>\\w+))?`?\\s*$");

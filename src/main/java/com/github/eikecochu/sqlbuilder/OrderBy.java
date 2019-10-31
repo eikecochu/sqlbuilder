@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,6 +15,30 @@ import lombok.experimental.Accessors;
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
 public class OrderBy extends SQLQueryPart<OrderBy> implements QueryBuilder, BeforeUnion {
+
+	@ToString
+	@Getter(AccessLevel.PROTECTED)
+	private static class OrderByTerm implements QueryPart {
+
+		private final Name name;
+		private final boolean ascending;
+
+		protected OrderByTerm(final String name, final boolean ascending) {
+			this(null, name, ascending);
+		}
+
+		protected OrderByTerm(final String schema, final String name, final boolean ascending) {
+			this.name = new Name().schema(schema)
+					.name(name);
+			this.ascending = ascending;
+		}
+
+		@Override
+		public String string(final QueryOptions options) {
+			return name.string(options) + " " + options.cased(ascending ? "ASC" : "DESC");
+		}
+
+	}
 
 	private BeforeOrderBy builder;
 	private final List<OrderByTerm> orderByTerms = new ArrayList<>();

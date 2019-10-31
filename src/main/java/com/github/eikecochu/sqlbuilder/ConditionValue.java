@@ -61,7 +61,7 @@ public class ConditionValue<T extends Conditionable<T>> {
 	/**
 	 * Set an expression to be used as condition
 	 *
-	 * @param value The condition expression
+	 * @param expr The condition expression
 	 * @return This instance
 	 */
 	public T expr(final String expr) {
@@ -71,7 +71,7 @@ public class ConditionValue<T extends Conditionable<T>> {
 	/**
 	 * Set a subquery to be used as condition with restriction ALL
 	 *
-	 * @param value The condition expression
+	 * @param builder The subquery builder
 	 * @return This instance
 	 */
 	public T all(final QueryBuilder builder) {
@@ -81,7 +81,7 @@ public class ConditionValue<T extends Conditionable<T>> {
 	/**
 	 * Set a subquery to be used as condition with restriction ANY
 	 *
-	 * @param value The condition expression
+	 * @param builder The subquery builder
 	 * @return This instance
 	 */
 	public T any(final QueryBuilder builder) {

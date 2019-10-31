@@ -21,7 +21,7 @@ public class From extends SQLQueryPart<From>
 	@Getter
 	@Setter
 	@Accessors(fluent = true)
-	private class FromOrigin implements QueryPart {
+	private static class FromOrigin implements QueryPart {
 
 		private String table;
 		private Query subquery;
@@ -78,7 +78,7 @@ public class From extends SQLQueryPart<From>
 	/**
 	 * Specify the target tables by name
 	 *
-	 * @param table The table names to select from
+	 * @param tables The table names to select from
 	 * @return This FROM statement
 	 */
 	public From tables(final String... tables) {
@@ -90,7 +90,7 @@ public class From extends SQLQueryPart<From>
 	/**
 	 * Specify the target table by Table representations
 	 *
-	 * @param table The Table representations to select from
+	 * @param tables The Table representations to select from
 	 * @return This FROM statement
 	 */
 	public From tables(final Table... tables) {

@@ -21,9 +21,10 @@ public class ConditionBiValue<T extends Conditionable<T>> {
 	}
 
 	/**
-	 * Set multiple values to be used as conditions
+	 * Set two values to be used as conditions
 	 *
-	 * @param values The condition values
+	 * @param value1 The first value
+	 * @param value2 The second value
 	 * @return This instance
 	 */
 	public T values(final Object value1, final Object value2) {

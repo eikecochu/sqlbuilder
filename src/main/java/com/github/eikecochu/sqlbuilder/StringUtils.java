@@ -1,6 +1,6 @@
 package com.github.eikecochu.sqlbuilder;
 
-public abstract class StringUtils {
+abstract class StringUtils {
 
 	private StringUtils() {
 	}

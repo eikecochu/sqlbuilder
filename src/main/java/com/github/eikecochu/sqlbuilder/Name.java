@@ -156,8 +156,8 @@ public class Name implements QueryPart {
 	 * estimation, as the target database is not taken into account. To modify the
 	 * keyword list, change or overwrite Name.KEYWORDS
 	 *
-	 * @param str
-	 * @return
+	 * @param str The name to check
+	 * @return true if it is a keyword
 	 */
 	public static boolean isKeyword(final String str) {
 		return str != null && KEYWORDS.contains(str.toUpperCase());

@@ -18,7 +18,6 @@ public abstract class SQLBuilder {
 	/**
 	 * Start with a SELECT statement
 	 *
-	 * @param columns The columns to be selected
 	 * @return The new SELECT statement
 	 */
 	public static Select Select() {

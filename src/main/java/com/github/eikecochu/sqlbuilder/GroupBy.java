@@ -36,7 +36,7 @@ public class GroupBy extends SQLQueryPart<GroupBy> implements QueryBuilder, Befo
 	/**
 	 * Group by column names
 	 *
-	 * @param column The column names to group by
+	 * @param columns The column names to group by
 	 * @return This GROUP BY statement
 	 */
 	public GroupBy columns(final String... columns) {

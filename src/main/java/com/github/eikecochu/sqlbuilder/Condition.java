@@ -9,7 +9,7 @@ import lombok.ToString;
  */
 @ToString
 @Getter(AccessLevel.PROTECTED)
-public class Condition extends Conditionable<Condition> implements QueryPart {
+public class Condition extends Conditionable<Condition> {
 
 	@Override
 	public String string(final QueryOptions options) {

@@ -3,7 +3,7 @@ package com.github.eikecochu.sqlbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StringJoiner {
+class StringJoiner {
 
 	private final List<String> strings = new ArrayList<>();
 

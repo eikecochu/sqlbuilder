@@ -7,14 +7,17 @@ import java.sql.Statement;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter(AccessLevel.PROTECTED)
 public class Query extends SQLQueryPart<Query> implements QueryBuilder {
 
 	@Getter(AccessLevel.PUBLIC)
+	@Setter(AccessLevel.PUBLIC)
 	@Accessors(fluent = true)
 	private QueryOptions options;
+
 	private final QueryPart builder;
 
 	Query(final QueryPart builder) {
@@ -51,27 +54,14 @@ public class Query extends SQLQueryPart<Query> implements QueryBuilder {
 	}
 
 	/**
-	 * Sets the QueryOptions of this Query instance
-	 *
-	 * @param options The QueryOptions
-	 * @return This Query instance
-	 */
-	public Query options(final QueryOptions options) {
-		if (options != null)
-			options.query(this);
-		this.options = options;
-		return this;
-	}
-
-	/**
 	 * Prepares the statement using the passed database connection
 	 *
 	 * @param connection The database connection
 	 * @return The PreparedStatement
-	 * @throws SQLException
+	 * @throws SQLException if preparing fails
 	 */
 	public PreparedStatement prepare(final Connection connection) throws SQLException {
-		return prepare(connection, safeOptions(options));
+		return prepare(connection, options);
 	}
 
 	/**
@@ -80,7 +70,7 @@ public class Query extends SQLQueryPart<Query> implements QueryBuilder {
 	 * @param connection The database connection
 	 * @param options    The QueryOptions to use
 	 * @return The PreparedStatement
-	 * @throws SQLException
+	 * @throws SQLException if preparing fails
 	 */
 	public PreparedStatement prepare(final Connection connection, QueryOptions options) throws SQLException {
 		options = safeOptions(options).prepare(true);

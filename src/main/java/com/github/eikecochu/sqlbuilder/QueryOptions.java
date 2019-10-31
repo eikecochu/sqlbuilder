@@ -11,6 +11,7 @@ import java.util.function.Function;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -23,6 +24,7 @@ public class QueryOptions {
 
 	public static int FETCH_ALL = 0;
 
+	@NonNull
 	static QueryOptions DEFAULT_OPTIONS = new QueryOptions();
 
 	/**
@@ -227,10 +229,8 @@ public class QueryOptions {
 	}
 
 	PreparedStatement applyStatementOptions(final PreparedStatement stmt) throws SQLException {
-		if (fetchSize != FETCH_ALL) {
-			stmt.setFetchSize(fetchSize);
-			stmt.setMaxRows(fetchSize);
-		}
+		stmt.setFetchSize(fetchSize);
+		stmt.setMaxRows(fetchSize);
 		stmt.setFetchDirection(fetchDirection);
 		return stmt;
 	}
@@ -256,6 +256,7 @@ public class QueryOptions {
 	/**
 	 * Register a converter for a specific class to be used for value conversion
 	 *
+	 * @param <T>   The input conversion type
 	 * @param clazz The class of the values to be converted
 	 * @param func  The value converter
 	 * @return This QueryOptions instance
@@ -283,7 +284,8 @@ public class QueryOptions {
 	 * @param options The new default options
 	 */
 	public static void setDefaultOptions(final QueryOptions options) {
-		DEFAULT_OPTIONS = options.copy();
+		if (options != null)
+			DEFAULT_OPTIONS = options.copy();
 	}
 
 }
