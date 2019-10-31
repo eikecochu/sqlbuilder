@@ -135,6 +135,14 @@ public class QueryOptions {
 	 */
 	private boolean conditionOnNewline = false;
 
+	/**
+	 * Enable to remove conditions with null values. For example if A = ? AND B = 1
+	 * with A = null, then the condition evaluates to B = 1. Disable to treat null
+	 * values as if the IS NULL operator was used, which will evaluate to A IS NULL
+	 * AND B = 1.
+	 */
+	private boolean ignoreNull = true;
+
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
 	private int indentLevel = 0;
@@ -211,6 +219,7 @@ public class QueryOptions {
 				.escapeKeywords(escapeKeywords)
 				.lineDelimiter(lineDelimiter)
 				.conditionOnNewline(conditionOnNewline)
+				.ignoreNull(ignoreNull)
 				.indentLevel(indentLevel);
 	}
 
@@ -256,7 +265,7 @@ public class QueryOptions {
 	/**
 	 * Register a converter for a specific class to be used for value conversion
 	 *
-	 * @param <T>   The input conversion type
+	 * @param       <T> The input conversion type
 	 * @param clazz The class of the values to be converted
 	 * @param func  The value converter
 	 * @return This QueryOptions instance

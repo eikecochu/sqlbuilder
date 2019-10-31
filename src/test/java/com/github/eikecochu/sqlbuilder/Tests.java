@@ -384,6 +384,31 @@ public class Tests {
 	}
 
 	@Test
+	public void testIgnoreNull() {
+		final Query query = SQLBuilder.Select("COL1")
+				.from("TEST")
+				.where()
+				.col("A")
+				.eq(null)
+				.or()
+				.col("B", 1)
+				.query();
+
+		final String ugly = "SELECT COL1 FROM TEST WHERE A IS NULL OR B = 1";
+
+		// @formatter:off
+		final String pretty =
+			"SELECT COL1" + NL +
+			"  FROM TEST" + NL +
+			" WHERE A IS NULL OR B = 1";
+		// @formatter:on
+
+		Assertions.assertEquals(ugly, query.string(testOptions().ignoreNull(false)));
+		Assertions.assertEquals(pretty, query.string(testOptions().ignoreNull(false)
+				.pretty(true)));
+	}
+
+	@Test
 	public void testComplex() {
 		final Query query = SQLBuilder.With("Recents")
 				.columns("ITEM_ID", "ITEM_PUID", "TIME_CREATED")
