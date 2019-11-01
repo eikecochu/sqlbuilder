@@ -1,6 +1,7 @@
 package com.github.eikecochu.sqlbuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -29,8 +30,7 @@ public class InsertValue {
 
 	public Insert values(final Object... values) {
 		if (values != null)
-			for (final Object value : values)
-				this.values.add(value);
+			this.values.addAll(Arrays.asList(values));
 		return insert;
 	}
 

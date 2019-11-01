@@ -9,11 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 @ToString
@@ -265,7 +261,7 @@ public class QueryOptions {
 	/**
 	 * Register a converter for a specific class to be used for value conversion
 	 *
-	 * @param       <T> The input conversion type
+	 * @param <T>   The input conversion type
 	 * @param clazz The class of the values to be converted
 	 * @param func  The value converter
 	 * @return This QueryOptions instance

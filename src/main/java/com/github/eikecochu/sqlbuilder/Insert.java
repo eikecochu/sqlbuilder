@@ -24,9 +24,9 @@ public class Insert extends SQLQueryPart<Insert> implements QueryBuilder, Before
 		INSERT_OR_FAIL("INSERT OR FAIL INTO"),
 		INSERT_OR_IGNORE("INSERT OR IGNORE INTO");
 
-		private String string;
+		private final String string;
 
-		private InsertType(final String string) {
+		InsertType(final String string) {
 			this.string = string;
 		}
 
@@ -172,7 +172,6 @@ public class Insert extends SQLQueryPart<Insert> implements QueryBuilder, Before
 	 * @return This INSERT statement
 	 */
 	public Insert value(final Object value) {
-		onlyValues = onlyValues && true;
 		return column(null).value(value);
 	}
 

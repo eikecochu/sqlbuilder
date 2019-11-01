@@ -1,6 +1,7 @@
 package com.github.eikecochu.sqlbuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -41,8 +42,7 @@ public class GroupBy extends SQLQueryPart<GroupBy> implements QueryBuilder, Befo
 	 */
 	public GroupBy columns(final String... columns) {
 		if (columns != null)
-			for (final String column : columns)
-				this.columns.add(column);
+			this.columns.addAll(Arrays.asList(columns));
 		return this;
 	}
 

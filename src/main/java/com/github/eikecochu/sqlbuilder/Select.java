@@ -1,6 +1,7 @@
 package com.github.eikecochu.sqlbuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -74,8 +75,7 @@ public class Select extends SQLQueryPart<Select> implements BeforeFrom {
 	 */
 	public Select columns(final String... columns) {
 		if (columns != null)
-			for (final String column : columns)
-				this.columns.add(column);
+			this.columns.addAll(Arrays.asList(columns));
 		return this;
 	}
 

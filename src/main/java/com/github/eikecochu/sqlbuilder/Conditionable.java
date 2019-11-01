@@ -2,6 +2,7 @@ package com.github.eikecochu.sqlbuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map.Entry;
 
 import lombok.AccessLevel;
@@ -25,7 +26,7 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 
 		private final String string;
 
-		private Operator(final String string) {
+		Operator(final String string) {
 			this.string = string;
 		}
 
@@ -146,7 +147,7 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 	}
 
 	private Conditionable<T> conditionable() {
-		return conditionable == null ? (Conditionable<T>) this : conditionable;
+		return conditionable;
 	}
 
 	@Override
@@ -164,17 +165,18 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 		}
 
 		// remove trailing operators
-		while (!parts.isEmpty() && parts.get(parts.size() - 1) instanceof Operator)
-			parts.remove(parts.size() - 1);
+		ListIterator<QueryPart> it = validParts.listIterator(validParts.size());
+		while (it.hasPrevious() && it.previous() instanceof Operator)
+			it.remove();
 
 		// check if empty
-		if (parts.isEmpty())
+		if (validParts.isEmpty())
 			return null;
 
 		final StringJoiner strings = new StringJoiner();
 
 		// get the first part
-		final String first = parts.get(0)
+		final String first = validParts.get(0)
 				.string(options);
 		boolean needsOp = false;
 
@@ -187,10 +189,10 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 		// this makes sure that not only values and operators alternate, but it also
 		// ensures that parts which evaluate to "" are handled and following operators
 		// are ignored
-		for (int i = 1; i < parts.size(); i += 2) {
-			final String op = parts.get(i)
+		for (int i = 1; i < validParts.size(); i += 2) {
+			final String op = validParts.get(i)
 					.string(options);
-			final String val = parts.get(i + 1)
+			final String val = validParts.get(i + 1)
 					.string(options);
 
 			if (needsOp) {

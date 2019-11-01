@@ -25,9 +25,9 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 		LT("<="),
 		BETWEEN("BETWEEN");
 
-		private String string;
+		private final String string;
 
-		private Operator(final String string) {
+		Operator(final String string) {
 			this.string = string;
 		}
 
@@ -308,7 +308,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 					} else
 						strings.add(StringUtils.join(QueryUtils.valuesToStrings(options, values), ", "));
 					strings.add(")");
-				} else if (type != null) {
+				} else if (type != null)
 					switch (type) {
 					case EXPRESSION:
 						strings.add(values[0].toString());
@@ -343,7 +343,6 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 						break;
 
 					}
-				}
 			}
 		}
 

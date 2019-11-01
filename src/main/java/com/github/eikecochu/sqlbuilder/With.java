@@ -1,6 +1,7 @@
 package com.github.eikecochu.sqlbuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -62,8 +63,7 @@ public class With extends SQLQueryPart<With>
 	 * @return This WITH statement
 	 */
 	public With columns(final String... columns) {
-		for (final String column : columns)
-			this.columns.add(column);
+		this.columns.addAll(Arrays.asList(columns));
 		return this;
 	}
 

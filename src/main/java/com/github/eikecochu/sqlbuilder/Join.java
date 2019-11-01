@@ -21,7 +21,7 @@ public class Join extends Conditionable<Join>
 
 		private final String string;
 
-		private JoinMode(final String string) {
+		JoinMode(final String string) {
 			this.string = string;
 		}
 

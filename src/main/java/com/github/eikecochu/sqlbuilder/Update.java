@@ -23,9 +23,9 @@ public class Update extends SQLQueryPart<Update> implements QueryBuilder, Before
 		UPDATE_OR_FAIL("UPDATE OR FAIL"),
 		UPDATE_OR_IGNORE("UPDATE OR IGNORE");
 
-		private String string;
+		private final String string;
 
-		private UpdateType(final String string) {
+		UpdateType(final String string) {
 			this.string = string;
 		}
 

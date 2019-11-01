@@ -93,7 +93,7 @@ public class ConditionValue<T extends Conditionable<T>> {
 		for (final Object o : values)
 			if (o != null)
 				v.add(o);
-		return values(v.toArray(new Object[v.size()]));
+		return values(v.toArray(new Object[0]));
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class ConditionValue<T extends Conditionable<T>> {
 			return b;
 		final int bLen = b.length;
 		final Object[] c = new Object[1 + bLen];
-		System.arraycopy(a, 0, c, 0, 1);
+		c[0] = a;
 		System.arraycopy(b, 0, c, 1, bLen);
 		return c;
 	}
