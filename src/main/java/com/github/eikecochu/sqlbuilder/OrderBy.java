@@ -130,7 +130,7 @@ public class OrderBy extends SQLQueryPart<OrderBy> implements QueryBuilder, Befo
 			for (final OrderByTerm orderByTerm : orderByTerms)
 				orderStrings.add(orderByTerm.string(options));
 
-			if (!orderStrings.isEmpty()) {
+			if (orderStrings.notEmpty()) {
 				strings.add(options.newLine());
 				strings.add(options.padCased("ORDER BY"));
 				strings.add(" ");

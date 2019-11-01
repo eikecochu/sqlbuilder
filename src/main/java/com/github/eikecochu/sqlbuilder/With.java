@@ -97,7 +97,7 @@ public class With extends SQLQueryPart<With>
 			strings.add(",");
 		}
 
-		if (!strings.isEmpty())
+		if (strings.notEmpty())
 			strings.add(" ");
 
 		if (sql() != null)

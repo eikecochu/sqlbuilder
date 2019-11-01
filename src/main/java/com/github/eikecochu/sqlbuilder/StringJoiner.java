@@ -26,8 +26,8 @@ class StringJoiner {
 		return s;
 	}
 
-	public boolean isEmpty() {
-		return strings.isEmpty();
+	public boolean notEmpty() {
+		return !strings.isEmpty();
 	}
 
 }

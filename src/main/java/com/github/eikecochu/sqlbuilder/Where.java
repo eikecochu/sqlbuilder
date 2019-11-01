@@ -30,14 +30,14 @@ public class Where extends Conditionable<Where> implements QueryBuilder, BeforeG
 			strings.add(builder.string(options));
 
 		if (sql() != null) {
-			if (!strings.isEmpty())
+			if (strings.notEmpty())
 				strings.add(options.newLine());
 			strings.add(options.padded(sql()));
 		} else {
 			final String condition = super.string(options);
 
 			if (condition != null && !condition.isEmpty()) {
-				if (!strings.isEmpty())
+				if (strings.notEmpty())
 					strings.add(options.newLine());
 				strings.add(options.padCased("WHERE"));
 				strings.add(" ");
