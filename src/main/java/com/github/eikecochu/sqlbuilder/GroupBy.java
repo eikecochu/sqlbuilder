@@ -52,10 +52,12 @@ public class GroupBy extends QueryPartImpl<GroupBy> implements QueryBuilder, Bef
 		if (parent() != null)
 			strings.add(parent().string(options));
 
-		if (sql() != null)
-			strings.add(sql());
-		else if (!columns.isEmpty()) {
+		if (strings.notEmpty())
 			strings.add(options.newLine());
+
+		if (sql() != null)
+			strings.add(options.padded(sql()));
+		else if (!columns.isEmpty()) {
 			strings.add(options.padCased("GROUP BY"));
 
 			final StringJoiner columnsStrings = new StringJoiner();

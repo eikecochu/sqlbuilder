@@ -85,11 +85,12 @@ public class Join extends Conditionable<Join>
 		if (parent() != null)
 			strings.add(parent().string(options));
 
-		if (sql() != null)
-			strings.add(sql());
-		else if (name != null) {
+		if (strings.notEmpty())
 			strings.add(options.newLine());
 
+		if (sql() != null)
+			strings.add(options.padded(sql()));
+		else if (name != null) {
 			strings.add(options.padCased(joinMode.string(options)));
 
 			if (query != null) {

@@ -41,7 +41,7 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder {
 	 */
 	public String string(final QueryOptions options, final Connection connection) {
 		String sql = sql();
-		if (sql == null)
+		if (sql == null && parent() != null)
 			sql = parent().string(safeOptions(options));
 
 		if (options.sqlPostprocessor() != null)

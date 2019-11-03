@@ -126,15 +126,17 @@ public class OrderBy extends QueryPartImpl<OrderBy> implements QueryBuilder, Bef
 		if (parent() != null)
 			strings.add(parent().string(options));
 
+		if (strings.notEmpty())
+			strings.add(options.newLine());
+
 		if (sql() != null)
-			strings.add(sql());
+			strings.add(options.padded(sql()));
 		else {
 			final StringJoiner orderStrings = new StringJoiner();
 			for (final OrderByTerm orderByTerm : orderByTerms)
 				orderStrings.add(orderByTerm.string(options));
 
 			if (orderStrings.notEmpty()) {
-				strings.add(options.newLine());
 				strings.add(options.padCased("ORDER BY"));
 				strings.add(" ");
 				strings.add(orderStrings.toString(", "));

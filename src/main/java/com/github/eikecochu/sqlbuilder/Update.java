@@ -191,13 +191,14 @@ public class Update extends QueryPartImpl<Update> implements QueryBuilder, Befor
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (parent() != null) {
+		if (parent() != null)
 			strings.add(parent().string(options));
+
+		if (strings.notEmpty())
 			strings.add(options.newLine());
-		}
 
 		if (sql() != null)
-			strings.add(sql());
+			strings.add(options.padded(sql()));
 		else {
 			strings.add(options.padCased(updateType.string(options)));
 

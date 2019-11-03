@@ -79,6 +79,28 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	}
 
 	/**
+	 * Set a column to be constrained
+	 *
+	 * @param column The column name
+	 * @return This instance
+	 */
+	public T eqCol(final String column) {
+		return eq().col(column);
+	}
+
+	/**
+	 * Set an expression to be used as condition
+	 *
+	 * @param expr   The condition expression
+	 * @param values Additional values that are passed to the PreparedStatement.
+	 *               These values are ignored if the target is not a PreparedQuery.
+	 * @return This instance
+	 */
+	public T eqExpr(final String expr, final Object... values) {
+		return eq().expr(expr, values);
+	}
+
+	/**
 	 * The NOT EQUALS operator
 	 *
 	 * @return The value instance to set the compare value

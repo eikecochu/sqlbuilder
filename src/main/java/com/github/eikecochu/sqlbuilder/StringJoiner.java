@@ -3,7 +3,7 @@ package com.github.eikecochu.sqlbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-class StringJoiner {
+public final class StringJoiner {
 
 	private final List<String> strings = new ArrayList<>();
 
@@ -24,7 +24,7 @@ class StringJoiner {
 		if (s.trim()
 				.isEmpty())
 			return null;
-		return s;
+		return s.replaceAll("(\r?\n)+$", "");
 	}
 
 	public boolean notEmpty() {

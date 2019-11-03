@@ -1,4 +1,8 @@
-package com.github.eikecochu.sqlbuilder;
+package com.github.eikecochu.sqlbuilder.oracle;
+
+import com.github.eikecochu.sqlbuilder.Conditionable;
+import com.github.eikecochu.sqlbuilder.QueryOptions;
+import com.github.eikecochu.sqlbuilder.StringJoiner;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -10,25 +14,10 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Union extends QueryPartImpl<Union> implements QueryBuilder, BeforeSelect, BeforeWith {
+public class StartWith extends Conditionable<StartWith> {
 
-	private boolean all = false;
-
-	protected Union(final BeforeUnion parent) {
-		super(parent);
-	}
-
-	public Union all() {
-		return all(true);
-	}
-
-	public Union distinct() {
-		return all(false);
-	}
-
-	public Union all(final boolean all) {
-		this.all = all;
-		return this;
+	public ConnectBy connectBy() {
+		return new ConnectBy(this);
 	}
 
 	@Override
@@ -41,14 +30,15 @@ public class Union extends QueryPartImpl<Union> implements QueryBuilder, BeforeS
 		if (strings.notEmpty())
 			strings.add(options.newLine());
 
-		if (sql() != null)
+		if (sql() != null) {
 			strings.add(options.padded(sql()));
-		else {
-			strings.add(options.padCased("UNION"));
+		} else {
+			final String condition = super.string(options);
 
-			if (all) {
+			if (condition != null && !condition.isEmpty()) {
+				strings.add(options.padCased("START WITH"));
 				strings.add(" ");
-				strings.add(options.cased("ALL"));
+				strings.add(condition);
 			}
 		}
 

@@ -115,10 +115,11 @@ public class From extends QueryPartImpl<From>
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (parent() != null) {
+		if (parent() != null)
 			strings.add(parent().string(options));
+
+		if (strings.notEmpty())
 			strings.add(options.newLine());
-		}
 
 		if (sql() != null)
 			strings.add(options.padded(sql()));

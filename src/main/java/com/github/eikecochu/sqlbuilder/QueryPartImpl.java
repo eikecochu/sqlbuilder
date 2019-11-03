@@ -21,7 +21,7 @@ public abstract class QueryPartImpl<T extends QueryPartImpl<T>> implements Query
 
 	/**
 	 * Set SQL as content
-	 * 
+	 *
 	 * @param sql The SQL expression
 	 * @return This instance
 	 */
@@ -32,7 +32,7 @@ public abstract class QueryPartImpl<T extends QueryPartImpl<T>> implements Query
 
 	/**
 	 * Set the parent of this expression
-	 * 
+	 *
 	 * @param parent The parent expression
 	 * @return This instance
 	 */
@@ -44,7 +44,7 @@ public abstract class QueryPartImpl<T extends QueryPartImpl<T>> implements Query
 	/**
 	 * Continue the building chain with any element, for example custom implemented
 	 * expressions.
-	 * 
+	 *
 	 * @param ext The custom expression
 	 * @return The custom expression
 	 */

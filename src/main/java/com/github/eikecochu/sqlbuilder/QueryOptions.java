@@ -161,32 +161,32 @@ public class QueryOptions {
 		preparedValues.add(value);
 	}
 
-	String indentString() {
+	public String indentString() {
 		if (pretty && indent)
 			return StringUtils.repeat(' ', indentLevel * padLength + (indentLevel == 0 ? 0 : 1));
 		else
 			return "";
 	}
 
-	String newLine() {
+	public String newLine() {
 		return newLine(false);
 	}
 
-	String newLine(final boolean noSpace) {
+	public String newLine(final boolean noSpace) {
 		return pretty ? lineDelimiter + indentString() : noSpace ? "" : " ";
 	}
 
-	String padCased(final String keyword) {
+	public String padCased(final String keyword) {
 		return cased(padded(keyword));
 	}
 
-	String ticked(final String string) {
+	public String ticked(final String string) {
 		if (string == null)
 			return null;
 		return quote || (escapeKeywords && Name.isKeyword(string)) ? quoteStartChar + string + quoteEndChar : string;
 	}
 
-	String padded(final String keyword) {
+	public String padded(final String keyword) {
 		if (pretty && keyword != null) {
 			final int length = Math.max(0, padLength - keyword.split("\\s+")[0].length());
 			return StringUtils.leftPad("", length) + cased(keyword);
@@ -194,13 +194,13 @@ public class QueryOptions {
 		return keyword;
 	}
 
-	String cased(final String string) {
+	public String cased(final String string) {
 		if (string == null)
 			return null;
 		return uppercase ? string.toUpperCase() : string.toLowerCase();
 	}
 
-	QueryOptions copy() {
+	public QueryOptions copy() {
 		return new QueryOptions().padLength(padLength)
 				.splitNames(splitNames)
 				.pretty(pretty)
@@ -223,7 +223,7 @@ public class QueryOptions {
 				.indentLevel(indentLevel);
 	}
 
-	String preparedValuesString() {
+	public String preparedValuesString() {
 		final StringBuilder sb = new StringBuilder();
 		int index = 1;
 		String prefix = "";

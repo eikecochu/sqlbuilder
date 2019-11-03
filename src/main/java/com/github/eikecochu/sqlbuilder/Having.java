@@ -25,10 +25,12 @@ public class Having extends Conditionable<Having> implements QueryBuilder, Befor
 		if (parent() != null)
 			strings.add(parent().string(options));
 
-		if (sql() != null)
-			strings.add(sql());
-		else if (condition != null) {
+		if (strings.notEmpty())
 			strings.add(options.newLine());
+
+		if (sql() != null)
+			strings.add(options.padded(sql()));
+		else if (condition != null) {
 			strings.add(options.padCased("HAVING"));
 			strings.add(" ");
 			strings.add(condition.string(options));

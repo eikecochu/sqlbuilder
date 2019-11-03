@@ -81,27 +81,27 @@ public class With extends QueryPartImpl<With>
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (parent() == null) {
-			if (sql() == null) {
-				strings.add(options.padCased("WITH"));
-
-				if (recursive) {
-					strings.add(" ");
-					strings.add(options.cased("RECURSIVE"));
-				}
-			}
-		} else {
-			strings.add(options.newLine());
+		if (parent() != null)
 			strings.add(parent().string(options));
-			strings.add(",");
-		}
 
-		if (strings.notEmpty())
+		if (strings.notEmpty()) {
+			strings.add(",");
+			strings.add(options.newLine(true));
+			strings.add(options.padded(""));
 			strings.add(" ");
+		}
 
 		if (sql() != null)
 			strings.add(sql());
 		else {
+			if (parent() == null) {
+				strings.add(options.padCased("WITH "));
+
+				if (recursive) {
+					strings.add(options.cased("RECURSIVE "));
+				}
+			}
+
 			strings.add(name);
 
 			if (!columns.isEmpty()) {

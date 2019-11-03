@@ -3,6 +3,8 @@ package com.github.eikecochu.sqlbuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.github.eikecochu.sqlbuilder.oracle.StartWith;
+
 public class Tests {
 
 	private static final String NL = "\n";
@@ -58,6 +60,52 @@ public class Tests {
 			"SELECT COL1, COL2" + NL +
 			"  FROM TEST" + NL +
 			" WHERE COL1 = 1 OR COL2 = 1";
+		// @formatter:on
+
+		Assertions.assertEquals(ugly, query.string(testOptions()));
+		Assertions.assertEquals(pretty, query.string(testOptions().pretty(true)));
+	}
+
+	@Test
+	public void testCol() {
+		final Query query = SQLBuilder.Select("COL1", "COL2")
+				.from("TEST")
+				.where()
+				.col("COL1")
+				.eq()
+				.col("COL2")
+				.query();
+
+		final String ugly = "SELECT COL1, COL2 FROM TEST WHERE COL1 = COL2";
+
+		// @formatter:off
+		final String pretty =
+			"SELECT COL1, COL2" + NL +
+			"  FROM TEST" + NL +
+			" WHERE COL1 = COL2";
+		// @formatter:on
+
+		Assertions.assertEquals(ugly, query.string(testOptions()));
+		Assertions.assertEquals(pretty, query.string(testOptions().pretty(true)));
+	}
+
+	@Test
+	public void testExpr() {
+		final Query query = SQLBuilder.Select("COL1", "COL2")
+				.from("TEST")
+				.where()
+				.col("COL1")
+				.eq()
+				.expr("UPPER(COL1)")
+				.query();
+
+		final String ugly = "SELECT COL1, COL2 FROM TEST WHERE COL1 = UPPER(COL1)";
+
+		// @formatter:off
+		final String pretty =
+			"SELECT COL1, COL2" + NL +
+			"  FROM TEST" + NL +
+			" WHERE COL1 = UPPER(COL1)";
 		// @formatter:on
 
 		Assertions.assertEquals(ugly, query.string(testOptions()));
@@ -401,6 +449,90 @@ public class Tests {
 			"SELECT COL1" + NL +
 			"  FROM TEST" + NL +
 			" WHERE A IS NULL OR B = 1";
+		// @formatter:on
+
+		Assertions.assertEquals(ugly, query.string(testOptions().ignoreNull(false)));
+		Assertions.assertEquals(pretty, query.string(testOptions().ignoreNull(false)
+				.pretty(true)));
+	}
+
+	@Test
+	public void testDoubleWith() {
+		final Query query = SQLBuilder.With("A")
+				.as(SQLBuilder.Select()
+						.from("TEST1"))
+				.with("B")
+				.as(SQLBuilder.Select()
+						.from("TEST2"))
+				.select()
+				.from("A")
+				.query();
+
+		final String ugly = "WITH A AS (SELECT * FROM TEST1), B AS (SELECT * FROM TEST2) SELECT * FROM A";
+
+		// @formatter:off
+		final String pretty =
+			"  WITH A AS (" + NL +
+			"       SELECT *" + NL +
+			"         FROM TEST1)," + NL +
+			"       B AS (" + NL +
+			"       SELECT *" + NL +
+			"         FROM TEST2)" + NL +
+			"SELECT *" + NL +
+			"  FROM A";
+		// @formatter:on
+
+		Assertions.assertEquals(ugly, query.string(testOptions().ignoreNull(false)));
+		Assertions.assertEquals(pretty, query.string(testOptions().ignoreNull(false)
+				.pretty(true)));
+	}
+
+	@Test
+	public void testDoubleWithSQL() {
+		final Query query = SQLBuilder.With("A")
+				.as(SQLBuilder.Select()
+						.from("TEST1"))
+				.withSQL("B AS (SELECT * FROM TEST2)")
+				.select()
+				.from("A")
+				.query();
+
+		final String ugly = "WITH A AS (SELECT * FROM TEST1), B AS (SELECT * FROM TEST2) SELECT * FROM A";
+
+		// @formatter:off
+		final String pretty =
+			"  WITH A AS (" + NL +
+			"       SELECT *" + NL +
+			"         FROM TEST1)," + NL +
+			"       B AS (SELECT * FROM TEST2)" + NL +
+			"SELECT *" + NL +
+			"  FROM A";
+		// @formatter:on
+
+		Assertions.assertEquals(ugly, query.string(testOptions().ignoreNull(false)));
+		Assertions.assertEquals(pretty, query.string(testOptions().ignoreNull(false)
+				.pretty(true)));
+	}
+
+	@Test
+	public void testStartWith() {
+		final Query query = SQLBuilder.Select()
+				.from("TEST1")
+				.ext(new StartWith())
+				.col("A", 1)
+				.connectBy()
+				.col("A")
+				.eqCol("PARENT")
+				.query();
+
+		final String ugly = "SELECT * FROM TEST1 START WITH A = 1 CONNECT BY PRIOR A = PARENT";
+
+		// @formatter:off
+		final String pretty =
+			"SELECT *" + NL +
+			"  FROM TEST1" + NL +
+			" START WITH A = 1" + NL +
+			"CONNECT BY PRIOR A = PARENT";
 		// @formatter:on
 
 		Assertions.assertEquals(ugly, query.string(testOptions().ignoreNull(false)));

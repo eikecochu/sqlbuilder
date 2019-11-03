@@ -157,8 +157,7 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 
 	@Override
 	public String string(final QueryOptions options) {
-		if (sql() != null)
-			return sql();
+		final StringJoiner strings = new StringJoiner();
 
 		// check for alternating value - operator pairs
 		final List<QueryPart> validParts = new ArrayList<>(parts.size());
@@ -177,8 +176,6 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 		// check if empty
 		if (validParts.isEmpty())
 			return null;
-
-		final StringJoiner strings = new StringJoiner();
 
 		// get the first part
 		final String first = validParts.get(0)

@@ -16,8 +16,12 @@ public class Where extends Conditionable<Where> implements QueryBuilder, BeforeG
 		super(parent);
 	}
 
-	public Where exists(final QueryBuilder parent) {
-		return addPart(new Exists(parent));
+	public Where exists(final QueryBuilder query) {
+		return addPart(new Exists(query));
+	}
+
+	public Where exists(final String sql) {
+		return addPart(new Exists(SQLBuilder.Query(sql)));
 	}
 
 	@Override
@@ -27,16 +31,15 @@ public class Where extends Conditionable<Where> implements QueryBuilder, BeforeG
 		if (parent() != null)
 			strings.add(parent().string(options));
 
+		if (strings.notEmpty())
+			strings.add(options.newLine());
+
 		if (sql() != null) {
-			if (strings.notEmpty())
-				strings.add(options.newLine());
 			strings.add(options.padded(sql()));
 		} else {
 			final String condition = super.string(options);
 
 			if (condition != null && !condition.isEmpty()) {
-				if (strings.notEmpty())
-					strings.add(options.newLine());
 				strings.add(options.padCased("WHERE"));
 				strings.add(" ");
 				strings.add(condition);
