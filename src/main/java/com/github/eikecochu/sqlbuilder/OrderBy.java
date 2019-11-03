@@ -3,14 +3,18 @@ package com.github.eikecochu.sqlbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class OrderBy extends SQLQueryPart<OrderBy> implements QueryBuilder, BeforeUnion {
+public class OrderBy extends QueryPartImpl<OrderBy> implements QueryBuilder, BeforeUnion {
 
 	@ToString
 	@Getter(AccessLevel.PROTECTED)
@@ -36,11 +40,10 @@ public class OrderBy extends SQLQueryPart<OrderBy> implements QueryBuilder, Befo
 
 	}
 
-	private BeforeOrderBy builder;
 	private final List<OrderByTerm> orderByTerms = new ArrayList<>();
 
-	protected OrderBy(final BeforeOrderBy builder) {
-		this.builder = builder;
+	protected OrderBy(final BeforeOrderBy parent) {
+		super(parent);
 	}
 
 	/**
@@ -120,8 +123,8 @@ public class OrderBy extends SQLQueryPart<OrderBy> implements QueryBuilder, Befo
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder != null)
-			strings.add(builder.string(options));
+		if (parent() != null)
+			strings.add(parent().string(options));
 
 		if (sql() != null)
 			strings.add(sql());

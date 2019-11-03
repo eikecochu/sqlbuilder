@@ -124,8 +124,8 @@ public class ConditionValue<T extends Conditionable<T>> {
 	 * @param builder The subquery builder
 	 * @return This instance
 	 */
-	public T all(final QueryBuilder builder) {
-		return op(ConditionValueType.ALL, builder);
+	public T all(final QueryBuilder parent) {
+		return op(ConditionValueType.ALL, parent);
 	}
 
 	/**
@@ -134,8 +134,8 @@ public class ConditionValue<T extends Conditionable<T>> {
 	 * @param builder The subquery builder
 	 * @return This instanceF
 	 */
-	public T any(final QueryBuilder builder) {
-		return op(ConditionValueType.ANY, builder);
+	public T any(final QueryBuilder parent) {
+		return op(ConditionValueType.ANY, parent);
 	}
 
 	private T op(final ConditionValueType type, final Object... values) {

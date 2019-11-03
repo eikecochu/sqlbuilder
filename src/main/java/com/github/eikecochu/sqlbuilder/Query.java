@@ -11,17 +11,15 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter(AccessLevel.PROTECTED)
-public class Query extends SQLQueryPart<Query> implements QueryBuilder {
+public class Query extends QueryPartImpl<Query> implements QueryBuilder {
 
 	@Getter(AccessLevel.PUBLIC)
 	@Setter(AccessLevel.PUBLIC)
 	@Accessors(fluent = true)
 	private QueryOptions options;
 
-	private final QueryPart builder;
-
-	Query(final QueryPart builder) {
-		this.builder = builder;
+	Query(final QueryPart parent) {
+		super(parent);
 	}
 
 	@Override
@@ -44,7 +42,7 @@ public class Query extends SQLQueryPart<Query> implements QueryBuilder {
 	public String string(final QueryOptions options, final Connection connection) {
 		String sql = sql();
 		if (sql == null)
-			sql = builder.string(safeOptions(options));
+			sql = parent().string(safeOptions(options));
 
 		if (options.sqlPostprocessor() != null)
 			sql = options.sqlPostprocessor()

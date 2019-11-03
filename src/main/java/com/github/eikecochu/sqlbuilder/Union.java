@@ -10,13 +10,12 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Union extends SQLQueryPart<Union> implements QueryBuilder, BeforeSelect, BeforeWith {
+public class Union extends QueryPartImpl<Union> implements QueryBuilder, BeforeSelect, BeforeWith {
 
 	private boolean all = false;
-	private BeforeUnion builder;
 
-	protected Union(final BeforeUnion builder) {
-		this.builder = builder;
+	protected Union(final BeforeUnion parent) {
+		super(parent);
 	}
 
 	public Union all() {
@@ -36,8 +35,8 @@ public class Union extends SQLQueryPart<Union> implements QueryBuilder, BeforeSe
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder != null) {
-			strings.add(builder.string(options));
+		if (parent() != null) {
+			strings.add(parent().string(options));
 			strings.add(options.newLine());
 		}
 

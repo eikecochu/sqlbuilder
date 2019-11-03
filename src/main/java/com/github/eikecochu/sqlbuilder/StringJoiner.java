@@ -21,7 +21,8 @@ class StringJoiner {
 		if (strings.isEmpty())
 			return null;
 		final String s = StringUtils.join(strings, delimiter);
-		if (s.trim().isEmpty())
+		if (s.trim()
+				.isEmpty())
 			return null;
 		return s;
 	}

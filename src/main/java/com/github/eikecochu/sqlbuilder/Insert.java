@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Insert extends SQLQueryPart<Insert> implements QueryBuilder, BeforeSelect {
+public class Insert extends QueryPartImpl<Insert> implements QueryBuilder, BeforeSelect {
 
 	@ToString
 	private enum InsertType implements QueryPart {
@@ -36,7 +36,6 @@ public class Insert extends SQLQueryPart<Insert> implements QueryBuilder, Before
 		}
 	}
 
-	private BeforeInsert builder;
 	private final String table;
 	private InsertType insertType = InsertType.INSERT;
 	private final List<InsertValue> insertValues = new ArrayList<>();
@@ -49,7 +48,7 @@ public class Insert extends SQLQueryPart<Insert> implements QueryBuilder, Before
 	 * @param table The name of the table to insert into
 	 */
 	public Insert(final String table) {
-		this.table = table;
+		this(null, table);
 	}
 
 	/**
@@ -61,9 +60,9 @@ public class Insert extends SQLQueryPart<Insert> implements QueryBuilder, Before
 		this(table.tableName());
 	}
 
-	protected Insert(final BeforeInsert builder, final String table) {
-		this(table);
-		this.builder = builder;
+	protected Insert(final BeforeInsert parent, final String table) {
+		super(parent);
+		this.table = table;
 	}
 
 	/**
@@ -203,8 +202,8 @@ public class Insert extends SQLQueryPart<Insert> implements QueryBuilder, Before
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder != null) {
-			strings.add(builder.string(options));
+		if (parent() != null) {
+			strings.add(parent().string(options));
 			strings.add(options.newLine());
 		}
 

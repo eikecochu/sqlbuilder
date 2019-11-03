@@ -17,7 +17,7 @@ import lombok.ToString;
  */
 @ToString
 @Getter(AccessLevel.PROTECTED)
-public abstract class Conditionable<T extends Conditionable<T>> extends SQLQueryPart<T> {
+public abstract class Conditionable<T extends Conditionable<T>> extends QueryPartImpl<T> {
 
 	@ToString
 	public enum Operator implements QueryPart {
@@ -40,6 +40,11 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 	private final Conditionable<T> conditionable;
 
 	public Conditionable() {
+		this(null);
+	}
+
+	protected Conditionable(final QueryPart parent) {
+		super(parent);
 		this.conditionable = this;
 	}
 
@@ -165,7 +170,7 @@ public abstract class Conditionable<T extends Conditionable<T>> extends SQLQuery
 		}
 
 		// remove trailing operators
-		ListIterator<QueryPart> it = validParts.listIterator(validParts.size());
+		final ListIterator<QueryPart> it = validParts.listIterator(validParts.size());
 		while (it.hasPrevious() && it.previous() instanceof Operator)
 			it.remove();
 

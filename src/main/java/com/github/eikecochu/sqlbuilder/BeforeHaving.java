@@ -21,7 +21,7 @@ public interface BeforeHaving extends QueryPart {
 	 * @return Returns the passed HAVING statement
 	 */
 	default Having having(final Having having) {
-		return having.builder(this);
+		return having.parent(this);
 	}
 
 	/**

@@ -21,7 +21,7 @@ abstract class StringUtils {
 	public static String leftPad(String s, final int length) {
 		if (s == null || s.length() >= length)
 			return s;
-		StringBuilder sBuilder = new StringBuilder(s);
+		final StringBuilder sBuilder = new StringBuilder(s);
 		while (sBuilder.length() < length)
 			sBuilder.insert(0, " ");
 		s = sBuilder.toString();

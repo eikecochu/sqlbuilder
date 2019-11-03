@@ -21,6 +21,16 @@ public interface BeforeUnion extends QueryPart {
 	}
 
 	/**
+	 * Accept an existing UNION statement as predecessor
+	 *
+	 * @param update The existing UNION statement
+	 * @return Returns the passed UNION statement
+	 */
+	default Union union(final Union union) {
+		return union.parent(this);
+	}
+
+	/**
 	 * Use plain SQL to form this UNION statement
 	 *
 	 * @param sql The sql string

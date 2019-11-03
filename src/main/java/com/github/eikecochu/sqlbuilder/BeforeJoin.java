@@ -53,7 +53,7 @@ public interface BeforeJoin extends QueryPart {
 	 * @return Returns the passed JOIN statement
 	 */
 	default Join join(final Join join) {
-		return join.builder(this);
+		return join.parent(this);
 	}
 
 	/**

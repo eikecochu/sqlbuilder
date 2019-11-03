@@ -3,14 +3,18 @@ package com.github.eikecochu.sqlbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class From extends SQLQueryPart<From>
+public class From extends QueryPartImpl<From>
 		implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
 
 	@ToString
@@ -33,11 +37,10 @@ public class From extends SQLQueryPart<From>
 
 	}
 
-	private BeforeFrom builder;
 	private final List<FromOrigin> origins = new ArrayList<>();
 
-	protected From(final BeforeFrom builder) {
-		this.builder = builder;
+	protected From(final BeforeFrom parent) {
+		super(parent);
 	}
 
 	/**
@@ -112,8 +115,8 @@ public class From extends SQLQueryPart<From>
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder != null) {
-			strings.add(builder.string(options));
+		if (parent() != null) {
+			strings.add(parent().string(options));
 			strings.add(options.newLine());
 		}
 

@@ -47,7 +47,7 @@ public interface BeforeFrom extends QueryPart {
 	 * @return Returns the passed FROM statement
 	 */
 	default From from(final From from) {
-		return from.builder(this);
+		return from.parent(this);
 	}
 
 	/**

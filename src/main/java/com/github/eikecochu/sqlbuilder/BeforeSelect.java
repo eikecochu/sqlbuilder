@@ -31,7 +31,7 @@ public interface BeforeSelect extends QueryPart {
 	 * @return Returns the passed SELECT statement
 	 */
 	default Select select(final Select select) {
-		return select.builder(this);
+		return select.parent(this);
 	}
 
 	/**

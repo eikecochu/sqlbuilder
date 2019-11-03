@@ -31,7 +31,7 @@ public interface BeforeWhere extends QueryPart {
 	 * @return Returns the passed WHERE statement
 	 */
 	default Where where(final Where where) {
-		return where.builder(this);
+		return where.parent(this);
 	}
 
 	/**

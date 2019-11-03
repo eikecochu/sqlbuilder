@@ -12,19 +12,18 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class Having extends Conditionable<Having> implements QueryBuilder, BeforeOrderBy, BeforeUnion {
 
-	private BeforeHaving builder;
 	private Conditionable<Having> condition;
 
-	protected Having(final BeforeHaving builder) {
-		this.builder = builder;
+	protected Having(final BeforeHaving parent) {
+		super(parent);
 	}
 
 	@Override
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder != null)
-			strings.add(builder.string(options));
+		if (parent() != null)
+			strings.add(parent().string(options));
 
 		if (sql() != null)
 			strings.add(sql());

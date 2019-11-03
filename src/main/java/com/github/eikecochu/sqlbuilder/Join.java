@@ -31,17 +31,16 @@ public class Join extends Conditionable<Join>
 		}
 	}
 
-	private BeforeJoin builder;
 	private final JoinMode joinMode;
 	private Query query;
 	private String name;
 
-	protected Join(final BeforeJoin builder) {
-		this(builder, JoinMode.INNER_JOIN);
+	protected Join(final BeforeJoin parent) {
+		this(parent, JoinMode.INNER_JOIN);
 	}
 
-	protected Join(final BeforeJoin builder, final JoinMode joinMode) {
-		this.builder = builder;
+	protected Join(final BeforeJoin parent, final JoinMode joinMode) {
+		super(parent);
 		this.joinMode = joinMode;
 	}
 
@@ -83,8 +82,8 @@ public class Join extends Conditionable<Join>
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder != null)
-			strings.add(builder.string(options));
+		if (parent() != null)
+			strings.add(parent().string(options));
 
 		if (sql() != null)
 			strings.add(sql());

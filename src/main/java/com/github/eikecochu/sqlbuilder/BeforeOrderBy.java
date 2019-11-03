@@ -31,7 +31,7 @@ public interface BeforeOrderBy extends QueryPart {
 	 * @return Returns the passed ORDER BY statement
 	 */
 	default OrderBy orderBy(final OrderBy orderBy) {
-		return orderBy.builder(this);
+		return orderBy.parent(this);
 	}
 
 	/**

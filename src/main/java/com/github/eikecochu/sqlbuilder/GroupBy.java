@@ -14,13 +14,12 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class GroupBy extends SQLQueryPart<GroupBy> implements QueryBuilder, BeforeOrderBy, BeforeHaving, BeforeUnion {
+public class GroupBy extends QueryPartImpl<GroupBy> implements QueryBuilder, BeforeOrderBy, BeforeHaving, BeforeUnion {
 
-	private BeforeGroupBy builder;
 	private final List<String> columns = new ArrayList<>();
 
-	protected GroupBy(final BeforeGroupBy builder) {
-		this.builder = builder;
+	protected GroupBy(final BeforeGroupBy parent) {
+		super(parent);
 	}
 
 	/**
@@ -50,8 +49,8 @@ public class GroupBy extends SQLQueryPart<GroupBy> implements QueryBuilder, Befo
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder != null)
-			strings.add(builder.string(options));
+		if (parent() != null)
+			strings.add(parent().string(options));
 
 		if (sql() != null)
 			strings.add(sql());

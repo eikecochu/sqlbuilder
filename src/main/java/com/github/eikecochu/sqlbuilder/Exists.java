@@ -8,12 +8,10 @@ import lombok.experimental.Accessors;
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Exists extends SQLQueryPart<Exists> implements QueryBuilder {
+public class Exists extends QueryPartImpl<Exists> implements QueryBuilder {
 
-	private QueryBuilder builder;
-
-	protected Exists(final QueryBuilder builder) {
-		this.builder = builder;
+	protected Exists(final QueryBuilder parent) {
+		super(parent);
 	}
 
 	@Override
@@ -22,13 +20,13 @@ public class Exists extends SQLQueryPart<Exists> implements QueryBuilder {
 
 		if (sql() != null)
 			strings.add(sql());
-		else if (builder != null) {
+		else if (parent() != null) {
 			strings.add(options.padCased("EXISTS ("));
 
 			final QueryOptions subOptions = options.copy()
 					.indentLevel(options.indentLevel() + 1);
 			strings.add(subOptions.newLine(true));
-			strings.add(builder.string(subOptions)
+			strings.add(parent().string(subOptions)
 					.trim());
 
 			strings.add(")");

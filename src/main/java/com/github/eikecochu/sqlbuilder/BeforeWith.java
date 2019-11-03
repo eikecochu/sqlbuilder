@@ -22,7 +22,7 @@ public interface BeforeWith extends QueryPart {
 	 * @return Returns the passed WITH statement
 	 */
 	default With with(final With with) {
-		return with.builder(this);
+		return with.parent(this);
 	}
 
 	/**

@@ -8,9 +8,8 @@ import lombok.experimental.Accessors;
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Delete extends SQLQueryPart<Delete> implements QueryBuilder, BeforeWhere {
+public class Delete extends QueryPartImpl<Delete> implements QueryBuilder, BeforeWhere {
 
-	private BeforeDelete builder;
 	private final String table;
 
 	/**
@@ -19,7 +18,7 @@ public class Delete extends SQLQueryPart<Delete> implements QueryBuilder, Before
 	 * @param table The name of the table to delete from
 	 */
 	public Delete(final String table) {
-		this.table = table;
+		this(null, table);
 	}
 
 	/**
@@ -31,17 +30,17 @@ public class Delete extends SQLQueryPart<Delete> implements QueryBuilder, Before
 		this(table.tableName());
 	}
 
-	protected Delete(final BeforeDelete builder, final String table) {
-		this(table);
-		this.builder = builder;
+	protected Delete(final BeforeDelete parent, final String table) {
+		super(parent);
+		this.table = table;
 	}
 
 	@Override
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder != null) {
-			strings.add(builder.string(options));
+		if (parent() != null) {
+			strings.add(parent().string(options));
 			strings.add(options.newLine());
 		}
 

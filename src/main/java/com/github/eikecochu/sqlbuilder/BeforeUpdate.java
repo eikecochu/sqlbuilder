@@ -32,7 +32,7 @@ public interface BeforeUpdate extends QueryPart {
 	 * @return Returns the passed UPDATE statement
 	 */
 	default Update update(final Update update) {
-		return update.builder(this);
+		return update.parent(this);
 	}
 
 	/**

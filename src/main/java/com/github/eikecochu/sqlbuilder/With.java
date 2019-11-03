@@ -12,10 +12,9 @@ import lombok.experimental.Accessors;
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class With extends SQLQueryPart<With>
+public class With extends QueryPartImpl<With>
 		implements BeforeWith, BeforeSelect, BeforeUpdate, BeforeDelete, BeforeInsert {
 
-	private BeforeWith builder;
 	private final String name;
 	private final List<String> columns = new ArrayList<>();
 	private QueryBuilder query;
@@ -27,12 +26,12 @@ public class With extends SQLQueryPart<With>
 	 * @param name The name of the with-block
 	 */
 	public With(final String name) {
-		this.name = name;
+		this(null, name);
 	}
 
-	protected With(final BeforeWith builder, final String name) {
-		this(name);
-		this.builder = builder;
+	protected With(final BeforeWith parent, final String name) {
+		super(parent);
+		this.name = name;
 	}
 
 	/**
@@ -82,7 +81,7 @@ public class With extends SQLQueryPart<With>
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder == null) {
+		if (parent() == null) {
 			if (sql() == null) {
 				strings.add(options.padCased("WITH"));
 
@@ -93,7 +92,7 @@ public class With extends SQLQueryPart<With>
 			}
 		} else {
 			strings.add(options.newLine());
-			strings.add(builder.string(options));
+			strings.add(parent().string(options));
 			strings.add(",");
 		}
 

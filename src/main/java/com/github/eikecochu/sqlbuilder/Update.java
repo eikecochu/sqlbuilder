@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -12,7 +13,7 @@ import lombok.experimental.Accessors;
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Update extends SQLQueryPart<Update> implements QueryBuilder, BeforeWhere {
+public class Update extends QueryPartImpl<Update> implements QueryBuilder, BeforeWhere {
 
 	@ToString
 	private enum UpdateType implements QueryPart {
@@ -35,8 +36,46 @@ public class Update extends SQLQueryPart<Update> implements QueryBuilder, Before
 		}
 	}
 
+	@ToString
+	@Getter(AccessLevel.PROTECTED)
+	public static class UpdateValue {
+
+		private final Update update;
+		private final String column;
+		private Object value;
+		private boolean expression = false;
+
+		protected UpdateValue(final Update update, final String column) {
+			this.update = update;
+			this.column = column;
+		}
+
+		/**
+		 * Set the updated value
+		 *
+		 * @param value The updated value
+		 * @return The UPDATE statement
+		 */
+		public Update value(final Object value) {
+			this.value = value;
+			return update;
+		}
+
+		/**
+		 * Use an expression to update the value
+		 *
+		 * @param expr The update expression
+		 * @return The UPDATE statement
+		 */
+		public Update expr(final String expr) {
+			value = expr;
+			expression = true;
+			return update;
+		}
+
+	}
+
 	private UpdateType updateType = UpdateType.UPDATE;
-	private BeforeUpdate builder;
 	private final String table;
 	private final List<UpdateValue> updateValues = new ArrayList<>();
 
@@ -46,7 +85,7 @@ public class Update extends SQLQueryPart<Update> implements QueryBuilder, Before
 	 * @param table The name of the table to update
 	 */
 	public Update(final String table) {
-		this.table = table;
+		this(null, table);
 	}
 
 	/**
@@ -58,9 +97,9 @@ public class Update extends SQLQueryPart<Update> implements QueryBuilder, Before
 		this(table.tableName());
 	}
 
-	protected Update(final BeforeUpdate builder, final String table) {
-		this(table);
-		this.builder = builder;
+	protected Update(final BeforeUpdate parent, final String table) {
+		super(parent);
+		this.table = table;
 	}
 
 	private Update setType(final UpdateType updateType) {
@@ -152,8 +191,8 @@ public class Update extends SQLQueryPart<Update> implements QueryBuilder, Before
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder != null) {
-			strings.add(builder.string(options));
+		if (parent() != null) {
+			strings.add(parent().string(options));
 			strings.add(options.newLine());
 		}
 
@@ -171,16 +210,16 @@ public class Update extends SQLQueryPart<Update> implements QueryBuilder, Before
 
 			final StringJoiner sets = new StringJoiner();
 			for (final UpdateValue updateValue : updateValues) {
-				String column = QueryUtils.splitName(options, updateValue.getColumn())
+				String column = QueryUtils.splitName(options, updateValue.column())
 						.string(options) + " = ";
-				if (updateValue.isExpression())
-					column += updateValue.getValue()
+				if (updateValue.expression())
+					column += updateValue.value()
 							.toString();
 				else if (options.prepare()) {
 					column += "?";
-					options.addPreparedValue(updateValue.getValue());
+					options.addPreparedValue(updateValue.value());
 				} else
-					column += QueryUtils.valueToString(options, updateValue.getValue());
+					column += QueryUtils.valueToString(options, updateValue.value());
 				sets.add(column);
 			}
 			strings.add(sets.toString(", "));

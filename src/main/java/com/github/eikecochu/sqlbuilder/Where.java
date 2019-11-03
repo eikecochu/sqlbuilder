@@ -12,22 +12,20 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class Where extends Conditionable<Where> implements QueryBuilder, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
 
-	private BeforeWhere builder;
-
-	protected Where(final BeforeWhere builder) {
-		this.builder = builder;
+	protected Where(final BeforeWhere parent) {
+		super(parent);
 	}
 
-	public Where exists(final QueryBuilder builder) {
-		return addPart(new Exists(builder));
+	public Where exists(final QueryBuilder parent) {
+		return addPart(new Exists(parent));
 	}
 
 	@Override
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder != null)
-			strings.add(builder.string(options));
+		if (parent() != null)
+			strings.add(parent().string(options));
 
 		if (sql() != null) {
 			if (strings.notEmpty())

@@ -32,7 +32,7 @@ public interface BeforeDelete extends QueryPart {
 	 * @return Returns the passed DELETE statement
 	 */
 	default Delete delete(final Delete delete) {
-		return delete.builder(this);
+		return delete.parent(this);
 	}
 
 	/**

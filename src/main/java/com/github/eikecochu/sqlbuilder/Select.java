@@ -14,12 +14,11 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Select extends SQLQueryPart<Select> implements BeforeFrom {
+public class Select extends QueryPartImpl<Select> implements BeforeFrom {
 
 	private final List<String> columns = new ArrayList<>();
 	private boolean distinct = false;
 	private boolean all = false;
-	private BeforeSelect builder;
 
 	/**
 	 * Create a new SELECT statement
@@ -30,8 +29,8 @@ public class Select extends SQLQueryPart<Select> implements BeforeFrom {
 		columns(columns);
 	}
 
-	protected Select(final BeforeSelect builder) {
-		this.builder = builder;
+	protected Select(final BeforeSelect parent) {
+		super(parent);
 	}
 
 	/**
@@ -83,8 +82,8 @@ public class Select extends SQLQueryPart<Select> implements BeforeFrom {
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
 
-		if (builder != null) {
-			strings.add(builder.string(options));
+		if (parent() != null) {
+			strings.add(parent().string(options));
 			strings.add(options.newLine());
 		}
 

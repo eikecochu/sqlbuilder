@@ -11,15 +11,13 @@ import lombok.ToString;
 @Getter(AccessLevel.PROTECTED)
 public class NestedCondition<T extends Conditionable<T>> extends Conditionable<NestedCondition<T>> {
 
-	private final Conditionable<T> parent;
-
 	NestedCondition(final Conditionable<T> parent) {
-		this.parent = parent;
+		super(parent);
 	}
 
 	@SuppressWarnings("unchecked")
 	T groupEnd() {
-		return parent == null ? (T) this : (T) parent;
+		return parent() == null ? (T) this : (T) parent();
 	}
 
 	@Override

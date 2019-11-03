@@ -32,7 +32,7 @@ public interface BeforeInsert extends QueryPart {
 	 * @return Returns the passed INSERT statement
 	 */
 	default Insert insert(final Insert insert) {
-		return insert.builder(this);
+		return insert.parent(this);
 	}
 
 	/**

@@ -31,7 +31,7 @@ public interface BeforeGroupBy extends QueryPart {
 	 * @return Returns the passed GROUP BY statement
 	 */
 	default GroupBy groupBy(final GroupBy groupBy) {
-		return groupBy.builder(this);
+		return groupBy.parent(this);
 	}
 
 	/**
