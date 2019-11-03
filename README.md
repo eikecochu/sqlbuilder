@@ -98,7 +98,7 @@ SELECT *
 ```
 and the parameters:
 ```java
-[5, "%test"]
+[5, "%test%"]
 ```
 
 ## More examples
