@@ -1,6 +1,7 @@
 package com.github.eikecochu.sqlbuilder.oracle;
 
 import com.github.eikecochu.sqlbuilder.Conditionable;
+import com.github.eikecochu.sqlbuilder.QueryBuilder;
 import com.github.eikecochu.sqlbuilder.QueryOptions;
 import com.github.eikecochu.sqlbuilder.StringJoiner;
 
@@ -14,7 +15,11 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class StartWith extends Conditionable<StartWith> {
+public class StartWith extends Conditionable<StartWith> implements QueryBuilder {
+
+	protected StartWith(ConnectBy parent) {
+		super(parent);
+	}
 
 	public ConnectBy connectBy() {
 		return new ConnectBy(this);

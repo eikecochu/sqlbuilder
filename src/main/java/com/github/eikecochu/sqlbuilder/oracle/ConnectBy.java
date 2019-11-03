@@ -18,12 +18,28 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class ConnectBy extends Conditionable<ConnectBy> implements QueryBuilder {
 
+	private boolean nocycle;
+
 	protected ConnectBy(final QueryPart parent) {
 		super(parent);
 	}
 
 	public ConnectBy connectBy() {
 		return new ConnectBy().parent(this);
+	}
+
+	public ConnectBy cycle() {
+		nocycle = false;
+		return this;
+	}
+
+	public ConnectBy nocycle() {
+		nocycle = true;
+		return this;
+	}
+
+	public StartWith startWith() {
+		return new StartWith(this);
 	}
 
 	@Override
@@ -42,7 +58,10 @@ public class ConnectBy extends Conditionable<ConnectBy> implements QueryBuilder 
 			final String condition = super.string(options);
 
 			if (condition != null && !condition.isEmpty()) {
-				strings.add(options.padCased("CONNECT BY PRIOR"));
+				strings.add(options.padCased("CONNECT BY"));
+				if (nocycle)
+					strings.add(" NOCYCLE");
+				strings.add(" PRIOR");
 				strings.add(" ");
 				strings.add(condition);
 			}

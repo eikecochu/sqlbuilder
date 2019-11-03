@@ -3,6 +3,7 @@ package com.github.eikecochu.sqlbuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.github.eikecochu.sqlbuilder.oracle.ConnectBy;
 import com.github.eikecochu.sqlbuilder.oracle.StartWith;
 
 public class Tests {
@@ -693,6 +694,69 @@ public class Tests {
 				" INNER JOIN RECENTS ON RH.ITEM_ID = RECENTS.ITEM_ID AND RH.TIME_CREATED = RECENTS.TIME_CREATED AND (RH.ITEM_PUID = RECENTS.ITEM_PUID OR (RH.ITEM_PUID IS NULL AND RECENTS.ITEM_PUID IS NULL))" + NL +
 				" WHERE RH.TYPE IN (1, 2, 3, 4, 5, 6) AND UPPER(RH.USER_NAME) = 'JOE'" + NL +
 				" ORDER BY RH.TIME_CREATED DESC";
+		// @formatter:on
+
+		Assertions.assertEquals(ugly, query.string(testOptions()));
+		Assertions.assertEquals(pretty, query.string(testOptions().pretty(true)));
+	}
+
+	@Test
+	public void testOracleHierarchyUp() {
+		final Query query = SQLBuilder.Select()
+				.from("CATEGORY")
+				.ext(new ConnectBy())
+				.col("CATEGORY_ID")
+				.eqCol("PARENT_ID")
+				.startWith()
+				.col("CATEGORY_ID", 15)
+				.query();
+
+		final String ugly = "SELECT * FROM CATEGORY CONNECT BY PRIOR CATEGORY_ID = PARENT_ID START WITH CATEGORY_ID = 15";
+
+		// @formatter:off
+		final String pretty =
+			"SELECT *" + NL +
+			"  FROM CATEGORY" + NL +
+			"CONNECT BY PRIOR CATEGORY_ID = PARENT_ID" + NL +
+			" START WITH CATEGORY_ID = 15";
+		// @formatter:on
+
+		Assertions.assertEquals(ugly, query.string(testOptions()));
+		Assertions.assertEquals(pretty, query.string(testOptions().pretty(true)));
+	}
+
+	@Test
+	public void testWithHierarchyUp() {
+		final Query query = SQLBuilder.With("CTE")
+				.as(SQLBuilder.Select()
+						.from("CATEGORY")
+						.where()
+						.col("CATEGORY_ID", 15)
+						.unionAll()
+						.select()
+						.from("CATEGORY C1")
+						.innerJoin("CTE")
+						.on()
+						.col("CTE.CATEGORY_ID")
+						.eqCol("C1.PARENT_ID"))
+				.select()
+				.from("CTE")
+				.query();
+
+		final String ugly = "WITH CTE AS (SELECT * FROM CATEGORY WHERE CATEGORY_ID = 15 UNION ALL SELECT * FROM CATEGORY C1 INNER JOIN CTE ON CTE.CATEGORY_ID = C1.PARENT_ID) SELECT * FROM CTE";
+
+		// @formatter:off
+		final String pretty =
+			"  WITH CTE AS (" + NL +
+			"       SELECT *" + NL + 
+			"         FROM CATEGORY" + NL+
+			"        WHERE CATEGORY_ID = 15" + NL+ 
+			"        UNION ALL" + NL+
+			"       SELECT *" + NL +
+			"         FROM CATEGORY C1" + NL+ 
+			"        INNER JOIN CTE ON CTE.CATEGORY_ID = C1.PARENT_ID)" + NL+ 
+			"SELECT *" +NL+ 
+			"  FROM CTE";
 		// @formatter:on
 
 		Assertions.assertEquals(ugly, query.string(testOptions()));
