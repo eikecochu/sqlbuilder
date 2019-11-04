@@ -339,7 +339,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 						if (values.length == 1)
 							expression = new Expression(values[0].toString());
 						else {
-							Object[] subValues = Arrays.copyOfRange(values, 1, values.length);
+							final Object[] subValues = Arrays.copyOfRange(values, 1, values.length);
 							expression = new Expression(values[0].toString(), subValues);
 						}
 						strings.add(expression.string(options));

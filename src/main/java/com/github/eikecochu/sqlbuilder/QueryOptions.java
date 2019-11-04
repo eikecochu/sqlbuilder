@@ -276,7 +276,7 @@ public class QueryOptions {
 	/**
 	 * Register a converter for a specific class to be used for value conversion
 	 *
-	 * @param <T>   The input conversion type
+	 * @param       <T> The input conversion type
 	 * @param clazz The class of the values to be converted
 	 * @param func  The value converter
 	 * @return This QueryOptions instance
