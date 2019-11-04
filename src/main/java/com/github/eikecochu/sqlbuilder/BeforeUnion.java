@@ -23,7 +23,7 @@ public interface BeforeUnion extends QueryPart {
 	/**
 	 * Accept an existing UNION statement as predecessor
 	 *
-	 * @param update The existing UNION statement
+	 * @param union The existing UNION statement
 	 * @return Returns the passed UNION statement
 	 */
 	default Union union(final Union union) {

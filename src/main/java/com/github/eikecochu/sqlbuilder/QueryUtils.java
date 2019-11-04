@@ -37,7 +37,7 @@ abstract class QueryUtils {
 	}
 
 	public static String valueToString(final QueryOptions options, Object value) {
-		if (value != null && options.valueConverters() != null && options.valueConverters()
+		if (value != null && options != null && options.valueConverters() != null && options.valueConverters()
 				.containsKey(value.getClass()))
 			value = options.valueConverters()
 					.get(value.getClass())
@@ -57,7 +57,8 @@ abstract class QueryUtils {
 		if (value instanceof Boolean)
 			return (boolean) value ? "true" : "false";
 		if (value instanceof Date)
-			return new SimpleDateFormat(options.dateFormat()).format((Date) value);
+			return new SimpleDateFormat(options == null ? "yyyy-MM-dd'T'HH:mm:ss.SSSZ" : options.dateFormat())
+					.format((Date) value);
 		return "";
 	}
 

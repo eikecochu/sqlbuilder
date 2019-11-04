@@ -119,9 +119,21 @@ public class ConditionValue<T extends Conditionable<T>> {
 	}
 
 	/**
+	 * Set an expression to be used as condition
+	 *
+	 * @param expression The expression object
+	 * @return This instance
+	 */
+	public T expr(final Expression expression) {
+		if (expression.values() == null)
+			return expr(expression.expression());
+		return expr(expression.expression(), expression.values());
+	}
+
+	/**
 	 * Set a subquery to be used as condition with restriction ALL
 	 *
-	 * @param builder The subquery builder
+	 * @param parent The subquery builder
 	 * @return This instance
 	 */
 	public T all(final QueryBuilder parent) {
@@ -131,7 +143,7 @@ public class ConditionValue<T extends Conditionable<T>> {
 	/**
 	 * Set a subquery to be used as condition with restriction ANY
 	 *
-	 * @param builder The subquery builder
+	 * @param parent The subquery builder
 	 * @return This instanceF
 	 */
 	public T any(final QueryBuilder parent) {

@@ -97,9 +97,8 @@ public class With extends QueryPartImpl<With>
 			if (parent() == null) {
 				strings.add(options.padCased("WITH "));
 
-				if (recursive) {
+				if (recursive)
 					strings.add(options.cased("RECURSIVE "));
-				}
 			}
 
 			strings.add(name);

@@ -748,19 +748,39 @@ public class Tests {
 		// @formatter:off
 		final String pretty =
 			"  WITH CTE AS (" + NL +
-			"       SELECT *" + NL + 
+			"       SELECT *" + NL +
 			"         FROM CATEGORY" + NL+
-			"        WHERE CATEGORY_ID = 15" + NL+ 
+			"        WHERE CATEGORY_ID = 15" + NL+
 			"        UNION ALL" + NL+
 			"       SELECT *" + NL +
-			"         FROM CATEGORY C1" + NL+ 
-			"        INNER JOIN CTE ON CTE.CATEGORY_ID = C1.PARENT_ID)" + NL+ 
-			"SELECT *" +NL+ 
+			"         FROM CATEGORY C1" + NL+
+			"        INNER JOIN CTE ON CTE.CATEGORY_ID = C1.PARENT_ID)" + NL+
+			"SELECT *" +NL+
 			"  FROM CTE";
 		// @formatter:on
 
 		Assertions.assertEquals(ugly, query.string(testOptions()));
 		Assertions.assertEquals(pretty, query.string(testOptions().pretty(true)));
+	}
+
+	@Test
+	public void testExpression() {
+		final Expression e = new Expression("PACKAGE.PROCEDURE", 1, 2, 3, null);
+		final String actual = e.valueString(testOptions());
+
+		final String expected = "PACKAGE.PROCEDURE(1, 2, 3)";
+
+		Assertions.assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testExpressionPrepare() {
+		final Expression e = new Expression("PACKAGE.PROCEDURE", 1, 2, 3, null);
+		final String actual = e.string(testOptions().prepare(true));
+
+		final String expected = "PACKAGE.PROCEDURE(?, ?, ?)";
+
+		Assertions.assertEquals(expected, actual);
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.github.eikecochu.sqlbuilder;
 
+import java.util.Arrays;
+
 import com.github.eikecochu.sqlbuilder.ConditionValue.ConditionBiValue;
 import com.github.eikecochu.sqlbuilder.ConditionValue.ConditionValueType;
 
@@ -333,10 +335,14 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 				} else if (type != null)
 					switch (type) {
 					case EXPRESSION:
-						strings.add(values[0].toString());
-						if (options.prepare())
-							for (int i = 1; i < values.length; i++)
-								options.addPreparedValue(values[i]);
+						Expression expression;
+						if (values.length == 1)
+							expression = new Expression(values[0].toString());
+						else {
+							Object[] subValues = Arrays.copyOfRange(values, 1, values.length);
+							expression = new Expression(values[0].toString(), subValues);
+						}
+						strings.add(expression.string(options));
 						break;
 					case COLUMN:
 						strings.add(QueryUtils.splitName(options, values[0].toString())

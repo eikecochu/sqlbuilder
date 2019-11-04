@@ -143,6 +143,16 @@ public class QueryOptions {
 	 */
 	private boolean ignoreNull = true;
 
+	/**
+	 * The default placeholder. If an expression is evaluated and parameters are
+	 * inserted, this placeholder is used to replace null values. In databases like
+	 * MSSQL, default parameters are invoked by passing "default". In Oracle, the
+	 * parameter is just left out. Leave to null or "" to remove null parameters
+	 * from parameter lists. If disabled, default parameters must be at the end of
+	 * the parameter list.
+	 */
+	private String defaultPlaceholder = null;
+
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
 	private int indentLevel = 0;
@@ -220,6 +230,7 @@ public class QueryOptions {
 				.lineDelimiter(lineDelimiter)
 				.conditionOnNewline(conditionOnNewline)
 				.ignoreNull(ignoreNull)
+				.defaultPlaceholder(defaultPlaceholder)
 				.indentLevel(indentLevel);
 	}
 
@@ -265,7 +276,7 @@ public class QueryOptions {
 	/**
 	 * Register a converter for a specific class to be used for value conversion
 	 *
-	 * @param       <T> The input conversion type
+	 * @param <T>   The input conversion type
 	 * @param clazz The class of the values to be converted
 	 * @param func  The value converter
 	 * @return This QueryOptions instance

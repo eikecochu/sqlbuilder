@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class StartWith extends Conditionable<StartWith> implements QueryBuilder {
 
-	protected StartWith(ConnectBy parent) {
+	protected StartWith(final ConnectBy parent) {
 		super(parent);
 	}
 
@@ -35,9 +35,9 @@ public class StartWith extends Conditionable<StartWith> implements QueryBuilder 
 		if (strings.notEmpty())
 			strings.add(options.newLine());
 
-		if (sql() != null) {
+		if (sql() != null)
 			strings.add(options.padded(sql()));
-		} else {
+		else {
 			final String condition = super.string(options);
 
 			if (condition != null && !condition.isEmpty()) {

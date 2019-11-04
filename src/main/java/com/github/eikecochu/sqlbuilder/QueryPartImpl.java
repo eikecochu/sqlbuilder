@@ -45,6 +45,7 @@ public abstract class QueryPartImpl<T extends QueryPartImpl<T>> implements Query
 	 * Continue the building chain with any element, for example custom implemented
 	 * expressions.
 	 *
+	 * @param <U> The type of the parameter
 	 * @param ext The custom expression
 	 * @return The custom expression
 	 */
