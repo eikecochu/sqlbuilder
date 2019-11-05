@@ -783,4 +783,29 @@ public class Tests {
 		Assertions.assertEquals(expected, actual);
 	}
 
+	@Test
+	public void testProcessor() {
+		class Processor implements QueryProcessor {
+			private Query query;
+
+			@Override
+			public void process(Query query) {
+				this.query = query;
+			}
+
+			public String convertToString() {
+				return query.string(testOptions());
+			}
+		}
+
+		final String actual = SQLBuilder.Select()
+				.from("TEST1")
+				.query(new Processor())
+				.convertToString();
+
+		final String expected = "SELECT * FROM TEST1";
+
+		Assertions.assertEquals(expected, actual);
+	}
+
 }
