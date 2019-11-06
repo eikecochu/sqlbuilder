@@ -46,7 +46,7 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder {
 
 		if (options.sqlPostprocessor() != null)
 			sql = options.sqlPostprocessor()
-					.process(sql, connection);
+					.process(sql, options.copy(), connection);
 
 		return sql;
 	}
@@ -85,7 +85,7 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder {
 
 		if (options.stmtPostprocessor() != null)
 			stmt = options.stmtPostprocessor()
-					.process(stmt, connection);
+					.process(stmt, options.copy(), connection);
 
 		int index = 1;
 		for (Object value : options.preparedValues()) {

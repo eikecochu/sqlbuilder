@@ -14,11 +14,11 @@ public interface QueryBuilder extends QueryPart {
 	/**
 	 * Allows the user to finish the query building process by passing the query to
 	 * a specified processor.
-	 * 
+	 *
 	 * @param processor The query processor
 	 * @return The query processor
 	 */
-	default <T extends QueryProcessor> T query(T processor) {
+	default <T extends QueryProcessor> T query(final T processor) {
 		if (processor != null)
 			processor.process(query());
 		return processor;

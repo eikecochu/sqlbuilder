@@ -9,6 +9,6 @@ import java.util.Map.Entry;
  * manually, this interface can be used to extract multiple values at once from
  * any object of classes that implement it.
  */
+@FunctionalInterface
 public interface ValueHolder extends Iterable<Entry<String, Object>> {
-
 }

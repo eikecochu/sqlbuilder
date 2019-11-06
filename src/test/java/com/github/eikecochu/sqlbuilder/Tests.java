@@ -13,7 +13,7 @@ public class Tests {
 	public QueryOptions testOptions() {
 		return new QueryOptions().pretty(false)
 				.convert(Boolean.class, b -> b ? 1 : 0)
-				.sqlPostprocessor((sql, connection) -> {
+				.sqlPostprocessor((sql, options, connection) -> {
 					System.out.println(sql);
 					return sql;
 				});
@@ -786,15 +786,15 @@ public class Tests {
 	@Test
 	public void testProcessor() {
 		class Processor implements QueryProcessor {
-			private Query query;
+			private QueryBuilder builder;
 
 			@Override
-			public void process(Query query) {
-				this.query = query;
+			public void process(final QueryBuilder builder) {
+				this.builder = builder;
 			}
 
 			public String convertToString() {
-				return query.string(testOptions());
+				return builder.string(testOptions());
 			}
 		}
 

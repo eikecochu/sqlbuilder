@@ -11,6 +11,6 @@ public interface PostProcessor<T> {
 	 * @param connection The connection used by the Query builder
 	 * @return The output value
 	 */
-	T process(T value, Connection connection);
+	T process(T value, QueryOptions options, Connection connection);
 
 }
