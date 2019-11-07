@@ -3,7 +3,7 @@ package com.github.eikecochu.sqlbuilder;
 /**
  * Implemented by keywords that precede the SELECT statement.
  */
-public interface BeforeSelect extends QueryPart {
+public interface BeforeSelect<T extends BeforeSelect<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**
 	 * Continue query with SELECT

@@ -13,11 +13,11 @@ import lombok.experimental.Accessors;
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
 public class With extends QueryPartImpl<With>
-		implements BeforeWith, BeforeSelect, BeforeUpdate, BeforeDelete, BeforeInsert {
+		implements BeforeWith<With>, BeforeSelect<With>, BeforeUpdate<With>, BeforeDelete<With>, BeforeInsert<With> {
 
 	private final String name;
 	private final List<String> columns = new ArrayList<>();
-	private QueryBuilder query;
+	private QueryBuilder<?> query;
 	private boolean recursive;
 
 	/**
@@ -29,7 +29,7 @@ public class With extends QueryPartImpl<With>
 		this(null, name);
 	}
 
-	protected With(final BeforeWith parent, final String name) {
+	protected With(final BeforeWith<?> parent, final String name) {
 		super(parent);
 		this.name = name;
 	}
@@ -72,7 +72,7 @@ public class With extends QueryPartImpl<With>
 	 * @param builder The subquery builder to use as body
 	 * @return This WITH statement
 	 */
-	public With as(final QueryBuilder builder) {
+	public With as(final QueryBuilder<?> builder) {
 		query = builder;
 		return this;
 	}

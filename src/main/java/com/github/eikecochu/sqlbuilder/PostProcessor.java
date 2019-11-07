@@ -8,6 +8,7 @@ public interface PostProcessor<T> {
 	 * Transforms the passed value into another value
 	 *
 	 * @param value      The input value
+	 * @param options    The query options
 	 * @param connection The connection used by the Query builder
 	 * @return The output value
 	 */

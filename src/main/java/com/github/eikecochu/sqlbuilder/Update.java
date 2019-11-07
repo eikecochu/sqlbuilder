@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Update extends QueryPartImpl<Update> implements QueryBuilder, BeforeWhere {
+public class Update extends QueryPartImpl<Update> implements QueryBuilder<Update>, BeforeWhere<Update> {
 
 	@ToString
 	private enum UpdateType implements QueryPart {
@@ -57,7 +57,7 @@ public class Update extends QueryPartImpl<Update> implements QueryBuilder, Befor
 		this(table.tableName());
 	}
 
-	protected Update(final BeforeUpdate parent, final String table) {
+	protected Update(final BeforeUpdate<?> parent, final String table) {
 		super(parent);
 		this.table = table;
 	}

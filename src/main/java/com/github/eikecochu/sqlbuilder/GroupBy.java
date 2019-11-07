@@ -14,11 +14,12 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class GroupBy extends QueryPartImpl<GroupBy> implements QueryBuilder, BeforeOrderBy, BeforeHaving, BeforeUnion {
+public class GroupBy extends QueryPartImpl<GroupBy>
+		implements QueryBuilder<GroupBy>, BeforeOrderBy<GroupBy>, BeforeHaving<GroupBy>, BeforeUnion<GroupBy> {
 
 	private final List<String> columns = new ArrayList<>();
 
-	protected GroupBy(final BeforeGroupBy parent) {
+	protected GroupBy(final BeforeGroupBy<?> parent) {
 		super(parent);
 	}
 

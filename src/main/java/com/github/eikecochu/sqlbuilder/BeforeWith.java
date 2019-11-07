@@ -3,7 +3,7 @@ package com.github.eikecochu.sqlbuilder;
 /**
  * Implemented by keywords that precede the WITH statement.
  */
-public interface BeforeWith extends QueryPart {
+public interface BeforeWith<T extends BeforeWith<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**
 	 * Continue query with WITH

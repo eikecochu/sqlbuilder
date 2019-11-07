@@ -1,6 +1,7 @@
 package com.github.eikecochu.sqlbuilder;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map.Entry;
@@ -43,7 +44,7 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 		this(null);
 	}
 
-	protected Conditionable(final QueryPart parent) {
+	protected Conditionable(final QueryPartLinked<?> parent) {
 		super(parent);
 		this.conditionable = this;
 	}
@@ -51,14 +52,26 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 	/**
 	 * Set the comparing values
 	 *
+	 * @return This instance
+	 */
+	public T values(final ValueHolder values) {
+		return values(values, null);
+	}
+
+	/**
+	 * Set the comparing values with prefix
+	 *
 	 * @param values The comparing values
+	 * @param prefix The column prefix for each constraint
 	 * @return This instance
 	 */
 	@SuppressWarnings("unchecked")
-	public T values(final ValueHolder values) {
+	public T values(final ValueHolder values, final String prefix) {
 		if (values != null)
-			for (final Entry<String, Object> value : values)
+			for (final Iterator<Entry<String, Object>> it = values.values(prefix); it.hasNext();) {
+				final Entry<String, Object> value = it.next();
 				col(value.getKey(), value.getValue());
+			}
 		return (T) this;
 	}
 

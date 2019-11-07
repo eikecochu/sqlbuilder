@@ -3,7 +3,7 @@ package com.github.eikecochu.sqlbuilder.oracle;
 import com.github.eikecochu.sqlbuilder.Conditionable;
 import com.github.eikecochu.sqlbuilder.QueryBuilder;
 import com.github.eikecochu.sqlbuilder.QueryOptions;
-import com.github.eikecochu.sqlbuilder.QueryPart;
+import com.github.eikecochu.sqlbuilder.QueryPartLinked;
 import com.github.eikecochu.sqlbuilder.StringJoiner;
 
 import lombok.AccessLevel;
@@ -16,11 +16,11 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class ConnectBy extends Conditionable<ConnectBy> implements QueryBuilder {
+public class ConnectBy extends Conditionable<ConnectBy> implements QueryBuilder<ConnectBy> {
 
 	private boolean nocycle;
 
-	protected ConnectBy(final QueryPart parent) {
+	protected ConnectBy(final QueryPartLinked<?> parent) {
 		super(parent);
 	}
 

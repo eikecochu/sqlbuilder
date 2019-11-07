@@ -3,7 +3,7 @@ package com.github.eikecochu.sqlbuilder;
 /**
  * Implemented by keywords that precede the WHERE statement.
  */
-public interface BeforeWhere extends QueryPart {
+public interface BeforeWhere<T extends BeforeWhere<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**
 	 * Continue query with WHERE

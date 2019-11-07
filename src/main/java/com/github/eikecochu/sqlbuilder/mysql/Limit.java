@@ -1,8 +1,9 @@
-package com.github.eikecochu.sqlbuilder.oracle;
+package com.github.eikecochu.sqlbuilder.mysql;
 
-import com.github.eikecochu.sqlbuilder.Conditionable;
 import com.github.eikecochu.sqlbuilder.QueryBuilder;
 import com.github.eikecochu.sqlbuilder.QueryOptions;
+import com.github.eikecochu.sqlbuilder.QueryPartImpl;
+import com.github.eikecochu.sqlbuilder.QueryPartLinked;
 import com.github.eikecochu.sqlbuilder.StringJoiner;
 
 import lombok.AccessLevel;
@@ -15,14 +16,20 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class StartWith extends Conditionable<StartWith> implements QueryBuilder<StartWith> {
+public class Limit extends QueryPartImpl<Limit> implements QueryBuilder<Limit> {
 
-	protected StartWith(final ConnectBy parent) {
-		super(parent);
+	private int limit = 0;
+
+	public Limit(final int limit) {
+		this(null, limit);
 	}
 
-	public ConnectBy connectBy() {
-		return new ConnectBy(this);
+	protected Limit(final QueryPartLinked<?> parent, final int limit) {
+		this.limit = limit;
+	}
+
+	public Offset offset(final int offset) {
+		return new Offset(this, offset);
 	}
 
 	@Override
@@ -35,16 +42,9 @@ public class StartWith extends Conditionable<StartWith> implements QueryBuilder<
 		if (strings.notEmpty())
 			strings.add(options.newLine());
 
-		if (sql() != null)
-			strings.add(options.padded(sql()));
-		else {
-			final String condition = super.string(options);
-
-			if (condition != null && !condition.isEmpty()) {
-				strings.add(options.padCased("START WITH"));
-				strings.add(" ");
-				strings.add(condition);
-			}
+		if (limit > 0) {
+			strings.add(options.padCased("LIMIT"));
+			strings.add(" " + limit);
 		}
 
 		return strings.toString();

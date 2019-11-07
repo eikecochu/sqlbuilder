@@ -10,11 +10,12 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Having extends Conditionable<Having> implements QueryBuilder, BeforeOrderBy, BeforeUnion {
+public class Having extends Conditionable<Having>
+		implements QueryBuilder<Having>, BeforeOrderBy<Having>, BeforeUnion<Having> {
 
 	private Conditionable<Having> condition;
 
-	protected Having(final BeforeHaving parent) {
+	protected Having(final BeforeHaving<?> parent) {
 		super(parent);
 	}
 

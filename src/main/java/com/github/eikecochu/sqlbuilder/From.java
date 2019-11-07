@@ -14,8 +14,8 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class From extends QueryPartImpl<From>
-		implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
+public class From extends QueryPartImpl<From> implements QueryBuilder<From>, BeforeJoin<From>, BeforeWhere<From>,
+		BeforeGroupBy<From>, BeforeOrderBy<From>, BeforeUnion<From> {
 
 	@ToString
 	@Getter
@@ -24,7 +24,7 @@ public class From extends QueryPartImpl<From>
 	private static class FromOrigin implements QueryPart {
 
 		private String table;
-		private Query subquery;
+		private QueryBuilder<?> subquery;
 		private String alias;
 
 		@Override
@@ -34,12 +34,11 @@ public class From extends QueryPartImpl<From>
 						.string(options) + (alias != null ? " " + alias : "");
 			return "(" + subquery.string(options) + ")" + (alias != null ? " " + alias : "");
 		}
-
 	}
 
 	private final List<FromOrigin> origins = new ArrayList<>();
 
-	protected From(final BeforeFrom parent) {
+	protected From(final BeforeFrom<?> parent) {
 		super(parent);
 	}
 
@@ -101,12 +100,12 @@ public class From extends QueryPartImpl<From>
 	/**
 	 * Specify a subquery to select from
 	 *
-	 * @param query The subquery to select from
-	 * @param alias The subquery alias
+	 * @param subquery The subquery to select from
+	 * @param alias    The subquery alias
 	 * @return This FROM statement
 	 */
-	public From subquery(final Query query, final String alias) {
-		origins.add(new FromOrigin().subquery(query)
+	public From subquery(final QueryBuilder<?> subquery, final String alias) {
+		origins.add(new FromOrigin().subquery(subquery)
 				.alias(alias));
 		return this;
 	}

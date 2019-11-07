@@ -3,7 +3,7 @@ package com.github.eikecochu.sqlbuilder;
 /**
  * Implemented by keywords that precede the ORDER BY statement.
  */
-public interface BeforeOrderBy extends QueryPart {
+public interface BeforeOrderBy<T extends BeforeOrderBy<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**
 	 * Continue query with ORDER BY

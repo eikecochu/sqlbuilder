@@ -3,7 +3,7 @@ package com.github.eikecochu.sqlbuilder;
 /**
  * Implemented by keywords that precede the UPDATE statement.
  */
-public interface BeforeUpdate extends QueryPart {
+public interface BeforeUpdate<T extends BeforeUpdate<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**
 	 * Continue query with UPDATE

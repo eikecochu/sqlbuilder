@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Insert extends QueryPartImpl<Insert> implements QueryBuilder, BeforeSelect {
+public class Insert extends QueryPartImpl<Insert> implements QueryBuilder<Insert>, BeforeSelect<Insert> {
 
 	@ToString
 	private enum InsertType implements QueryPart {
@@ -60,7 +60,7 @@ public class Insert extends QueryPartImpl<Insert> implements QueryBuilder, Befor
 		this(table.tableName());
 	}
 
-	protected Insert(final BeforeInsert parent, final String table) {
+	protected Insert(final BeforeInsert<?> parent, final String table) {
 		super(parent);
 		this.table = table;
 	}

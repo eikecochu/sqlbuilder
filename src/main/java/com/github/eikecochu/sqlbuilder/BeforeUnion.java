@@ -1,6 +1,6 @@
 package com.github.eikecochu.sqlbuilder;
 
-public interface BeforeUnion extends QueryPart {
+public interface BeforeUnion<T extends BeforeUnion<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**
 	 * Continue query with UNION

@@ -8,8 +8,8 @@ import lombok.experimental.Accessors;
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Join extends Conditionable<Join>
-		implements QueryBuilder, BeforeJoin, BeforeWhere, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
+public class Join extends Conditionable<Join> implements QueryBuilder<Join>, BeforeJoin<Join>, BeforeWhere<Join>,
+		BeforeGroupBy<Join>, BeforeOrderBy<Join>, BeforeUnion<Join> {
 
 	@ToString
 	public enum JoinMode implements QueryPart {
@@ -32,14 +32,14 @@ public class Join extends Conditionable<Join>
 	}
 
 	private final JoinMode joinMode;
-	private Query query;
+	private QueryBuilder<?> subquery;
 	private String name;
 
-	protected Join(final BeforeJoin parent) {
+	protected Join(final BeforeJoin<?> parent) {
 		this(parent, JoinMode.INNER_JOIN);
 	}
 
-	protected Join(final BeforeJoin parent, final JoinMode joinMode) {
+	protected Join(final BeforeJoin<?> parent, final JoinMode joinMode) {
 		super(parent);
 		this.joinMode = joinMode;
 	}
@@ -47,12 +47,12 @@ public class Join extends Conditionable<Join>
 	/**
 	 * Add a subquery as join target
 	 *
-	 * @param query The subquery to join to
-	 * @param name  The name of the subquery
+	 * @param subquery The subquery to join to
+	 * @param name     The name of the subquery
 	 * @return This JOIN statement
 	 */
-	public Join subquery(final Query query, final String name) {
-		this.query = query;
+	public Join subquery(final QueryBuilder<?> subquery, final String name) {
+		this.subquery = subquery;
 		this.name = name;
 		return this;
 	}
@@ -64,7 +64,7 @@ public class Join extends Conditionable<Join>
 	 * @return This JOIN statement
 	 */
 	public Join table(final String name) {
-		query = null;
+		subquery = null;
 		this.name = name;
 		return this;
 	}
@@ -93,9 +93,9 @@ public class Join extends Conditionable<Join>
 		else if (name != null) {
 			strings.add(options.padCased(joinMode.string(options)));
 
-			if (query != null) {
+			if (subquery != null) {
 				strings.add(" ");
-				strings.add(query.string(options));
+				strings.add(subquery.string(options));
 			}
 
 			strings.add(" ");

@@ -10,11 +10,11 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Union extends QueryPartImpl<Union> implements QueryBuilder, BeforeSelect, BeforeWith {
+public class Union extends QueryPartImpl<Union> implements BeforeSelect<Union>, BeforeWith<Union> {
 
 	private boolean all = false;
 
-	protected Union(final BeforeUnion parent) {
+	protected Union(final BeforeUnion<?> parent) {
 		super(parent);
 	}
 

@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Delete extends QueryPartImpl<Delete> implements QueryBuilder, BeforeWhere {
+public class Delete extends QueryPartImpl<Delete> implements QueryBuilder<Delete>, BeforeWhere<Delete> {
 
 	private final String table;
 
@@ -30,7 +30,7 @@ public class Delete extends QueryPartImpl<Delete> implements QueryBuilder, Befor
 		this(table.tableName());
 	}
 
-	protected Delete(final BeforeDelete parent, final String table) {
+	protected Delete(final BeforeDelete<?> parent, final String table) {
 		super(parent);
 		this.table = table;
 	}

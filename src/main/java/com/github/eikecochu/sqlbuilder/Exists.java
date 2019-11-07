@@ -8,11 +8,11 @@ import lombok.experimental.Accessors;
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Exists extends QueryPartImpl<Exists> implements QueryBuilder {
+public class Exists extends QueryPartImpl<Exists> implements QueryBuilder<Exists> {
 
-	private final QueryPart query;
+	private final QueryBuilder<?> query;
 
-	protected Exists(final QueryBuilder query) {
+	protected Exists(final QueryBuilder<?> query) {
 		super(null);
 		this.query = query;
 	}

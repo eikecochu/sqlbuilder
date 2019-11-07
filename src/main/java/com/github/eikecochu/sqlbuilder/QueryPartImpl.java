@@ -7,52 +7,29 @@ import lombok.experimental.Accessors;
 
 @NoArgsConstructor
 @Accessors(fluent = true)
-public abstract class QueryPartImpl<T extends QueryPartImpl<T>> implements QueryPart {
+public abstract class QueryPartImpl<T extends QueryPartImpl<T>>
+		implements QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
-	@Getter(AccessLevel.PROTECTED)
-	private QueryPart parent;
+	@Getter
+	private QueryPartLinked<?> parent;
 
 	@Getter(AccessLevel.PROTECTED)
 	private String sql;
 
-	public QueryPartImpl(final QueryPart parent) {
+	public QueryPartImpl(final QueryPartLinked<?> parent) {
 		this.parent = parent;
 	}
 
-	/**
-	 * Set SQL as content
-	 *
-	 * @param sql The SQL expression
-	 * @return This instance
-	 */
+	@Override
 	public T sql(final String sql) {
 		this.sql = sql;
 		return self();
 	}
 
-	/**
-	 * Set the parent of this expression
-	 *
-	 * @param parent The parent expression
-	 * @return This instance
-	 */
-	public T parent(final QueryPart parent) {
+	@Override
+	public T parent(final QueryPartLinked<?> parent) {
 		this.parent = parent;
 		return self();
-	}
-
-	/**
-	 * Continue the building chain with any element, for example custom implemented
-	 * expressions.
-	 *
-	 * @param <U> The type of the parameter
-	 * @param ext The custom expression
-	 * @return The custom expression
-	 */
-	public <U extends QueryPartImpl<U>> U ext(final U ext) {
-		if (ext == null)
-			return null;
-		return ext.parent(this);
 	}
 
 	@SuppressWarnings("unchecked")

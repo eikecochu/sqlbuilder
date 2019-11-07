@@ -3,7 +3,7 @@ package com.github.eikecochu.sqlbuilder;
 /**
  * Implemented by keywords that precede the INSERT statement.
  */
-public interface BeforeInsert extends QueryPart {
+public interface BeforeInsert<T extends BeforeInsert<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**
 	 * Continue query with INSERT

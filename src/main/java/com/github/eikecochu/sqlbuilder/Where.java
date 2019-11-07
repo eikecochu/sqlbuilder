@@ -10,13 +10,14 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Where extends Conditionable<Where> implements QueryBuilder, BeforeGroupBy, BeforeOrderBy, BeforeUnion {
+public class Where extends Conditionable<Where>
+		implements QueryBuilder<Where>, BeforeGroupBy<Where>, BeforeOrderBy<Where>, BeforeUnion<Where> {
 
-	protected Where(final BeforeWhere parent) {
+	protected Where(final BeforeWhere<?> parent) {
 		super(parent);
 	}
 
-	public Where exists(final QueryBuilder query) {
+	public Where exists(final QueryBuilder<?> query) {
 		return addPart(new Exists(query));
 	}
 

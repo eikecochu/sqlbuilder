@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Select extends QueryPartImpl<Select> implements BeforeFrom {
+public class Select extends QueryPartImpl<Select> implements BeforeFrom<Select> {
 
 	private final List<String> columns = new ArrayList<>();
 	private boolean distinct = false;
@@ -29,7 +29,7 @@ public class Select extends QueryPartImpl<Select> implements BeforeFrom {
 		columns(columns);
 	}
 
-	protected Select(final BeforeSelect parent) {
+	protected Select(final BeforeSelect<?> parent) {
 		super(parent);
 	}
 

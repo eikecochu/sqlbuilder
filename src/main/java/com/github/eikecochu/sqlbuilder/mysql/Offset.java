@@ -1,8 +1,9 @@
-package com.github.eikecochu.sqlbuilder.oracle;
+package com.github.eikecochu.sqlbuilder.mysql;
 
-import com.github.eikecochu.sqlbuilder.Conditionable;
 import com.github.eikecochu.sqlbuilder.QueryBuilder;
 import com.github.eikecochu.sqlbuilder.QueryOptions;
+import com.github.eikecochu.sqlbuilder.QueryPartImpl;
+import com.github.eikecochu.sqlbuilder.QueryPartLinked;
 import com.github.eikecochu.sqlbuilder.StringJoiner;
 
 import lombok.AccessLevel;
@@ -15,14 +16,16 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class StartWith extends Conditionable<StartWith> implements QueryBuilder<StartWith> {
+public class Offset extends QueryPartImpl<Offset> implements QueryBuilder<Offset> {
 
-	protected StartWith(final ConnectBy parent) {
-		super(parent);
+	private int offset = 0;
+
+	public Offset(final int offset) {
+		this(null, offset);
 	}
 
-	public ConnectBy connectBy() {
-		return new ConnectBy(this);
+	protected Offset(final QueryPartLinked<?> parent, final int offset) {
+		this.offset = offset;
 	}
 
 	@Override
@@ -35,16 +38,9 @@ public class StartWith extends Conditionable<StartWith> implements QueryBuilder<
 		if (strings.notEmpty())
 			strings.add(options.newLine());
 
-		if (sql() != null)
-			strings.add(options.padded(sql()));
-		else {
-			final String condition = super.string(options);
-
-			if (condition != null && !condition.isEmpty()) {
-				strings.add(options.padCased("START WITH"));
-				strings.add(" ");
-				strings.add(condition);
-			}
+		if (offset > 0) {
+			strings.add(options.padCased("OFFSET"));
+			strings.add(" " + offset);
 		}
 
 		return strings.toString();

@@ -11,14 +11,14 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter(AccessLevel.PROTECTED)
-public class Query extends QueryPartImpl<Query> implements QueryBuilder {
+public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 
 	@Getter(AccessLevel.PUBLIC)
 	@Setter(AccessLevel.PUBLIC)
 	@Accessors(fluent = true)
 	private QueryOptions options;
 
-	Query(final QueryPart parent) {
+	Query(final QueryPartLinked<?> parent) {
 		super(parent);
 	}
 
@@ -104,6 +104,46 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder {
 		options = options == null ? QueryOptions.DEFAULT_OPTIONS : options;
 		return options.copy()
 				.query(this);
+	}
+
+	public Class<?> statementType() {
+		QueryPartLinked<?> part = this;
+		while (part != null && part.parent() != null && !(part.parent() instanceof With))
+			part = part.parent();
+		if (part == null)
+			return null;
+		if (part instanceof Select)
+			return Select.class;
+		if (part instanceof Insert)
+			return Insert.class;
+		if (part instanceof Update)
+			return Update.class;
+		if (part instanceof Delete)
+			return Delete.class;
+		return part.getClass();
+	}
+
+	public boolean isStatementType(final Class<?> clazz) {
+		final Class<?> type = statementType();
+		if (clazz == null && type == null || (clazz == null ^ type == null))
+			return true;
+		return type.isAssignableFrom(clazz);
+	}
+
+	public boolean isSelect() {
+		return isStatementType(Select.class);
+	}
+
+	public boolean isInsert() {
+		return isStatementType(Insert.class);
+	}
+
+	public boolean isUpdate() {
+		return isStatementType(Update.class);
+	}
+
+	public boolean isDelete() {
+		return isStatementType(Delete.class);
 	}
 
 	@Override

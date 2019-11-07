@@ -3,7 +3,7 @@ package com.github.eikecochu.sqlbuilder;
 /**
  * Implemented by keywords that precede the DELETE statement.
  */
-public interface BeforeDelete extends QueryPart {
+public interface BeforeDelete<T extends BeforeDelete<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**
 	 * Continue query with DELETE

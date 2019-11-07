@@ -3,7 +3,7 @@ package com.github.eikecochu.sqlbuilder;
 /**
  * Implemented by keywords that precede the HAVING statement.
  */
-public interface BeforeHaving extends QueryPart {
+public interface BeforeHaving<T extends BeforeHaving<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**
 	 * Continue query with HAVING

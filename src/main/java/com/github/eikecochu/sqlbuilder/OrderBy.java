@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class OrderBy extends QueryPartImpl<OrderBy> implements QueryBuilder, BeforeUnion {
+public class OrderBy extends QueryPartImpl<OrderBy> implements QueryBuilder<OrderBy>, BeforeUnion<OrderBy> {
 
 	@ToString
 	@Getter(AccessLevel.PROTECTED)
@@ -37,12 +37,11 @@ public class OrderBy extends QueryPartImpl<OrderBy> implements QueryBuilder, Bef
 		public String string(final QueryOptions options) {
 			return name.string(options) + " " + options.cased(ascending ? "ASC" : "DESC");
 		}
-
 	}
 
 	private final List<OrderByTerm> orderByTerms = new ArrayList<>();
 
-	protected OrderBy(final BeforeOrderBy parent) {
+	protected OrderBy(final BeforeOrderBy<?> parent) {
 		super(parent);
 	}
 

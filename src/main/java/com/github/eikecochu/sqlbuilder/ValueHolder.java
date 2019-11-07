@@ -1,5 +1,6 @@
 package com.github.eikecochu.sqlbuilder;
 
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 /**
@@ -11,4 +12,12 @@ import java.util.Map.Entry;
  */
 @FunctionalInterface
 public interface ValueHolder extends Iterable<Entry<String, Object>> {
+
+	@Override
+	default Iterator<Entry<String, Object>> iterator() {
+		return values(null);
+	}
+
+	Iterator<Entry<String, Object>> values(String columnPrefix);
+
 }

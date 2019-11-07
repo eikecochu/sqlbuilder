@@ -3,7 +3,7 @@ package com.github.eikecochu.sqlbuilder;
 /**
  * Implemented by keywords that precede the GROUP BY statement.
  */
-public interface BeforeGroupBy extends QueryPart {
+public interface BeforeGroupBy<T extends BeforeGroupBy<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**
 	 * Continue query with GROUP BY

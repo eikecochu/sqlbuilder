@@ -356,7 +356,7 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 						final QueryOptions subOptions = options.copy()
 								.indentLevel(options.indentLevel() + 1);
 						strings.add(subOptions.newLine(true));
-						strings.add(((QueryBuilder) values[0]).string(subOptions)
+						strings.add(((QueryBuilder<?>) values[0]).string(subOptions)
 								.trim());
 
 						strings.add(")");

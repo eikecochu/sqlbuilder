@@ -5,7 +5,7 @@ import com.github.eikecochu.sqlbuilder.Join.JoinMode;
 /**
  * Implemented by keywords that precede the JOIN statement.
  */
-public interface BeforeJoin extends QueryPart {
+public interface BeforeJoin<T extends BeforeJoin<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**
 	 * Continue query with the passed JOIN mode

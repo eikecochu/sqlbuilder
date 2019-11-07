@@ -786,15 +786,15 @@ public class Tests {
 	@Test
 	public void testProcessor() {
 		class Processor implements QueryProcessor {
-			private QueryBuilder builder;
+			private QueryBuilder<?> builder;
 
 			@Override
-			public void process(final QueryBuilder builder) {
+			public <T extends QueryBuilder<T>> void process(final T builder) {
 				this.builder = builder;
 			}
 
 			public String convertToString() {
-				return builder.string(testOptions());
+				return builder == null ? null : builder.string(testOptions());
 			}
 		}
 
@@ -806,6 +806,19 @@ public class Tests {
 		final String expected = "SELECT * FROM TEST1";
 
 		Assertions.assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testTypes() {
+		final Class<?> clazz = SQLBuilder.With("A")
+				.as(SQLBuilder.Select()
+						.from("TEST1"))
+				.select()
+				.from("TEST1")
+				.query()
+				.statementType();
+
+		Assertions.assertEquals(Select.class, clazz);
 	}
 
 }

@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Implemented by keywords that precede the FROM statement.
  */
-public interface BeforeFrom extends QueryPart {
+public interface BeforeFrom<T extends BeforeFrom<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**
 	 * Continue query with FROM
