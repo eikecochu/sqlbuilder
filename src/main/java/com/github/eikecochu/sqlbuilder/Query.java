@@ -39,14 +39,16 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 	 * @param connection Optional database connection
 	 * @return The created SQL string
 	 */
-	public String string(final QueryOptions options, final Connection connection) {
+	public String string(QueryOptions options, final Connection connection) {
+		options = safeOptions(options);
+
 		String sql = sql();
 		if (sql == null && parent() != null)
-			sql = parent().string(safeOptions(options));
+			sql = parent().string(options);
 
 		if (options.sqlPostprocessor() != null)
 			sql = options.sqlPostprocessor()
-					.process(sql, options.copy(), connection);
+					.process(sql, options, connection);
 
 		return sql;
 	}
@@ -85,7 +87,7 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 
 		if (options.stmtPostprocessor() != null)
 			stmt = options.stmtPostprocessor()
-					.process(stmt, options.copy(), connection);
+					.process(stmt, options, connection);
 
 		int index = 1;
 		for (Object value : options.preparedValues()) {
@@ -102,8 +104,7 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 
 	private QueryOptions safeOptions(QueryOptions options) {
 		options = options == null ? QueryOptions.DEFAULT_OPTIONS : options;
-		return options.copy()
-				.query(this);
+		return options.query(this);
 	}
 
 	public Class<?> statementType() {
@@ -125,8 +126,10 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 
 	public boolean isStatementType(final Class<?> clazz) {
 		final Class<?> type = statementType();
-		if (clazz == null && type == null || (clazz == null ^ type == null))
+		if (clazz == null && type == null)
 			return true;
+		if (clazz == null ^ type == null)
+			return false;
 		return type.isAssignableFrom(clazz);
 	}
 
