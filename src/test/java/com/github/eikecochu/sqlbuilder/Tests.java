@@ -12,7 +12,6 @@ public class Tests {
 
 	public QueryOptions testOptions() {
 		return new QueryOptions().pretty(false)
-				.convert(Boolean.class, b -> b ? 1 : 0)
 				.sqlPostprocessor((sql, options, connection) -> {
 					System.out.println(sql);
 					return sql;
@@ -51,7 +50,7 @@ public class Tests {
 				.col("COL1")
 				.eq(1)
 				.or()
-				.col("COL2", true)
+				.col("COL2", 1)
 				.query();
 
 		final String ugly = "SELECT COL1, COL2 FROM TEST WHERE COL1 = 1 OR COL2 = 1";
@@ -291,7 +290,7 @@ public class Tests {
 		final Query query = SQLBuilder.Insert("TEST")
 				.column("COL1", 1)
 				.column("COL2")
-				.value(true)
+				.value(1)
 				.query();
 
 		final String ugly = "INSERT INTO TEST (COL1, COL2) VALUES (1, 1)";
@@ -310,7 +309,7 @@ public class Tests {
 		final Query query = SQLBuilder.Update("TEST")
 				.set("COL1")
 				.value(2)
-				.set("COL2", true)
+				.set("COL2", 1)
 				.where()
 				.col("COL1", 1)
 				.query();
@@ -337,7 +336,7 @@ public class Tests {
 				.and()
 				.col("COL2")
 				.not()
-				.eq(true)
+				.eq(1)
 				.query();
 
 		final String ugly = "DELETE FROM TEST WHERE COL1 = 1 AND NOT COL2 = 1";

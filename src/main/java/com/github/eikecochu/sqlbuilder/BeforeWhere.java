@@ -25,6 +25,17 @@ public interface BeforeWhere<T extends BeforeWhere<T>> extends QueryPart, QueryP
 	}
 
 	/**
+	 * Continue query with WHERE
+	 *
+	 * @param values       The ValueHolder to use as WHERE conditions
+	 * @param columnPrefix The column prefix for each constraint
+	 * @return The new WHERE statement
+	 */
+	default Where where(final ValueHolder values, final String columnPrefix) {
+		return where().values(values, columnPrefix);
+	}
+
+	/**
 	 * Accept an existing WHERE statement as predecessor
 	 *
 	 * @param where The existing WHERE statement

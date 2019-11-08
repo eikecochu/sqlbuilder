@@ -39,16 +39,14 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 	 * @param connection Optional database connection
 	 * @return The created SQL string
 	 */
-	public String string(QueryOptions options, final Connection connection) {
-		options = safeOptions(options);
-
+	public String string(final QueryOptions options, final Connection connection) {
 		String sql = sql();
 		if (sql == null && parent() != null)
-			sql = parent().string(options);
+			sql = parent().string(safeOptions(options));
 
 		if (options.sqlPostprocessor() != null)
 			sql = options.sqlPostprocessor()
-					.process(sql, options, connection);
+					.process(sql, safeOptions(options), connection);
 
 		return sql;
 	}
@@ -87,24 +85,19 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 
 		if (options.stmtPostprocessor() != null)
 			stmt = options.stmtPostprocessor()
-					.process(stmt, options, connection);
+					.process(stmt, safeOptions(options), connection);
 
 		int index = 1;
-		for (Object value : options.preparedValues()) {
-			if (value != null && options.valueConverters() != null && options.valueConverters()
-					.containsKey(value.getClass()))
-				value = options.valueConverters()
-						.get(value.getClass())
-						.apply(value);
+		for (final Object value : options.preparedValues())
 			stmt.setObject(index++, value);
-		}
 
 		return stmt;
 	}
 
 	private QueryOptions safeOptions(QueryOptions options) {
 		options = options == null ? QueryOptions.DEFAULT_OPTIONS : options;
-		return options.query(this);
+		return options.copy()
+				.query(this);
 	}
 
 	public Class<?> statementType() {

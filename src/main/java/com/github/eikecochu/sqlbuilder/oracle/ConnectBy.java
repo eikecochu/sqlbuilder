@@ -57,7 +57,8 @@ public class ConnectBy extends Conditionable<ConnectBy> implements QueryBuilder<
 		else {
 			final String condition = super.string(options);
 
-			if (condition != null && !condition.isEmpty()) {
+			if (condition != null && !condition.trim()
+					.isEmpty()) {
 				strings.add(options.padCased("CONNECT BY"));
 				if (nocycle)
 					strings.add(" NOCYCLE");

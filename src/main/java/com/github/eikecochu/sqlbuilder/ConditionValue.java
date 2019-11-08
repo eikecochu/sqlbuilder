@@ -3,8 +3,6 @@ package com.github.eikecochu.sqlbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.eikecochu.sqlbuilder.ConditionPart.Operator;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.ToString;
@@ -13,51 +11,10 @@ import lombok.ToString;
 @Getter(AccessLevel.PROTECTED)
 public class ConditionValue<T extends Conditionable<T>> {
 
-	@ToString
-	public enum ConditionValueType implements QueryPart {
-		VALUE,
-		COLUMN,
-		EXPRESSION,
-		ALL,
-		ANY;
-
-		@Override
-		public String string(final QueryOptions options) {
-			if (this == ALL)
-				return "ALL";
-			if (this == ANY)
-				return "ANY";
-			return null;
-		}
-	}
-
-	@ToString
-	@Getter(AccessLevel.PROTECTED)
-	public static class ConditionBiValue<T extends Conditionable<T>> {
-
-		private final ConditionValue<T> value;
-
-		protected ConditionBiValue(final ConditionPart<T> part, final Operator operator) {
-			this.value = new ConditionValue<>(part, operator);
-		}
-
-		/**
-		 * Set two values to be used as conditions
-		 *
-		 * @param value1 The first value
-		 * @param value2 The second value
-		 * @return This instance
-		 */
-		public T values(final Object value1, final Object value2) {
-			return value.values(value1, value2);
-		}
-
-	}
-
 	private final ConditionPart<T> part;
-	private final Operator operator;
+	private final CompareOperator operator;
 
-	protected ConditionValue(final ConditionPart<T> part, final Operator operator) {
+	protected ConditionValue(final ConditionPart<T> part, final CompareOperator operator) {
 		this.part = part;
 		this.operator = operator;
 	}

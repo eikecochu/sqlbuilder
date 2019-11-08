@@ -1,6 +1,6 @@
 package com.github.eikecochu.sqlbuilder;
 
-public abstract class SQLBuilder {
+public final class SQLBuilder {
 
 	private SQLBuilder() {
 	}

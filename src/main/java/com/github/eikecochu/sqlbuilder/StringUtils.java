@@ -1,6 +1,9 @@
 package com.github.eikecochu.sqlbuilder;
 
-abstract class StringUtils {
+import java.util.ArrayList;
+import java.util.List;
+
+final class StringUtils {
 
 	private StringUtils() {
 	}
@@ -41,6 +44,20 @@ abstract class StringUtils {
 
 	public static String repeat(final char c, final int times) {
 		return repeat("" + c, times);
+	}
+
+	public static boolean nullOrBlank(final String s) {
+		return s == null || s.trim()
+				.isEmpty();
+	}
+
+	public static List<String> filterValues(final String[] strings) {
+		final List<String> list = new ArrayList<>(strings == null ? 0 : strings.length);
+		if (strings != null && strings.length > 0)
+			for (final String string : strings)
+				if (!nullOrBlank(string))
+					list.add(string);
+		return list;
 	}
 
 }

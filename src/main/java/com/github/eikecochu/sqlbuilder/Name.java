@@ -116,10 +116,11 @@ public class Name implements QueryPart {
 	private String table;
 	private String name;
 	private String alias;
+	private boolean unrecognized = false;
 
 	@Override
 	public String string(final QueryOptions options) {
-		if (!options.splitNames())
+		if (!options.splitNames() || unrecognized)
 			return name;
 
 		final StringBuilder sb = new StringBuilder();

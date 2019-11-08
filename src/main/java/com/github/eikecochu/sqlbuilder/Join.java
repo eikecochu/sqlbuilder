@@ -11,26 +11,6 @@ import lombok.experimental.Accessors;
 public class Join extends Conditionable<Join> implements QueryBuilder<Join>, BeforeJoin<Join>, BeforeWhere<Join>,
 		BeforeGroupBy<Join>, BeforeOrderBy<Join>, BeforeUnion<Join> {
 
-	@ToString
-	public enum JoinMode implements QueryPart {
-		INNER_JOIN("INNER JOIN"),
-		OUTER_JOIN("OUTER JOIN"),
-		LEFT_JOIN("LEFT JOIN"),
-		RIGHT_JOIN("RIGHT JOIN"),
-		CROSS_JOIN("CROSS JOIN");
-
-		private final String string;
-
-		JoinMode(final String string) {
-			this.string = string;
-		}
-
-		@Override
-		public String string(final QueryOptions options) {
-			return options.cased(string);
-		}
-	}
-
 	private final JoinMode joinMode;
 	private QueryBuilder<?> subquery;
 	private String name;
@@ -76,6 +56,17 @@ public class Join extends Conditionable<Join> implements QueryBuilder<Join>, Bef
 	 */
 	public Conditionable<Join> on() {
 		return this;
+	}
+
+	/**
+	 * Set join conditions to join on two equal columns
+	 *
+	 * @param col1 The left column
+	 * @param col2 The right column, equal to left
+	 * @return This instance
+	 */
+	public Join onColsEq(final String col1, final String col2) {
+		return on().colsEq(col1, col2);
 	}
 
 	@Override

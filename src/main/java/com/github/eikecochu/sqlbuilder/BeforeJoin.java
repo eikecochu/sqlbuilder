@@ -1,7 +1,5 @@
 package com.github.eikecochu.sqlbuilder;
 
-import com.github.eikecochu.sqlbuilder.Join.JoinMode;
-
 /**
  * Implemented by keywords that precede the JOIN statement.
  */
@@ -93,6 +91,32 @@ public interface BeforeJoin<T extends BeforeJoin<T>> extends QueryPart, QueryPar
 	 */
 	default Join innerJoin(final Table table) {
 		return innerJoin(table.tableName());
+	}
+
+	/**
+	 * Continue query with INNER JOIN and use two columns as condition with col1 =
+	 * col2
+	 *
+	 * @param table The name of the table to join to
+	 * @param col1  The first column
+	 * @param col2  The second column, equal to col1
+	 * @return The new INNER JOIN statement
+	 */
+	default Join innerJoinOnColsEq(final String table, final String col1, final String col2) {
+		return innerJoin(table).onColsEq(col1, col2);
+	}
+
+	/**
+	 * Continue query with INNER JOIN and use two columns as condition with col1 =
+	 * col2
+	 *
+	 * @param table The Table representation of the table to join to
+	 * @param col1  The first column
+	 * @param col2  The second column, equal to col1
+	 * @return The new INNER JOIN statement
+	 */
+	default Join innerJoinOnColsEq(final Table table, final String col1, final String col2) {
+		return innerJoin(table).onColsEq(col1, col2);
 	}
 
 	/**

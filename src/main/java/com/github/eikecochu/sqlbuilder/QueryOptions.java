@@ -4,10 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -94,13 +91,6 @@ public class QueryOptions {
 	private PostProcessor<PreparedStatement> stmtPostprocessor = null;
 
 	/**
-	 * Value converters used to convert values of classes into other values. To add
-	 * a value converter for booleans for example, call convert(Boolean.class, b ->
-	 * ...) to register the converter. Only one converter per class type is allowed.
-	 */
-	private Map<Class<?>, Function<Object, Object>> valueConverters = null;
-
-	/**
 	 * Fetch option. Will enable returning generated database keys after the
 	 * statement is executed.
 	 */
@@ -152,6 +142,12 @@ public class QueryOptions {
 	 * the parameter list.
 	 */
 	private String defaultPlaceholder = null;
+
+	/**
+	 * Enable to treat unrecognizable names as simple names. If disabled,
+	 * unrecognizable names will throw a RuntimeException.
+	 */
+	private boolean ignoreUnrecognizableNames = true;
 
 	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
@@ -222,7 +218,6 @@ public class QueryOptions {
 				.dateFormat(dateFormat)
 				.sqlPostprocessor(sqlPostprocessor)
 				.stmtPostprocessor(stmtPostprocessor)
-				.valueConverters(valueConverters == null ? null : new HashMap<>(valueConverters))
 				.returnGeneratedKeys(returnGeneratedKeys)
 				.fetchSize(fetchSize)
 				.fetchDirection(fetchDirection)
@@ -231,6 +226,7 @@ public class QueryOptions {
 				.conditionOnNewline(conditionOnNewline)
 				.ignoreNull(ignoreNull)
 				.defaultPlaceholder(defaultPlaceholder)
+				.ignoreUnrecognizableNames(ignoreUnrecognizableNames)
 				.indentLevel(indentLevel);
 	}
 
@@ -271,22 +267,6 @@ public class QueryOptions {
 	 */
 	public QueryOptions fetchFirst() {
 		return fetchSize(1);
-	}
-
-	/**
-	 * Register a converter for a specific class to be used for value conversion
-	 *
-	 * @param       <T> The input conversion type
-	 * @param clazz The class of the values to be converted
-	 * @param func  The value converter
-	 * @return This QueryOptions instance
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> QueryOptions convert(final Class<T> clazz, final Function<T, Object> func) {
-		if (valueConverters == null)
-			valueConverters = new HashMap<>();
-		valueConverters.put(clazz, (Function<Object, Object>) func);
-		return this;
 	}
 
 	/**

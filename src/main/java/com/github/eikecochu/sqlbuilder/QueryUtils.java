@@ -8,10 +8,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-abstract class QueryUtils {
+final class QueryUtils {
 
 	private static final Pattern namePattern = Pattern.compile(
-			"^\\s*((?<fn>\\w+)\\()?(`?(?<a1>\\w+)`?\\.)?(`?(?<a2>\\w+)`?\\.)?(`?(?<name>\\w+|\\*)`?)\\)?(\\s+[Aa][Ss])?(\\s+`?(?<alias>\\w+))?`?\\s*$");
+			"^\\s*((?<fn>\\w+)\\()?([\"'`]?(?<a1>\\w+)[\"'`]?\\.)?([\"'`]?(?<a2>\\w+)[\"'`]?\\.)?([\"'`]?(?<name>\\w+|\\*)[\"'`]?)\\)?(\\s+[Aa][Ss])?(\\s+[\"'`]?(?<alias>\\w+))?[\"'`]?\\s*$");
 
 	public static Name splitName(final QueryOptions options, final String strName) {
 		if (!options.splitNames())
@@ -32,16 +32,14 @@ abstract class QueryUtils {
 					.table(table)
 					.name(m.group("name"))
 					.alias(m.group("alias"));
-		} else
+		} else if (options.ignoreUnrecognizableNames())
+			return new Name().name(strName)
+					.unrecognized(true);
+		else
 			throw new RuntimeException("unrecognizable name: " + strName);
 	}
 
-	public static String valueToString(final QueryOptions options, Object value) {
-		if (value != null && options != null && options.valueConverters() != null && options.valueConverters()
-				.containsKey(value.getClass()))
-			value = options.valueConverters()
-					.get(value.getClass())
-					.apply(value);
+	public static String valueToString(final QueryOptions options, final Object value) {
 		if (value == null)
 			return "";
 		if (value instanceof String)

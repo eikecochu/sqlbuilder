@@ -41,6 +41,27 @@ public interface BeforeFrom<T extends BeforeFrom<T>> extends QueryPart, QueryPar
 	}
 
 	/**
+	 * Specify a subquery to select from
+	 *
+	 * @param subquery The subquery to select from
+	 * @param alias    The subquery alias
+	 * @return This FROM statement
+	 */
+	default From from(final QueryBuilder<?> subquery, final String alias) {
+		return new From(this).subquery(subquery, alias);
+	}
+
+	/**
+	 * Specify a subquery to select from
+	 *
+	 * @param subquery The subquery to select from
+	 * @return This FROM statement
+	 */
+	default From from(final QueryBuilder<?> subquery) {
+		return new From(this).subquery(subquery);
+	}
+
+	/**
 	 * Accept an existing FROM statement as predecessor
 	 *
 	 * @param from The existing FROM statement

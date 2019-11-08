@@ -14,30 +14,8 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class Insert extends QueryPartImpl<Insert> implements QueryBuilder<Insert>, BeforeSelect<Insert> {
 
-	@ToString
-	private enum InsertType implements QueryPart {
-		INSERT("INSERT INTO"),
-		REPLACE("REPLACE INTO"),
-		INSERT_OR_REPLACE("INSERT OR REPLACE INTO"),
-		INSERT_OR_ROLLBACK("INSERT OR ROLLBACK INTO"),
-		INSERT_OR_ABORT("INSERT OR ABORT INTO"),
-		INSERT_OR_FAIL("INSERT OR FAIL INTO"),
-		INSERT_OR_IGNORE("INSERT OR IGNORE INTO");
-
-		private final String string;
-
-		InsertType(final String string) {
-			this.string = string;
-		}
-
-		@Override
-		public String string(final QueryOptions options) {
-			return options.cased(string);
-		}
-	}
-
 	private final String table;
-	private InsertType insertType = InsertType.INSERT;
+	private InsertMode insertType = InsertMode.INSERT;
 	private final List<InsertValue> insertValues = new ArrayList<>();
 	private boolean defaultValues = false;
 	private boolean onlyValues = true;
@@ -71,7 +49,7 @@ public class Insert extends QueryPartImpl<Insert> implements QueryBuilder<Insert
 	 * @return This INSERT statement
 	 */
 	public Insert replace() {
-		return insertType(InsertType.REPLACE);
+		return insertType(InsertMode.REPLACE);
 	}
 
 	/**
@@ -80,7 +58,7 @@ public class Insert extends QueryPartImpl<Insert> implements QueryBuilder<Insert
 	 * @return This INSERT statement
 	 */
 	public Insert orReplace() {
-		return insertType(InsertType.INSERT_OR_REPLACE);
+		return insertType(InsertMode.INSERT_OR_REPLACE);
 	}
 
 	/**
@@ -89,7 +67,7 @@ public class Insert extends QueryPartImpl<Insert> implements QueryBuilder<Insert
 	 * @return This INSERT statement
 	 */
 	public Insert orRollback() {
-		return insertType(InsertType.INSERT_OR_ROLLBACK);
+		return insertType(InsertMode.INSERT_OR_ROLLBACK);
 	}
 
 	/**
@@ -98,7 +76,7 @@ public class Insert extends QueryPartImpl<Insert> implements QueryBuilder<Insert
 	 * @return This INSERT statement
 	 */
 	public Insert orAbort() {
-		return insertType(InsertType.INSERT_OR_ABORT);
+		return insertType(InsertMode.INSERT_OR_ABORT);
 	}
 
 	/**
@@ -107,7 +85,7 @@ public class Insert extends QueryPartImpl<Insert> implements QueryBuilder<Insert
 	 * @return This INSERT statement
 	 */
 	public Insert orFail() {
-		return insertType(InsertType.INSERT_OR_FAIL);
+		return insertType(InsertMode.INSERT_OR_FAIL);
 	}
 
 	/**
@@ -116,7 +94,7 @@ public class Insert extends QueryPartImpl<Insert> implements QueryBuilder<Insert
 	 * @return This INSERT statement
 	 */
 	public Insert orIgnore() {
-		return insertType(InsertType.INSERT_OR_IGNORE);
+		return insertType(InsertMode.INSERT_OR_IGNORE);
 	}
 
 	@Override

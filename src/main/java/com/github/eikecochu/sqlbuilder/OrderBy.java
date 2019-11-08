@@ -93,7 +93,7 @@ public class OrderBy extends QueryPartImpl<OrderBy> implements QueryBuilder<Orde
 	 */
 	public OrderBy columns(final String... names) {
 		if (names != null)
-			for (final String name : names)
+			for (final String name : StringUtils.filterValues(names))
 				column(name);
 		return this;
 	}

@@ -1,7 +1,6 @@
 package com.github.eikecochu.sqlbuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -67,6 +66,17 @@ public class Select extends QueryPartImpl<Select> implements BeforeFrom<Select> 
 	}
 
 	/**
+	 * Select a column by name
+	 *
+	 * @param column The column name of the column to select
+	 * @param alias  The column alias, will be appended to the column name
+	 * @return This SELECT statement
+	 */
+	public Select column(final String column, final String alias) {
+		return column(column + (StringUtils.nullOrBlank(alias) ? "" : (" " + alias)));
+	}
+
+	/**
 	 * Select multiple columns by name
 	 *
 	 * @param columns The column names of the columns to select
@@ -74,7 +84,7 @@ public class Select extends QueryPartImpl<Select> implements BeforeFrom<Select> 
 	 */
 	public Select columns(final String... columns) {
 		if (columns != null)
-			this.columns.addAll(Arrays.asList(columns));
+			this.columns.addAll(StringUtils.filterValues(columns));
 		return this;
 	}
 

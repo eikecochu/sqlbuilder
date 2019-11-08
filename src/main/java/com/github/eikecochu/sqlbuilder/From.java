@@ -80,8 +80,9 @@ public class From extends QueryPartImpl<From> implements QueryBuilder<From>, Bef
 	 * @return This FROM statement
 	 */
 	public From tables(final String... tables) {
-		for (final String table : tables)
-			table(table);
+		if (tables != null)
+			for (final String table : StringUtils.filterValues(tables))
+				table(table);
 		return this;
 	}
 
@@ -108,6 +109,16 @@ public class From extends QueryPartImpl<From> implements QueryBuilder<From>, Bef
 		origins.add(new FromOrigin().subquery(subquery)
 				.alias(alias));
 		return this;
+	}
+
+	/**
+	 * Specify a subquery to select from
+	 *
+	 * @param subquery The subquery to select from
+	 * @return This FROM statement
+	 */
+	public From subquery(final QueryBuilder<?> subquery) {
+		return subquery(subquery, null);
 	}
 
 	@Override

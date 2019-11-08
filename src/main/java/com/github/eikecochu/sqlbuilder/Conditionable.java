@@ -20,23 +20,6 @@ import lombok.ToString;
 @Getter(AccessLevel.PROTECTED)
 public abstract class Conditionable<T extends Conditionable<T>> extends QueryPartImpl<T> {
 
-	@ToString
-	public enum Operator implements QueryPart {
-		AND("AND"),
-		OR("OR");
-
-		private final String string;
-
-		Operator(final String string) {
-			this.string = string;
-		}
-
-		@Override
-		public String string(final QueryOptions options) {
-			return options.cased(string);
-		}
-	}
-
 	private final List<QueryPart> parts = new ArrayList<>();
 	private final Conditionable<T> conditionable;
 
@@ -52,6 +35,7 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 	/**
 	 * Set the comparing values
 	 *
+	 * @param values The comparing values
 	 * @return This instance
 	 */
 	public T values(final ValueHolder values) {
@@ -61,18 +45,45 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 	/**
 	 * Set the comparing values with prefix
 	 *
-	 * @param values The comparing values
-	 * @param prefix The column prefix for each constraint
+	 * @param values       The comparing values
+	 * @param columnPrefix The column prefix for each constraint
 	 * @return This instance
 	 */
 	@SuppressWarnings("unchecked")
-	public T values(final ValueHolder values, final String prefix) {
+	public T values(final ValueHolder values, final String columnPrefix) {
 		if (values != null)
-			for (final Iterator<Entry<String, Object>> it = values.values(prefix); it.hasNext();) {
+			for (final Iterator<Entry<String, Object>> it = values.values(columnPrefix); it.hasNext();) {
 				final Entry<String, Object> value = it.next();
 				col(value.getKey(), value.getValue());
 			}
 		return (T) this;
+	}
+
+	/**
+	 * Use a column as constraint and set the comparative element
+	 *
+	 * @param name     The column name
+	 * @param operator The comarator operator
+	 * @param type     The type of the value
+	 * @param values   The value to compare to
+	 * @return This instance
+	 */
+	public T col(final String name, final CompareOperator operator, final ConditionValueType type,
+			final Object... values) {
+		return col(name).condition(operator, type, values);
+	}
+
+	/**
+	 * Use a column as constraint and set the comparative element
+	 *
+	 * @param name     The column name
+	 * @param operator The comarator operator as string
+	 * @param type     The type of the value
+	 * @param values   The value to compare to
+	 * @return This instance
+	 */
+	public T col(final String name, final String operator, final ConditionValueType type, final Object... values) {
+		return col(name, CompareOperator.fromString(operator), type, values);
 	}
 
 	/**
@@ -96,6 +107,17 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 	 */
 	public T col(final String name, final Object value) {
 		return col(name).eq(value);
+	}
+
+	/**
+	 * Compare a column to another column
+	 *
+	 * @param name1 The first column name
+	 * @param name2 The second column name
+	 * @return This instance
+	 */
+	public T colsEq(final String name1, final String name2) {
+		return col(name1).eqCol(name2);
 	}
 
 	/**
@@ -136,7 +158,7 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 	 * @return This instance
 	 */
 	public T and() {
-		return op(Operator.AND);
+		return op(ConjunctiveOperator.AND);
 	}
 
 	/**
@@ -145,12 +167,12 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 	 * @return This instance
 	 */
 	public T or() {
-		return op(Operator.OR);
+		return op(ConjunctiveOperator.OR);
 	}
 
 	@SuppressWarnings("unchecked")
 	T addPart(final QueryPart part) {
-		if (!parts.isEmpty() && !(parts.get(parts.size() - 1) instanceof Operator))
+		if (!parts.isEmpty() && !(parts.get(parts.size() - 1) instanceof ConjunctiveOperator))
 			this.and();
 
 		parts.add(part);
@@ -158,7 +180,7 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 	}
 
 	@SuppressWarnings("unchecked")
-	private T op(final Operator operator) {
+	private T op(final ConjunctiveOperator operator) {
 		if (!parts.isEmpty() && parts.size() % 2 == 1)
 			parts.add(operator);
 		return (T) this;
@@ -176,14 +198,14 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 		final List<QueryPart> validParts = new ArrayList<>(parts.size());
 		boolean valueNext = true;
 		for (final QueryPart part : parts) {
-			if (valueNext == !(part instanceof Operator))
+			if (valueNext == !(part instanceof ConjunctiveOperator))
 				validParts.add(part);
 			valueNext = !valueNext;
 		}
 
 		// remove trailing operators
 		final ListIterator<QueryPart> it = validParts.listIterator(validParts.size());
-		while (it.hasPrevious() && it.previous() instanceof Operator)
+		while (it.hasPrevious() && it.previous() instanceof ConjunctiveOperator)
 			it.remove();
 
 		// check if empty
