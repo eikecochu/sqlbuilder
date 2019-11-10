@@ -12,6 +12,11 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * Limit statement
+ *
+ * Supported by MySQL
+ */
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)

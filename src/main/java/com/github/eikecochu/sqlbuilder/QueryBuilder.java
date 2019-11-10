@@ -15,7 +15,7 @@ public interface QueryBuilder<T extends QueryBuilder<T>> extends QueryPartLinked
 	 * Allows the user to finish the query building process by passing the query to
 	 * a specified processor.
 	 *
-	 * @param <U>       The generic type
+	 * @param           <U> The generic type
 	 * @param processor The query processor
 	 * @return The query processor
 	 */

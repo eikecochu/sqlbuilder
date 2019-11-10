@@ -1,4 +1,4 @@
-package com.github.eikecochu.sqlbuilder.mysql;
+package com.github.eikecochu.sqlbuilder.mssql;
 
 import com.github.eikecochu.sqlbuilder.QueryBuilder;
 import com.github.eikecochu.sqlbuilder.QueryOptions;
@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 /**
  * Offset statement
  *
- * Supported by MySQL
+ * Supported by MS SQL Server, Oracle 12c, PostgreSQL
  */
 @ToString
 @NoArgsConstructor
@@ -33,6 +33,10 @@ public class Offset extends QueryPartImpl<Offset> implements QueryBuilder<Offset
 		this.offset = offset;
 	}
 
+	public Fetch fetch(final int fetch) {
+		return new Fetch(this, fetch);
+	}
+
 	@Override
 	public String string(final QueryOptions options) {
 		final StringJoiner strings = new StringJoiner();
@@ -46,6 +50,8 @@ public class Offset extends QueryPartImpl<Offset> implements QueryBuilder<Offset
 		if (offset > 0) {
 			strings.add(options.padCased("OFFSET"));
 			strings.add(" " + offset);
+			strings.add(" ");
+			strings.add(offset == 1 ? "ROW" : "ROWS");
 		}
 
 		return strings.toString();

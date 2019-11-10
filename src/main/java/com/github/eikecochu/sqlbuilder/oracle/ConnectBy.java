@@ -12,6 +12,11 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * ConnectBy statement
+ *
+ * Supported by Oracle 11g
+ */
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)

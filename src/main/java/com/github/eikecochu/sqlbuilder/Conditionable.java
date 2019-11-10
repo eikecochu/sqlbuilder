@@ -21,7 +21,6 @@ import lombok.ToString;
 public abstract class Conditionable<T extends Conditionable<T>> extends QueryPartImpl<T> {
 
 	private final List<QueryPart> parts = new ArrayList<>();
-	private final Conditionable<T> conditionable;
 
 	public Conditionable() {
 		this(null);
@@ -29,7 +28,6 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 
 	protected Conditionable(final QueryPartLinked<?> parent) {
 		super(parent);
-		this.conditionable = this;
 	}
 
 	/**
@@ -49,14 +47,13 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 	 * @param columnPrefix The column prefix for each constraint
 	 * @return This instance
 	 */
-	@SuppressWarnings("unchecked")
 	public T values(final ValueHolder values, final String columnPrefix) {
 		if (values != null)
 			for (final Iterator<Entry<String, Object>> it = values.values(columnPrefix); it.hasNext();) {
 				final Entry<String, Object> value = it.next();
 				col(value.getKey(), value.getValue());
 			}
-		return (T) this;
+		return self();
 	}
 
 	/**
@@ -93,7 +90,7 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 	 * @return The value instance to set the compare value
 	 */
 	public ConditionPart<T> col(final String name) {
-		final ConditionPart<T> part = new ConditionPart<>(conditionable(), name);
+		final ConditionPart<T> part = new ConditionPart<>(this, name);
 		addPart(part);
 		return part;
 	}
@@ -170,24 +167,23 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 		return op(ConjunctiveOperator.OR);
 	}
 
-	@SuppressWarnings("unchecked")
 	T addPart(final QueryPart part) {
 		if (!parts.isEmpty() && !(parts.get(parts.size() - 1) instanceof ConjunctiveOperator))
 			this.and();
 
 		parts.add(part);
-		return (T) conditionable;
+		return self();
 	}
 
-	@SuppressWarnings("unchecked")
 	private T op(final ConjunctiveOperator operator) {
 		if (!parts.isEmpty() && parts.size() % 2 == 1)
 			parts.add(operator);
-		return (T) this;
+		return self();
 	}
 
-	private Conditionable<T> conditionable() {
-		return conditionable;
+	@SuppressWarnings("unchecked")
+	private T self() {
+		return (T) this;
 	}
 
 	@Override

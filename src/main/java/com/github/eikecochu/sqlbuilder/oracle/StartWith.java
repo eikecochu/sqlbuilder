@@ -11,6 +11,11 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * StartWith statement
+ *
+ * Supported by Oracle 11g
+ */
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)

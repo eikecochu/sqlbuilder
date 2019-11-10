@@ -21,7 +21,7 @@ public interface QueryPartLinked<T extends QueryPartLinked<T>> extends QueryPart
 	 * Continue the building chain with any element, for example custom implemented
 	 * expressions.
 	 *
-	 * @param <U> The type of the parameter
+	 * @param     <U> The type of the parameter
 	 * @param ext The custom expression
 	 * @return The custom expression
 	 */

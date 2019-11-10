@@ -1,4 +1,4 @@
-package com.github.eikecochu.sqlbuilder.mysql;
+package com.github.eikecochu.sqlbuilder.mssql;
 
 import com.github.eikecochu.sqlbuilder.QueryBuilder;
 import com.github.eikecochu.sqlbuilder.QueryOptions;
@@ -13,24 +13,24 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
- * Offset statement
+ * Fetch statement
  *
- * Supported by MySQL
+ * Supported by MS SQL Server, Oracle 12c, PostgreSQL
  */
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)
-public class Offset extends QueryPartImpl<Offset> implements QueryBuilder<Offset> {
+public class Fetch extends QueryPartImpl<Fetch> implements QueryBuilder<Fetch> {
 
-	private int offset = 0;
+	private int fetch = 1;
 
-	public Offset(final int offset) {
-		this(null, offset);
+	public Fetch(final int fetch) {
+		this(null, fetch);
 	}
 
-	protected Offset(final QueryPartLinked<?> parent, final int offset) {
-		this.offset = offset;
+	protected Fetch(final QueryPartLinked<?> parent, final int fetch) {
+		this.fetch = fetch;
 	}
 
 	@Override
@@ -43,9 +43,17 @@ public class Offset extends QueryPartImpl<Offset> implements QueryBuilder<Offset
 		if (strings.notEmpty())
 			strings.add(options.newLine());
 
-		if (offset > 0) {
-			strings.add(options.padCased("OFFSET"));
-			strings.add(" " + offset);
+		if (fetch > 0) {
+			strings.add(options.padCased("FETCH"));
+			if (parent() != null && parent() instanceof Offset)
+				strings.add(" NEXT");
+			else
+				strings.add(" FIRST");
+			if (fetch > 1)
+				strings.add(" " + fetch);
+			strings.add(" ");
+			strings.add(fetch == 1 ? "ROW" : "ROWS");
+			strings.add(" ONLY");
 		}
 
 		return strings.toString();
