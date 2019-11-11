@@ -149,15 +149,12 @@ public class QueryOptions {
 	 */
 	private boolean ignoreUnrecognizableNames = true;
 
-	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
 	private int indentLevel = 0;
 
-	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.PACKAGE)
 	private boolean prepare;
 
-	@Getter(AccessLevel.PACKAGE)
 	@Setter(AccessLevel.NONE)
 	private final List<Object> preparedValues = new ArrayList<>();
 

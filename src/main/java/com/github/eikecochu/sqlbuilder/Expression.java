@@ -36,7 +36,7 @@ public class Expression implements QueryPart {
 	public String preparedString(QueryOptions options) {
 		options = safeOptions(options);
 		String result = expression;
-		final boolean prepare = options != null && options.prepare();
+		final boolean prepare = options != null;
 		if (values != null && values.length > 0 && !result.contains("(")) {
 			final StringBuilder params = new StringBuilder();
 			final String defaultPlaceholder = options.defaultPlaceholder();

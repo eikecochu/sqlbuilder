@@ -106,14 +106,6 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 			part = part.parent();
 		if (part == null)
 			return null;
-		if (part instanceof Select)
-			return Select.class;
-		if (part instanceof Insert)
-			return Insert.class;
-		if (part instanceof Update)
-			return Update.class;
-		if (part instanceof Delete)
-			return Delete.class;
 		return part.getClass();
 	}
 
@@ -140,6 +132,10 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 
 	public boolean isDelete() {
 		return isStatementType(Delete.class);
+	}
+
+	public boolean isExpression() {
+		return isStatementType(Expression.class);
 	}
 
 	@Override
