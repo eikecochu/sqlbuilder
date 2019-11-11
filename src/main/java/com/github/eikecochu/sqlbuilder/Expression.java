@@ -53,10 +53,10 @@ public class Expression extends QueryPartImpl<Expression> implements QueryBuilde
 
 	@Override
 	public String string(final QueryOptions options) {
-		return string(options, options.prepare());
+		return string(options, options.prepare(), false);
 	}
 
-	public String string(QueryOptions options, final boolean prepare) {
+	public String string(QueryOptions options, final boolean prepare, final boolean callWrap) {
 		if (values != null && paramTypes != null && values.size() != paramTypes.size())
 			throw new RuntimeException("values and paramTypes size does not match");
 
@@ -99,10 +99,10 @@ public class Expression extends QueryPartImpl<Expression> implements QueryBuilde
 				result += "(" + paramString + ")";
 		}
 
-		if (prepare) {
+		if (callWrap) {
 			result = "call " + result;
 
-			if (returnType != null)
+			if (prepare && returnType != null)
 				result = "? = " + result;
 
 			result = "{ " + result + " }";
@@ -112,11 +112,11 @@ public class Expression extends QueryPartImpl<Expression> implements QueryBuilde
 	}
 
 	public String preparedString(final QueryOptions options) {
-		return string(options, true);
+		return string(options, true, false);
 	}
 
 	public String valueString(final QueryOptions options) {
-		return string(options, false);
+		return string(options, false, false);
 	}
 
 	private QueryOptions safeOptions(final QueryOptions options) {

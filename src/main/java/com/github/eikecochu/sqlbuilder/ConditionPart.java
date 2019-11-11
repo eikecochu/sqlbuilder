@@ -74,6 +74,16 @@ public class ConditionPart<T extends Conditionable<T>> implements QueryPart {
 	}
 
 	/**
+	 * Set an expression to be used as condition
+	 *
+	 * @param expression The condition expression
+	 * @return This instance
+	 */
+	public T eqExpr(final Expression expression) {
+		return eq().expr(expression);
+	}
+
+	/**
 	 * The NOT EQUALS operator
 	 *
 	 * @return The value instance to set the compare value

@@ -777,9 +777,26 @@ public class Tests {
 		final Expression e = new Expression("PACKAGE.PROCEDURE", 1, 2, 3, null);
 		final String actual = e.string(testOptions().prepare(true));
 
-		final String expected = "{ call PACKAGE.PROCEDURE(?, ?, ?) }";
+		final String expected = "PACKAGE.PROCEDURE(?, ?, ?)";
 
 		Assertions.assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testExpressionPrepare2() {
+		final Expression e = new Expression("PACKAGE.PROCEDURE", 1, 2, 3, null);
+		final Query query = SQLBuilder.Select()
+				.from("TEST1")
+				.where()
+				.col("COL1")
+				.eqExpr(e)
+				.query();
+
+		String value = "SELECT * FROM TEST1 WHERE COL1 = PACKAGE.PROCEDURE(1, 2, 3)";
+		String prepared = "SELECT * FROM TEST1 WHERE COL1 = PACKAGE.PROCEDURE(?, ?, ?)";
+
+		Assertions.assertEquals(value, query.string(testOptions()));
+		Assertions.assertEquals(prepared, query.string(testOptions().prepare(true)));
 	}
 
 	@Test
