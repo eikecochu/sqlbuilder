@@ -1,5 +1,6 @@
 package com.github.eikecochu.sqlbuilder;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -89,6 +90,12 @@ public class QueryOptions {
 	 * returned.
 	 */
 	private PostProcessor<PreparedStatement> stmtPostprocessor = null;
+
+	/**
+	 * The Callable statement postprocessor used when a callable statement is
+	 * prepared, before it is returned.
+	 */
+	private PostProcessor<CallableStatement> callPostprocessor = null;
 
 	/**
 	 * Fetch option. Will enable returning generated database keys after the
@@ -215,6 +222,7 @@ public class QueryOptions {
 				.dateFormat(dateFormat)
 				.sqlPostprocessor(sqlPostprocessor)
 				.stmtPostprocessor(stmtPostprocessor)
+				.callPostprocessor(callPostprocessor)
 				.returnGeneratedKeys(returnGeneratedKeys)
 				.fetchSize(fetchSize)
 				.fetchDirection(fetchDirection)
@@ -241,7 +249,7 @@ public class QueryOptions {
 		return sb.toString();
 	}
 
-	PreparedStatement applyStatementOptions(final PreparedStatement stmt) throws SQLException {
+	<T extends PreparedStatement> T applyStatementOptions(final T stmt) throws SQLException {
 		stmt.setFetchSize(fetchSize);
 		stmt.setMaxRows(fetchSize);
 		stmt.setFetchDirection(fetchDirection);

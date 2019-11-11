@@ -1,5 +1,6 @@
 package com.github.eikecochu.sqlbuilder;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -71,6 +72,8 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 	 * @throws SQLException if preparing fails
 	 */
 	public PreparedStatement prepare(final Connection connection, QueryOptions options) throws SQLException {
+		if (isExpression())
+			throw new RuntimeException("use prepareCall() to prepare function calls");
 		options = safeOptions(options).prepare(true);
 
 		final String sql = string(options, connection);
@@ -94,12 +97,63 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 		return stmt;
 	}
 
+	/**
+	 * Prepares the call using the passed database connection
+	 *
+	 * @param connection The database connection
+	 * @param options    The QueryOptions to use
+	 * @return The CallableStatement
+	 * @throws SQLException if preparing fails
+	 */
+	public CallableStatement prepareCall(final Connection connection, QueryOptions options) throws SQLException {
+		if (!isExpression())
+			throw new RuntimeException("use prepare() to prepare query statements");
+		options = safeOptions(options).prepare(true);
+
+		final String sql = string(options, connection).trim();
+
+		CallableStatement stmt = connection.prepareCall(sql);
+
+		stmt = options.applyStatementOptions(stmt);
+
+		if (options.stmtPostprocessor() != null)
+			stmt = options.callPostprocessor()
+					.process(stmt, safeOptions(options), connection);
+
+		int index = 1;
+
+		// register return parameter
+		final Expression expr = (Expression) parent();
+		if (expr.returnType() != null)
+			stmt.registerOutParameter(index++, expr.returnType());
+
+		// insert values
+		for (final Object value : options.preparedValues())
+			stmt.setObject(index++, value);
+
+		// register OUT parameters
+		int paramOffset = expr.returnType() == null ? 1 : 2;
+		for (final Integer type : expr.paramTypes()) {
+			if (type != null)
+				stmt.registerOutParameter(paramOffset, type);
+			paramOffset++;
+		}
+
+		return stmt;
+	}
+
 	private QueryOptions safeOptions(QueryOptions options) {
 		options = options == null ? QueryOptions.DEFAULT_OPTIONS : options;
 		return options.copy()
 				.query(this);
 	}
 
+	/**
+	 * Returns the statement type. The type is determined by the first expression of
+	 * the builder, that is not a WITH expression.
+	 *
+	 * @return The statement type as Class
+	 */
 	public Class<?> statementType() {
 		QueryPartLinked<?> part = this;
 		while (part != null && part.parent() != null && !(part.parent() instanceof With))
@@ -109,6 +163,12 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 		return part.getClass();
 	}
 
+	/**
+	 * Checks if this builder represents the passed statement type
+	 *
+	 * @param clazz The statement type to check
+	 * @return True if types match
+	 */
 	public boolean isStatementType(final Class<?> clazz) {
 		final Class<?> type = statementType();
 		if (clazz == null && type == null)
@@ -118,22 +178,47 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 		return type.isAssignableFrom(clazz);
 	}
 
+	/**
+	 * Checks if this builder represents a SELECT statement
+	 *
+	 * @return True if SELECT
+	 */
 	public boolean isSelect() {
 		return isStatementType(Select.class);
 	}
 
+	/**
+	 * Checks if this builder represents an INSERT statement
+	 *
+	 * @return True if INSERT
+	 */
 	public boolean isInsert() {
 		return isStatementType(Insert.class);
 	}
 
+	/**
+	 * Checks if this builder represents an UPDATE statement
+	 *
+	 * @return True if UPDATE
+	 */
 	public boolean isUpdate() {
 		return isStatementType(Update.class);
 	}
 
+	/**
+	 * Checks if this builder represents a DELETE statement
+	 *
+	 * @return True if DELETE
+	 */
 	public boolean isDelete() {
 		return isStatementType(Delete.class);
 	}
 
+	/**
+	 * Checks if this builder represents a function expression
+	 *
+	 * @return True if expression
+	 */
 	public boolean isExpression() {
 		return isStatementType(Expression.class);
 	}

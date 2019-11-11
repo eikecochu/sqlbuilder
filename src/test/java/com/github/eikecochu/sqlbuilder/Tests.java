@@ -777,7 +777,7 @@ public class Tests {
 		final Expression e = new Expression("PACKAGE.PROCEDURE", 1, 2, 3, null);
 		final String actual = e.string(testOptions().prepare(true));
 
-		final String expected = "PACKAGE.PROCEDURE(?, ?, ?)";
+		final String expected = "{ call PACKAGE.PROCEDURE(?, ?, ?) }";
 
 		Assertions.assertEquals(expected, actual);
 	}
