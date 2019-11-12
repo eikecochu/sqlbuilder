@@ -9,7 +9,6 @@ import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -22,8 +21,7 @@ public class QueryOptions {
 
 	public static int FETCH_ALL = 0;
 
-	@NonNull
-	static QueryOptions DEFAULT_OPTIONS = new QueryOptions();
+	private static QueryOptions DEFAULT_OPTIONS = new QueryOptions();
 
 	/**
 	 * The default length to pad to. If pretty printing is enabled, keywords on new
@@ -162,7 +160,6 @@ public class QueryOptions {
 	@Setter(AccessLevel.PACKAGE)
 	private boolean prepare;
 
-	@Setter(AccessLevel.NONE)
 	private final List<Object> preparedValues = new ArrayList<>();
 
 	private Query query;
@@ -210,8 +207,16 @@ public class QueryOptions {
 		return uppercase ? string.toUpperCase() : string.toLowerCase();
 	}
 
+	public QueryOptions indent() {
+		return indentLevel(indentLevel + 1);
+	}
+
+	public QueryOptions unindent() {
+		return indentLevel(Math.max(0, indentLevel - 1));
+	}
+
 	public QueryOptions copy() {
-		return new QueryOptions().padLength(padLength)
+		final QueryOptions copy = new QueryOptions().padLength(padLength)
 				.splitNames(splitNames)
 				.pretty(pretty)
 				.indent(indent)
@@ -232,7 +237,12 @@ public class QueryOptions {
 				.ignoreNull(ignoreNull)
 				.defaultPlaceholder(defaultPlaceholder)
 				.ignoreUnrecognizableNames(ignoreUnrecognizableNames)
-				.indentLevel(indentLevel);
+				.indentLevel(indentLevel)
+				.prepare(prepare)
+				.query(query);
+		copy.preparedValues()
+				.addAll(preparedValues);
+		return copy;
 	}
 
 	public String preparedValuesString() {

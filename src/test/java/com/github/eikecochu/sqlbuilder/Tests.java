@@ -792,8 +792,8 @@ public class Tests {
 				.eqExpr(e)
 				.query();
 
-		String value = "SELECT * FROM TEST1 WHERE COL1 = PACKAGE.PROCEDURE(1, 2, 3)";
-		String prepared = "SELECT * FROM TEST1 WHERE COL1 = PACKAGE.PROCEDURE(?, ?, ?)";
+		final String value = "SELECT * FROM TEST1 WHERE COL1 = PACKAGE.PROCEDURE(1, 2, 3)";
+		final String prepared = "SELECT * FROM TEST1 WHERE COL1 = PACKAGE.PROCEDURE(?, ?, ?)";
 
 		Assertions.assertEquals(value, query.string(testOptions()));
 		Assertions.assertEquals(prepared, query.string(testOptions().prepare(true)));

@@ -112,11 +112,11 @@ public class With extends QueryPartImpl<With>
 			strings.add(options.cased("AS"));
 			strings.add(" (");
 
-			final QueryOptions subOptions = options.copy()
-					.indentLevel(options.indentLevel() + 1);
-			strings.add(subOptions.newLine(true));
-			strings.add(query.string(subOptions)
+			options.indent();
+			strings.add(options.newLine(true));
+			strings.add(query.string(options)
 					.trim());
+			options.unindent();
 
 			strings.add(")");
 		}

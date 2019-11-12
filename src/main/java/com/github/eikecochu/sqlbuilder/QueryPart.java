@@ -8,7 +8,7 @@ public interface QueryPart {
 	 * @return The created SQL string
 	 */
 	default String string() {
-		return string(QueryOptions.DEFAULT_OPTIONS);
+		return string(QueryOptions.getDefaultOptions());
 	}
 
 	/**

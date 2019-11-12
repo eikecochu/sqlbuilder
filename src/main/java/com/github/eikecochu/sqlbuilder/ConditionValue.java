@@ -84,7 +84,8 @@ public class ConditionValue<T extends Conditionable<T>> {
 	public T expr(final Expression expression) {
 		if (expression.values() == null)
 			return expr(expression.expression());
-		return expr(expression.expression(), expression.values());
+		return expr(expression.expression(), expression.values()
+				.toArray());
 	}
 
 	/**

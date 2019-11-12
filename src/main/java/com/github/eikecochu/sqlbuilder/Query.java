@@ -143,9 +143,8 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 	}
 
 	private QueryOptions safeOptions(QueryOptions options) {
-		options = options == null ? QueryOptions.DEFAULT_OPTIONS : options;
-		return options.copy()
-				.query(this);
+		options = options == null ? QueryOptions.getDefaultOptions() : options;
+		return options.query(this);
 	}
 
 	/**

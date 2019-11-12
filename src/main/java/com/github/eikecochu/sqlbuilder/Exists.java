@@ -29,11 +29,11 @@ public class Exists extends QueryPartImpl<Exists> implements QueryBuilder<Exists
 		else if (query != null) {
 			strings.add(options.padCased("EXISTS ("));
 
-			final QueryOptions subOptions = options.copy()
-					.indentLevel(options.indentLevel() + 1);
-			strings.add(subOptions.newLine(true));
-			strings.add(query.string(subOptions)
+			options.indent();
+			strings.add(options.newLine(true));
+			strings.add(query.string(options)
 					.trim());
+			options.unindent();
 
 			strings.add(")");
 		}
