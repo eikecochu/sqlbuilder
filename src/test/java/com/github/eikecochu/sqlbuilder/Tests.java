@@ -837,4 +837,20 @@ public class Tests {
 		Assertions.assertEquals(Select.class, clazz);
 	}
 
+	@Test
+	public void testExpressionType() {
+		Expression expr = new Expression("TEST");
+
+		Assertions.assertTrue(expr.query()
+				.isExpression());
+
+		class SubClass extends Expression {
+		}
+
+		SubClass expr2 = new SubClass();
+
+		Assertions.assertTrue(expr2.query()
+				.isExpression());
+	}
+
 }

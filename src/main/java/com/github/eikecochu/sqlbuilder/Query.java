@@ -116,7 +116,7 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 
 		stmt = options.applyStatementOptions(stmt);
 
-		if (options.stmtPostprocessor() != null)
+		if (options.callPostprocessor() != null)
 			stmt = options.callPostprocessor()
 					.process(stmt, safeOptions(options), connection);
 
@@ -124,7 +124,7 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 
 		// register return parameter
 		final Expression expr = (Expression) parent();
-		if (expr.returnType() != null)
+		if (expr.returnType() != 0)
 			stmt.registerOutParameter(index++, expr.returnType());
 
 		// insert values
@@ -132,9 +132,9 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 			stmt.setObject(index++, value);
 
 		// register OUT parameters
-		int paramOffset = expr.returnType() == null ? 1 : 2;
-		for (final Integer type : expr.paramTypes()) {
-			if (type != null)
+		int paramOffset = expr.returnType() == 0 ? 1 : 2;
+		for (final int type : expr.paramTypes()) {
+			if (type != 0)
 				stmt.registerOutParameter(paramOffset, type);
 			paramOffset++;
 		}
@@ -174,7 +174,7 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 			return true;
 		if (clazz == null ^ type == null)
 			return false;
-		return type.isAssignableFrom(clazz);
+		return clazz.isAssignableFrom(type);
 	}
 
 	/**

@@ -17,9 +17,9 @@ import lombok.experimental.Accessors;
 public class Expression extends QueryPartImpl<Expression> implements QueryBuilder<Expression> {
 
 	private String expression;
-	private List<Object> values;
-	private List<Integer> paramTypes;
-	private Integer returnType;
+	private List<Object> values = new ArrayList<>();
+	private List<Integer> paramTypes = new ArrayList<>();
+	private int returnType = 0;
 
 	public Expression(final String expression, final Object... values) {
 		this.expression = expression;
@@ -29,20 +29,49 @@ public class Expression extends QueryPartImpl<Expression> implements QueryBuilde
 	}
 
 	public Expression in(final Object value) {
-		return inOut(value, null);
+		return inOut(value, 0);
 	}
 
 	public Expression out(final int type) {
 		return inOut(null, type);
 	}
 
-	public Expression inOut(final Object value, final Integer type) {
-		if (values == null)
-			values = new ArrayList<>();
+	public Expression inOut(final Object value, final int type) {
 		values.add(value);
-		if (paramTypes == null)
-			paramTypes = new ArrayList<>();
 		paramTypes.add(type);
+		return this;
+	}
+
+	public Expression setIn(int index, final Object value) {
+		return setInOut(index, value, 0);
+	}
+
+	public Expression setIns(final Object... values) {
+		if (values != null)
+			for (int i = 0; i < values.length; i++)
+				setIn(i, values[i]);
+		return this;
+	}
+
+	public Expression setOut(int index, final int type) {
+		return setInOut(index, null, type);
+	}
+
+	public Expression setOuts(final Integer... types) {
+		if (types != null)
+			for (int i = 0; i < types.length; i++)
+				setOut(i, types[i]);
+		return this;
+	}
+
+	public Expression setInOut(final int index, final Object value, final int type) {
+		if (index < 0)
+			throw new RuntimeException("bad index");
+		while (index + 1 > paramTypes.size())
+			in(null);
+		if (value != null)
+			values.set(index, value);
+		paramTypes.set(index, type);
 		return this;
 	}
 
@@ -66,7 +95,7 @@ public class Expression extends QueryPartImpl<Expression> implements QueryBuilde
 			// check for OUT parameters
 			if (!prepare)
 				for (int i = 0; i < values.size(); i++)
-					if (values.get(i) == null && paramTypes.get(i) != null)
+					if (values.get(i) == null && paramTypes.get(i) != 0)
 						throw new RuntimeException("non-prepare method does not support OUT parameters");
 
 			// get default placeholder
@@ -102,7 +131,7 @@ public class Expression extends QueryPartImpl<Expression> implements QueryBuilde
 		if (callWrap) {
 			result = "call " + result;
 
-			if (prepare && returnType != null)
+			if (prepare && returnType != 0)
 				result = "? = " + result;
 
 			result = "{ " + result + " }";
