@@ -6,6 +6,13 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The UNION expression. Allows joining two SELECT statements to unify the
+ * results. Columns must match.
+ *
+ * @author eike
+ *
+ */
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
@@ -18,14 +25,30 @@ public class Union extends QueryPartImpl<Union> implements BeforeSelect<Union>, 
 		super(parent);
 	}
 
+	/**
+	 * Enable UNION ALL to join all results without removing duplicate results.
+	 *
+	 * @return This instance
+	 */
 	public Union all() {
 		return all(true);
 	}
 
+	/**
+	 * Enable UNION to join only distinct results. Removes duplicate results.
+	 *
+	 * @return This instance
+	 */
 	public Union distinct() {
 		return all(false);
 	}
 
+	/**
+	 * Pass true to enable UNION ALL or false to enable UNION.
+	 *
+	 * @param all True for ALL or false for DISTINCT
+	 * @return This instance
+	 */
 	public Union all(final boolean all) {
 		this.all = all;
 		return this;

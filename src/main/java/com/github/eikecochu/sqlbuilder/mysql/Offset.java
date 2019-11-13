@@ -25,6 +25,11 @@ public class Offset extends QueryPartImpl<Offset> implements QueryBuilder<Offset
 
 	private int offset = 0;
 
+	/**
+	 * Creates a new Offset instance with the offset to skip when selecting data
+	 *
+	 * @param offset The offset to skip from the start
+	 */
 	public Offset(final int offset) {
 		this(null, offset);
 	}

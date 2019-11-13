@@ -11,6 +11,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+/**
+ * The Query class is the final class of the building process and describes a
+ * complete query.
+ */
 @Getter(AccessLevel.PROTECTED)
 public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 
@@ -76,7 +80,7 @@ public class Query extends QueryPartImpl<Query> implements QueryBuilder<Query> {
 			throw new RuntimeException("use prepareCall() to prepare function calls");
 		options = safeOptions(options).prepare(true);
 
-		final String sql = string(options, connection);
+		final String sql = string(options, connection).trim();
 
 		PreparedStatement stmt;
 		if (options.returnGeneratedKeys())

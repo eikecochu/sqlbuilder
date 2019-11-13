@@ -3,6 +3,10 @@ package com.github.eikecochu.sqlbuilder;
 import java.util.HashMap;
 import java.util.Iterator;
 
+/**
+ * The default ValueHolder implementation with convenience methods to add
+ * values.
+ */
 public class Values extends HashMap<String, Object> implements ValueHolder {
 
 	private static final long serialVersionUID = 1L;

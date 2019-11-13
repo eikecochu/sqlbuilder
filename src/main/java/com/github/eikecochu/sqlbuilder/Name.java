@@ -9,12 +9,20 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The Name class represents a name used in a query, for example a table name,
+ * column name or function name.
+ */
 @ToString
 @Getter
 @Setter
 @Accessors(fluent = true)
 public class Name implements QueryPart {
 
+	/**
+	 * The KEYWORDS set is used to identify database keywords in names to apply
+	 * escaping to avoid errors when executing the query.
+	 */
 	public static Set<String> KEYWORDS = new HashSet<>(Arrays.asList("A", "ABORT", "ABS", "ABSOLUTE", "ACCESS",
 			"ACTION", "ADA", "ADD", "ADMIN", "AFTER", "AGGREGATE", "ALIAS", "ALL", "ALLOCATE", "ALSO", "ALTER",
 			"ALWAYS", "ANALYSE", "ANALYZE", "AND", "ANY", "ARE", "ARRAY", "AS", "ASC", "ASENSITIVE", "ASSERTION",

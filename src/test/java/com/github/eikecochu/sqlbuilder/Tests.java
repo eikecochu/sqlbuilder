@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import com.github.eikecochu.sqlbuilder.oracle.ConnectBy;
 import com.github.eikecochu.sqlbuilder.oracle.StartWith;
 
+@SuppressWarnings("javadoc")
 public class Tests {
 
 	private static final String NL = "\n";
@@ -773,7 +774,7 @@ public class Tests {
 	}
 
 	@Test
-	public void testExpressionPrepare() {
+	public void testExpressionPrepareString() {
 		final Expression e = new Expression("PACKAGE.PROCEDURE", 1, 2, 3, null);
 		final String actual = e.string(testOptions().prepare(true));
 
@@ -783,7 +784,18 @@ public class Tests {
 	}
 
 	@Test
-	public void testExpressionPrepare2() {
+	public void testExpressionPrepareStandalone() {
+		final Expression expr = new Expression("TEST", 1, 2, 3).returnType(12);
+		final String actual = expr.query()
+				.string(testOptions().prepare(true));
+
+		final String expected = "{ ? = call TEST(?, ?, ?) }";
+
+		Assertions.assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testExpressionPrepareInQuery() {
 		final Expression e = new Expression("PACKAGE.PROCEDURE", 1, 2, 3, null);
 		final Query query = SQLBuilder.Select()
 				.from("TEST1")
@@ -839,7 +851,7 @@ public class Tests {
 
 	@Test
 	public void testExpressionType() {
-		Expression expr = new Expression("TEST");
+		final Expression expr = new Expression("TEST");
 
 		Assertions.assertTrue(expr.query()
 				.isExpression());
@@ -847,7 +859,7 @@ public class Tests {
 		class SubClass extends Expression {
 		}
 
-		SubClass expr2 = new SubClass();
+		final SubClass expr2 = new SubClass();
 
 		Assertions.assertTrue(expr2.query()
 				.isExpression());

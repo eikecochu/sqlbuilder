@@ -9,6 +9,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The GROUP BY expression. Allows the grouping of selected data under some
+ * columns to apply aggregate functions on it.
+ */
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)

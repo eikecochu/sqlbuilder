@@ -2,6 +2,8 @@ package com.github.eikecochu.sqlbuilder;
 
 /**
  * Implemented by keywords that precede the ORDER BY statement.
+ *
+ * @param <T> the generic type returned by some fluent methods of this interface
  */
 public interface BeforeOrderBy<T extends BeforeOrderBy<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 

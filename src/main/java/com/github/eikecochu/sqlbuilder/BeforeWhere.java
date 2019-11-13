@@ -2,6 +2,8 @@ package com.github.eikecochu.sqlbuilder;
 
 /**
  * Implemented by keywords that precede the WHERE statement.
+ *
+ * @param <T> the generic type returned by some fluent methods of this interface
  */
 public interface BeforeWhere<T extends BeforeWhere<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 

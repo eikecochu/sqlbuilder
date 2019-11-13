@@ -8,6 +8,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The InsertValue represents a value that is inserted into the database with
+ * the INSERT statement.
+ */
 @ToString
 @Getter(AccessLevel.PROTECTED)
 public class InsertValue {

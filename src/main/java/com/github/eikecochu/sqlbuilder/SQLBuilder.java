@@ -1,5 +1,9 @@
 package com.github.eikecochu.sqlbuilder;
 
+/**
+ * Convenience class for quick starting a new statement. Contains all valid
+ * starting points.
+ */
 public final class SQLBuilder {
 
 	private SQLBuilder() {

@@ -9,6 +9,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The UPDATE expression. Start with this expression to prepare an UPDATE query
+ * to update elements in the database.
+ */
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)

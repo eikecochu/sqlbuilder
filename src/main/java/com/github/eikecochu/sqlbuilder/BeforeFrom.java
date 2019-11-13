@@ -5,6 +5,8 @@ import java.util.List;
 
 /**
  * Implemented by keywords that precede the FROM statement.
+ *
+ * @param <T> the generic type returned by some fluent methods of this interface
  */
 public interface BeforeFrom<T extends BeforeFrom<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 

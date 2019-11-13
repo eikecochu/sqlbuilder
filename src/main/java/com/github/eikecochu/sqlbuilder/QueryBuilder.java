@@ -1,5 +1,11 @@
 package com.github.eikecochu.sqlbuilder;
 
+/**
+ * The QueryBuilder interface that is implemented by all expressions that mark
+ * the possible end of a query.
+ *
+ * @param <T> The type of the QueryPartLinked instance
+ */
 public interface QueryBuilder<T extends QueryBuilder<T>> extends QueryPartLinked<T> {
 
 	/**
@@ -15,7 +21,7 @@ public interface QueryBuilder<T extends QueryBuilder<T>> extends QueryPartLinked
 	 * Allows the user to finish the query building process by passing the query to
 	 * a specified processor.
 	 *
-	 * @param <U>       The generic type
+	 * @param           <U> The generic type
 	 * @param processor The query processor
 	 * @return The query processor
 	 */

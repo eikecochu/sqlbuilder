@@ -25,6 +25,11 @@ public class Offset extends QueryPartImpl<Offset> implements QueryBuilder<Offset
 
 	private int offset = 0;
 
+	/**
+	 * Creates a new Offset instance with the offset to skip when selecting data
+	 *
+	 * @param offset The offset to skip from the start
+	 */
 	public Offset(final int offset) {
 		this(null, offset);
 	}
@@ -33,6 +38,12 @@ public class Offset extends QueryPartImpl<Offset> implements QueryBuilder<Offset
 		this.offset = offset;
 	}
 
+	/**
+	 * Create a new Fetch statement with the amount of rows to be fetched
+	 *
+	 * @param fetch The amount of rows to be fetched
+	 * @return the created Fetch instance
+	 */
 	public Fetch fetch(final int fetch) {
 		return new Fetch(this, fetch);
 	}

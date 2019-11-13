@@ -8,6 +8,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The WITH expression. Allows creating Common Table Expressions (CTE) to use in
+ * the following SELECT statement, for example for recursive queries.
+ */
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)

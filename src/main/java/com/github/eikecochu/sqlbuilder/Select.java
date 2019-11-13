@@ -9,6 +9,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The SELECT expression. Start with this expression to prepare a SELECT query
+ * to select elements from the database.
+ */
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)

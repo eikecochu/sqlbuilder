@@ -5,6 +5,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The EXISTS expression. This expression is used to create a constraint with a
+ * subquery to check if some elements exist.
+ */
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)

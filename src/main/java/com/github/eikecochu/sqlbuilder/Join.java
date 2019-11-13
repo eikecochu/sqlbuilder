@@ -5,6 +5,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The JOIN expression. Joins two tables or subqueries together into the current
+ * selection to select from both. Elements are joined through some conditions.
+ */
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)

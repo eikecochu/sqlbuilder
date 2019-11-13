@@ -6,6 +6,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The UpdateValue class that represents a database value to be used with an
+ * UPDATE statement.
+ */
 @ToString
 @Getter(AccessLevel.PROTECTED)
 @Setter(AccessLevel.PROTECTED)

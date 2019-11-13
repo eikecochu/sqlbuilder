@@ -26,6 +26,11 @@ public class StartWith extends Conditionable<StartWith> implements QueryBuilder<
 		super(parent);
 	}
 
+	/**
+	 * Creates a new ConnectBy instance
+	 * 
+	 * @return The new ConnectBy instance
+	 */
 	public ConnectBy connectBy() {
 		return new ConnectBy(this);
 	}

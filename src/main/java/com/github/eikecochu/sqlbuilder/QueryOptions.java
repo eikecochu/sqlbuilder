@@ -13,12 +13,20 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The QueryOptions class holds all options that are applied at various places
+ * throughout the building process of a query.
+ */
 @ToString
 @Getter
 @Setter
 @Accessors(fluent = true)
 public class QueryOptions {
 
+	/**
+	 * The default value of the fetchSize variable. Use to fetch all available rows
+	 * when executing a SELECT query.
+	 */
 	public static int FETCH_ALL = 0;
 
 	private static QueryOptions DEFAULT_OPTIONS = new QueryOptions();
@@ -168,6 +176,11 @@ public class QueryOptions {
 		preparedValues.add(value);
 	}
 
+	/**
+	 * Creates an indent string based on the indent size and level
+	 *
+	 * @return The indent string
+	 */
 	public String indentString() {
 		if (pretty && indent)
 			return StringUtils.repeat(' ', indentLevel * padLength + (indentLevel == 0 ? 0 : 1));
@@ -175,24 +188,54 @@ public class QueryOptions {
 			return "";
 	}
 
+	/**
+	 * Creates a newline if required, when pretty printing is enabled
+	 *
+	 * @return The newline or space
+	 */
 	public String newLine() {
 		return newLine(false);
 	}
 
+	/**
+	 * Creates a newline or space, if enabled
+	 *
+	 * @param noSpace If true, returns an empty string if no newline should be
+	 *                created, else creates a string
+	 * @return The newline, space or empty string
+	 */
 	public String newLine(final boolean noSpace) {
 		return pretty ? lineDelimiter + indentString() : noSpace ? "" : " ";
 	}
 
+	/**
+	 * Combines the methods padded and cased
+	 *
+	 * @param keyword The keyword
+	 * @return The padded and cased keyword
+	 */
 	public String padCased(final String keyword) {
 		return cased(padded(keyword));
 	}
 
+	/**
+	 * Wraps a keyword in ticks or quotes, if enabled
+	 *
+	 * @param string The string
+	 * @return The ticked or quoted string
+	 */
 	public String ticked(final String string) {
 		if (string == null)
 			return null;
 		return quote || (escapeKeywords && Name.isKeyword(string)) ? quoteStartChar + string + quoteEndChar : string;
 	}
 
+	/**
+	 * Pads a string to a specified length, if enabled
+	 *
+	 * @param keyword The keyword
+	 * @return The padded keyword
+	 */
 	public String padded(final String keyword) {
 		if (pretty && keyword != null) {
 			final int length = Math.max(0, padLength - keyword.split("\\s+")[0].length());
@@ -201,20 +244,41 @@ public class QueryOptions {
 		return keyword;
 	}
 
+	/**
+	 * Turns a string uppercase if enabled, else lowercase
+	 *
+	 * @param string The string
+	 * @return Uppercase string if enabled, else lowercase
+	 */
 	public String cased(final String string) {
 		if (string == null)
 			return null;
 		return uppercase ? string.toUpperCase() : string.toLowerCase();
 	}
 
+	/**
+	 * Increases the indent level by 1
+	 *
+	 * @return This instnace
+	 */
 	public QueryOptions indent() {
 		return indentLevel(indentLevel + 1);
 	}
 
+	/**
+	 * Decreases the indent level by 1
+	 *
+	 * @return This instance
+	 */
 	public QueryOptions unindent() {
 		return indentLevel(Math.max(0, indentLevel - 1));
 	}
 
+	/**
+	 * Copies this instance including values and returns the new instance
+	 *
+	 * @return The copied instance
+	 */
 	public QueryOptions copy() {
 		final QueryOptions copy = new QueryOptions().padLength(padLength)
 				.splitNames(splitNames)
@@ -245,6 +309,11 @@ public class QueryOptions {
 		return copy;
 	}
 
+	/**
+	 * Returns all contained prepared values as a simple, concatenated string
+	 *
+	 * @return The prepared values of this instance
+	 */
 	public String preparedValuesString() {
 		final StringBuilder sb = new StringBuilder();
 		int index = 1;

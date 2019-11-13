@@ -7,6 +7,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The condition value that is used to represent values to use for conditions.
+ *
+ * @param <T> the type of the conditionable to return to
+ */
 @ToString
 @Getter(AccessLevel.PROTECTED)
 public class ConditionValue<T extends Conditionable<T>> {

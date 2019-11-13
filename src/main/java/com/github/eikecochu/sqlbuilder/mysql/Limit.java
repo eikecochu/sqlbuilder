@@ -25,6 +25,11 @@ public class Limit extends QueryPartImpl<Limit> implements QueryBuilder<Limit> {
 
 	private int limit = 0;
 
+	/**
+	 * Create a new Limit statement with the amount of rows to be fetched
+	 * 
+	 * @param limit The amount of rows to be fetched
+	 */
 	public Limit(final int limit) {
 		this(null, limit);
 	}
@@ -33,6 +38,12 @@ public class Limit extends QueryPartImpl<Limit> implements QueryBuilder<Limit> {
 		this.limit = limit;
 	}
 
+	/**
+	 * Creates a new Offset instance with the offset to skip when selecting data
+	 *
+	 * @param offset The offset to skip from the start
+	 * @return The new Offset instance
+	 */
 	public Offset offset(final int offset) {
 		return new Offset(this, offset);
 	}

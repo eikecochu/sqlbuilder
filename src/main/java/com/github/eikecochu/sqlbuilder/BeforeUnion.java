@@ -1,5 +1,10 @@
 package com.github.eikecochu.sqlbuilder;
 
+/**
+ * Implemented by keywords that precede the UNION statement.
+ *
+ * @param <T> the generic type returned by some fluent methods of this interface
+ */
 public interface BeforeUnion<T extends BeforeUnion<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
 	/**

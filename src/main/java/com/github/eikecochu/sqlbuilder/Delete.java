@@ -5,6 +5,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The DELETE expression. Start with this expression to prepare a DELETE query
+ * to delete elements from the database.
+ */
 @ToString
 @Setter(AccessLevel.PROTECTED)
 @Accessors(fluent = true)

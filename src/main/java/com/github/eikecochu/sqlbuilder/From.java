@@ -10,6 +10,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The FROM expression. This expression defines from where the data is selected.
+ * Can be a table name or subquery.
+ */
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)

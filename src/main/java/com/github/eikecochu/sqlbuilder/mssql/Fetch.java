@@ -25,6 +25,11 @@ public class Fetch extends QueryPartImpl<Fetch> implements QueryBuilder<Fetch> {
 
 	private int fetch = 1;
 
+	/**
+	 * Create a new Fetch statement with the amount of rows to be fetched
+	 * 
+	 * @param fetch The amount of rows to be fetched
+	 */
 	public Fetch(final int fetch) {
 		this(null, fetch);
 	}

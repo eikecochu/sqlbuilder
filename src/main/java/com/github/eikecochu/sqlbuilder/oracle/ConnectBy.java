@@ -29,20 +29,40 @@ public class ConnectBy extends Conditionable<ConnectBy> implements QueryBuilder<
 		super(parent);
 	}
 
+	/**
+	 * Creates a new ConnectBy instance
+	 *
+	 * @return The new ConnectBy instance
+	 */
 	public ConnectBy connectBy() {
 		return new ConnectBy().parent(this);
 	}
 
+	/**
+	 * Enables CYCLE selection
+	 *
+	 * @return This instance
+	 */
 	public ConnectBy cycle() {
 		nocycle = false;
 		return this;
 	}
 
+	/**
+	 * Enables NOCYCLE selection
+	 *
+	 * @return This instance
+	 */
 	public ConnectBy nocycle() {
 		nocycle = true;
 		return this;
 	}
 
+	/**
+	 * Creates a new StartWith instance
+	 *
+	 * @return The new StartWith instance
+	 */
 	public StartWith startWith() {
 		return new StartWith(this);
 	}

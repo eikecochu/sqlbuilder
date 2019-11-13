@@ -6,6 +6,8 @@ import lombok.ToString;
 
 /**
  * Condition to multiple statements, for example WHERE, JOIN etc.
+ *
+ * @param <T> the type of the conditionable to return to
  */
 @ToString
 @Getter(AccessLevel.PROTECTED)

@@ -6,6 +6,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The ConditionPart is a part of the conditionable expression. It marks the
+ * start of a new condition and provides methods to configure it and return to
+ * the conditionable in a fluid style.
+ *
+ * @param <T> the type of the conditionable to return to
+ */
 @ToString
 @Getter(AccessLevel.PROTECTED)
 public class ConditionPart<T extends Conditionable<T>> implements QueryPart {

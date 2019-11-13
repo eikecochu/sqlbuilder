@@ -4,6 +4,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The ConditionBiValue is used for the BETWEEN operator, to restrict values to
+ * two.
+ *
+ * @param <T> The type of the conditionable
+ */
 @ToString
 @Getter(AccessLevel.PROTECTED)
 public class ConditionBiValue<T extends Conditionable<T>> {

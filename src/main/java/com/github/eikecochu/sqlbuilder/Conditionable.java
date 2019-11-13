@@ -22,6 +22,9 @@ public abstract class Conditionable<T extends Conditionable<T>> extends QueryPar
 
 	private final List<QueryPart> parts = new ArrayList<>();
 
+	/**
+	 * Creates a new empty conditionable
+	 */
 	public Conditionable() {
 		this(null);
 	}

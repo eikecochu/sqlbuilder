@@ -6,6 +6,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The HAVING expression. Allows constraining the grouped data.
+ */
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)

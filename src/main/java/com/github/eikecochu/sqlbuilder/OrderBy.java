@@ -10,6 +10,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The ORDER BY expression. Allows ordering the selected data with multiple
+ * columns.
+ */
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)

@@ -1,5 +1,9 @@
 package com.github.eikecochu.sqlbuilder;
 
+/**
+ * The QueryPart interface is implemented by all parts of the query building
+ * process to turn them into strings for query assembly when building.
+ */
 public interface QueryPart {
 
 	/**

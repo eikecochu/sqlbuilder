@@ -6,6 +6,10 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+/**
+ * The WHERE expression. Allows constraining a SELECT statement by multiple
+ * columns or subqueries.
+ */
 @ToString
 @NoArgsConstructor
 @Setter(AccessLevel.PROTECTED)
@@ -17,10 +21,22 @@ public class Where extends Conditionable<Where>
 		super(parent);
 	}
 
+	/**
+	 * Continues the condition with an EXISTS expression
+	 *
+	 * @param query The subquery to apply the EXISTS constraint on
+	 * @return This instance
+	 */
 	public Where exists(final QueryBuilder<?> query) {
 		return addPart(new Exists(query));
 	}
 
+	/**
+	 * Continues the condition with an EXISTS expression
+	 *
+	 * @param sql The subquery to apply the EXISTS constraint on
+	 * @return This instance
+	 */
 	public Where exists(final String sql) {
 		return addPart(new Exists(SQLBuilder.Query(sql)));
 	}

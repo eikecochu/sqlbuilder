@@ -18,6 +18,9 @@ import lombok.Setter;
  */
 public interface ValueHolder extends Iterable<Entry<String, Object>> {
 
+	/**
+	 * The ValueEntry class is an implementation of the Map.Entry class
+	 */
 	@Getter
 	@Setter
 	@AllArgsConstructor
@@ -36,6 +39,10 @@ public interface ValueHolder extends Iterable<Entry<String, Object>> {
 
 	}
 
+	/**
+	 * The EntryWrapper is a wrapper around the Map.Entry class to support automatic
+	 * key prefixing.
+	 */
 	@AllArgsConstructor
 	public static class EntryWrapper implements Entry<String, Object> {
 
@@ -58,14 +65,33 @@ public interface ValueHolder extends Iterable<Entry<String, Object>> {
 		}
 	}
 
+	/**
+	 * Create a ValueHolder from an Iterable instance
+	 *
+	 * @param it The Iterable
+	 * @return the ValueHolder instance
+	 */
 	static ValueHolder from(final Iterable<? extends Entry<String, Object>> it) {
 		return (ValueHolder) it;
 	}
 
+	/**
+	 * Creates a ValueHolder instance from a Map instance
+	 *
+	 * @param map The Map
+	 * @return the ValueHolder instance
+	 */
 	static ValueHolder from(final Map<String, Object> map) {
 		return map == null ? null : from(map.entrySet());
 	}
 
+	/**
+	 * Creates a new Map.Entry instance
+	 *
+	 * @param string the key
+	 * @param object the value
+	 * @return the new Map.Entry instance
+	 */
 	static Entry<String, Object> entry(final String string, final Object object) {
 		return new ValueEntry(string, object);
 	}
@@ -75,6 +101,15 @@ public interface ValueHolder extends Iterable<Entry<String, Object>> {
 		return null;
 	}
 
+	/**
+	 * Returns the values stored in this ValueHolder. Optionally prefixes the keys
+	 * with a column prefix.
+	 *
+	 * @param columnPrefix The optional columnPrefix. Pass null to disable. Pass a
+	 *                     value to prefix all keys with this prefix. The prefix and
+	 *                     the key are joined with a "."
+	 * @return The value iterator
+	 */
 	default Iterator<Entry<String, Object>> values(final String columnPrefix) {
 		final Iterator<Entry<String, Object>> it = iterator();
 		if (it == null || columnPrefix == null || columnPrefix.isEmpty())

@@ -2,6 +2,8 @@ package com.github.eikecochu.sqlbuilder;
 
 /**
  * Implemented by keywords that precede the SELECT statement.
+ *
+ * @param <T> the generic type returned by some fluent methods of this interface
  */
 public interface BeforeSelect<T extends BeforeSelect<T>> extends QueryPart, QueryPartSQL<T>, QueryPartLinked<T> {
 
