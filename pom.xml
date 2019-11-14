@@ -1,11 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.github.eikecochu</groupId>
 	<artifactId>sqlbuilder</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<packaging>jar</packaging>
 	<name>SQLBuilder</name>
 	<description>Java builder to create SQL statements</description>
@@ -45,7 +43,7 @@
 		<url>https://github.com/eikecochu/sqlbuilder</url>
 		<connection>scm:git:git://github.com/eikecochu/sqlbuilder.git</connection>
 		<developerConnection>scm:git:git@github.com:eikecochu/sqlbuilder.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>sqlbuilder-1.2</tag>
 	</scm>
 
 	<developers>
