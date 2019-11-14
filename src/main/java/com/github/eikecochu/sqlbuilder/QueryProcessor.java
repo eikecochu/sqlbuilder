@@ -13,7 +13,8 @@ public interface QueryProcessor {
 
 	/**
 	 * The process method. Will receive the query builder.
-	 *
+	 * 
+	 * @param <T>     The type of the passed builder
 	 * @param builder The QueryBuilder to process
 	 */
 	<T extends QueryBuilder<T>> void process(T builder);

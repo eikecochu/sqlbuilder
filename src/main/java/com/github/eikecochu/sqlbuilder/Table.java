@@ -13,4 +13,14 @@ public interface Table {
 	 */
 	String tableName();
 
+	/**
+	 * The table name with alias
+	 * 
+	 * @param alias The alias
+	 * @return The table name with alias
+	 */
+	default String withAlias(String alias) {
+		return tableName() + (alias != null && !alias.isEmpty() ? (" " + alias) : "");
+	}
+
 }
