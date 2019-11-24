@@ -1,5 +1,4 @@
-# SQLDeveloper
-
+# SQLBuilder
 Java builder to create SQL statements
 
 The following keywords are supported: DELETE, FROM, GROUP BY, HAVING, INSERT, JOIN, ORDER BY, SELECT, UPDATE, WHERE, WITH
